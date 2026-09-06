@@ -478,19 +478,37 @@
        TOP BAR
        ============================================================ -->
 
-  <div class="topbar">
+  <!-- ============================================================
+TOP BAR With Live Volume Controls
+============================================================ -->
+<div class="topbar">
 
-    <div class="brand">
-      ZAMORAK
-    </div>
-
-    <button
-      id="settingsBtn"
-      class="tab-btn">
-      ⚙ Settings
-    </button>
-
+  <div class="brand">
+    ZAMORAK
   </div>
+
+  <!-- Real-time interactive volume track controls -->
+  <div style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 12px;">
+    <span style="font-size: 11px; color: #aaa; font-weight: bold;">🔊 Vol:</span>
+    <input 
+      id="voiceVolumeSlider" 
+      type="range" 
+      min="0" 
+      max="1" 
+      step="0.05" 
+      value="1" 
+      style="width: 75px; height: 4px; cursor: pointer; accent-color: #ff6b6b;"
+    >
+  </div>
+
+  <button
+    id="settingsBtn"
+    class="tab-btn">
+    ⚙ Settings
+  </button>
+
+</div>
+
 
 
   <!-- ============================================================
@@ -967,18 +985,21 @@
   };
 
 
-  /* ================================================================
-     STATE
-     ================================================================ */
+/* ================================================================
+STATE
+=============================================================== */
+let autoEnabled = false;
+let lastFired = {};
+let reader = null;
+let pollTimer = null;
+let foundChat = false;
+let lastLogged = "";
+let currentCue = null;
+let activeCues = [];
 
-  let autoEnabled = false;
-  let lastFired = {};
-  let reader = null;
-  let pollTimer = null;
-  let foundChat = false;
-  let lastLogged = "";
-  let currentCue = null;
-  let activeCues = [];
+// Master audio level state variable tracking slider adjustments
+let masterVoiceVolume = 1.0; 
+
 
 
   /* ================================================================
@@ -1020,6 +1041,14 @@
     document.getElementById(
       "autoToggle"
     );
+
+    // Audio Volume DOM selector element connection mapping
+const voiceVolumeSlider = document.getElementById("voiceVolumeSlider");
+
+voiceVolumeSlider.addEventListener("input", () => {
+  masterVoiceVolume = Number(voiceVolumeSlider.value);
+});
+
 
   const cueBoard =
     document.getElementById(
@@ -3535,9 +3564,10 @@ function speakActions(text) {
     const utterance = new SpeechSynthesisUtterance(spokenText);
     
     // 4. Set rapid combat pace parameters
-    utterance.rate = 1.35; // Speaks slightly faster to match rapid boss cycles
-    utterance.pitch = 1.15;  // High clarity tonal pitch
-    utterance.volume = 1.0; // Master volume balance scale
+    utterance.rate = 1.35;   // Fast combat pace call response times
+    utterance.pitch = 1.15;  // Higher tonal pitch cuts through heavy boss ambient loops
+    utterance.volume = masterVoiceVolume; // Binds layout level dynamically to slider settings
+
     
     // 5. Fire audio out to your headset!
     window.speechSynthesis.speak(utterance);
