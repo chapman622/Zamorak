@@ -1791,6 +1791,11 @@
 
   /* ================================================================
      SHOW CUE
+
+     NOTE: the solid black backdrop panel that used to sit behind
+     the overlay text has been removed. Only a coloured outline
+     (per-cue colour) plus shadowed text is drawn now, so gameplay
+     underneath stays visible.
      ================================================================ */
 
   function showBanner(
@@ -1902,17 +1907,11 @@
         );
 
 
-      filledRect(
-        COLORS.black,
-        x,
-        y,
-        panelW,
-        panelH,
-        cue.duration,
-        3
-      );
-
-
+      /*
+       * No black fill here anymore — just a single coloured
+       * outline so the cue is easy to spot without blocking
+       * the view of the fight underneath.
+       */
       const cueColor =
         color(
           cue.color[0],
@@ -1928,18 +1927,7 @@
         panelW,
         panelH,
         cue.duration,
-        8
-      );
-
-
-      outline(
-        COLORS.white,
-        x + 9,
-        y + 9,
-        panelW - 18,
-        panelH - 18,
-        cue.duration,
-        2
+        4
       );
 
 
@@ -2170,6 +2158,13 @@
     }
 
   }
+
+  /*
+   * NOTE: colourTest() above still uses the black filledRect
+   * deliberately — it's a one-off diagnostic (key 9) meant to
+   * check overlay colours against a known-dark backdrop, not a
+   * cue you'll see during normal play. Left unchanged on purpose.
+   */
 
 
   /* ================================================================
