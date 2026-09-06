@@ -1808,12 +1808,12 @@ function centeredText(
   cx,
   y,
   duration,
-  panelW // Added panelW to the parameters here
+  panelW
 ) {
 
   /*
-   * Left-alignment matrix: Computes the precise box left edge
-   * using the real panel width passed dynamically into the call execution.
+   * Left-alignment matrix: Computes the precise box boundary edge 
+   * using the variable panelW value passed dynamically into the call execution.
    */
   const boxLeftEdge =
     cx -
@@ -2115,15 +2115,16 @@ function centeredText(
       );
 
 
-            centeredText(
+      centeredText(
         overlayText,
         COLORS.white,
         textSize,
         cx,
         y + 16,
         cue.duration,
-        panelW // Added panelW here to link it with your layout math
+        panelW
       );
+
 
 
 
