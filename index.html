@@ -18,7 +18,44 @@
       padding: 10px;
       user-select: none;
       min-width: 320px;
+
+      /*
+       * These are controlled by the settings below.
+       */
+      --icon-size: 80px;
+      --icon-image-size: 64px;
     }
+
+    /* ============================================================
+       TRANSPARENT MODE
+       ============================================================ */
+
+    body.transparent-mode {
+      background: transparent;
+    }
+
+    body.transparent-mode .cue-display {
+      background: transparent;
+      border-color: transparent !important;
+      padding: 0;
+    }
+
+    body.transparent-mode .waiting {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    body.transparent-mode .action {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    body.transparent-mode .arrow {
+      text-shadow:
+        0 2px 3px #000,
+        0 0 4px #000;
+    }
+
 
     /* ============================================================
        TOP BAR
@@ -52,6 +89,7 @@
       background: #252831;
     }
 
+
     /* ============================================================
        GAMEPLAY BOARD
        ============================================================ */
@@ -84,6 +122,7 @@
       justify-content: center;
       padding: 18px;
       transition: border-color 0.15s;
+      overflow: hidden;
     }
 
     .actions {
@@ -92,9 +131,12 @@
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: clamp(6px, 1.5vw, 14px);
     }
 
+    /*
+     * Every icon box follows the chosen icon size.
+     */
     .action {
       min-width: 74px;
       min-height: 74px;
@@ -109,30 +151,49 @@
       font-size: 12px;
       font-weight: 800;
       color: #fff;
+      flex: 0 0 auto;
     }
 
     .action.icon {
-      width: 82px;
-      height: 82px;
-      padding: 5px;
+      width: var(--icon-size);
+      height: var(--icon-size);
+      padding: calc(var(--icon-size) * 0.06);
     }
 
     .action img {
-      width: 64px;
-      height: 64px;
+      width: var(--icon-image-size);
+      height: var(--icon-image-size);
+      max-width: 100%;
+      max-height: 100%;
       image-rendering: auto;
       object-fit: contain;
+      display: block;
     }
 
+    /*
+     * Text actions scale a little with the icon size.
+     */
     .action.text {
-      min-width: 90px;
-      padding: 10px;
+      min-width: max(90px, calc(var(--icon-size) * 1.1));
+      min-height: calc(var(--icon-size) * 0.72);
+      padding: 10px 14px;
+      font-size: clamp(
+        12px,
+        calc(var(--icon-size) * 0.17),
+        22px
+      );
+      line-height: 1.15;
     }
 
     .arrow {
       color: #777b86;
-      font-size: 22px;
+      font-size: clamp(
+        18px,
+        calc(var(--icon-size) * 0.30),
+        42px
+      );
       font-weight: 900;
+      flex: 0 0 auto;
     }
 
     .action-row {
@@ -143,7 +204,6 @@
       flex-wrap: wrap;
     }
 
-    /* Small text-only instructions */
     .plain-action {
       font-size: 16px;
       font-weight: 900;
@@ -154,6 +214,7 @@
       border: 1px solid #3b3e47;
       text-align: center;
     }
+
 
     /* ============================================================
        SETTINGS
@@ -191,6 +252,11 @@
       flex: 1;
     }
 
+
+    /* ============================================================
+       TOGGLE
+       ============================================================ */
+
     .toggle {
       width: 44px;
       height: 24px;
@@ -199,6 +265,7 @@
       position: relative;
       cursor: pointer;
       transition: background 0.2s;
+      flex: 0 0 auto;
     }
 
     .toggle.on {
@@ -221,6 +288,66 @@
       left: 23px;
     }
 
+
+    /* ============================================================
+       DISPLAY SETTINGS
+       ============================================================ */
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .setting-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .setting-label {
+      font-size: 13px;
+      color: #ddd;
+      font-weight: 600;
+    }
+
+    .setting-description {
+      font-size: 10px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    .slider-wrap {
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .slider-values {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #777;
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    #iconSizeValue {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    #iconSize {
+      width: 100%;
+      cursor: pointer;
+      accent-color: #ef4444;
+    }
+
+
+    /* ============================================================
+       STATUS
+       ============================================================ */
+
     .status {
       font-size: 11px;
       color: #aaa;
@@ -239,6 +366,11 @@
     .status.err {
       color: #f87171;
     }
+
+
+    /* ============================================================
+       TEST BUTTONS
+       ============================================================ */
 
     .test-grid {
       display: grid;
@@ -268,6 +400,11 @@
     .channel  { background: #be185d; }
     .rune     { background: #059669; }
     .def      { background: #4b5563; }
+
+
+    /* ============================================================
+       LOG
+       ============================================================ */
 
     .log {
       background: #0c0d10;
@@ -299,32 +436,33 @@
       line-height: 1.4;
     }
 
+
     /* ============================================================
-       MOBILE / SMALL WINDOW
+       SMALL WINDOW
        ============================================================ */
 
     @media (max-width: 430px) {
+
+      body {
+        padding: 6px;
+      }
+
       .cue-display {
         min-height: 210px;
       }
 
-      .action.icon {
-        width: 70px;
-        height: 70px;
-      }
-
-      .action img {
-        width: 55px;
-        height: 55px;
+      .waiting {
+        min-height: 210px;
       }
 
       .arrow {
-        font-size: 18px;
+        font-size: clamp(
+          16px,
+          calc(var(--icon-size) * 0.27),
+          32px
+        );
       }
 
-      .plain-action {
-        font-size: 14px;
-      }
     }
   </style>
 </head>
@@ -336,13 +474,17 @@
        ============================================================ -->
 
   <div class="topbar">
-    <div class="brand">ZAMORAK</div>
+
+    <div class="brand">
+      ZAMORAK
+    </div>
 
     <button
       id="settingsBtn"
       class="tab-btn">
       ⚙ Settings
     </button>
+
   </div>
 
 
@@ -352,7 +494,9 @@
 
   <div id="cueBoard">
 
-    <div id="waiting" class="waiting">
+    <div
+      id="waiting"
+      class="waiting">
       WAITING FOR CUE…
     </div>
 
@@ -360,7 +504,12 @@
       id="cueDisplay"
       class="cue-display"
       style="display:none;">
-      <div id="actions" class="actions"></div>
+
+      <div
+        id="actions"
+        class="actions">
+      </div>
+
     </div>
 
   </div>
@@ -371,6 +520,85 @@
        ============================================================ -->
 
   <div id="settings">
+
+
+    <!-- ==========================================================
+         DISPLAY SETTINGS
+         ========================================================== -->
+
+    <div class="settings-section">
+
+      <div class="settings-title">
+        Display
+      </div>
+
+
+      <div class="setting-row">
+
+        <div>
+          <div class="setting-label">
+            Transparent background
+          </div>
+
+          <div class="setting-description">
+            Remove the Cue Board panel behind the actions.
+          </div>
+        </div>
+
+        <div
+          id="transparentToggle"
+          class="toggle"
+          title="Toggle transparent background">
+        </div>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <div
+          class="setting-label">
+          Icon size
+        </div>
+
+        <div
+          id="iconSizeValue">
+          80px
+        </div>
+
+      </div>
+
+
+      <div class="slider-wrap">
+
+        <input
+          id="iconSize"
+          type="range"
+          min="32"
+          max="200"
+          step="1"
+          value="80">
+
+        <div class="slider-values">
+
+          <span>
+            32px
+          </span>
+
+          <span>
+            200px
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================================
+         AUTO DETECTION
+         ========================================================== -->
 
     <div class="settings-section">
 
@@ -385,17 +613,25 @@
       </div>
 
       <div class="auto-row">
-        <label>Auto-read Zamorak chat</label>
+
+        <label>
+          Auto-read Zamorak chat
+        </label>
 
         <div
           id="autoToggle"
           class="toggle"
           title="Toggle auto chat reading">
         </div>
+
       </div>
 
     </div>
 
+
+    <!-- ==========================================================
+         CUE TESTING
+         ========================================================== -->
 
     <div class="settings-section">
 
@@ -405,35 +641,51 @@
 
       <div class="test-grid">
 
-        <button class="test-btn stun" data-id="stun">
+        <button
+          class="test-btn stun"
+          data-id="stun">
           1 · STUN
         </button>
 
-        <button class="test-btn slam" data-id="slam">
+        <button
+          class="test-btn slam"
+          data-id="slam">
           2 · SLAM
         </button>
 
-        <button class="test-btn cage" data-id="cage">
+        <button
+          class="test-btn cage"
+          data-id="cage">
           3 · CAGE
         </button>
 
-        <button class="test-btn curl" data-id="curl">
+        <button
+          class="test-btn curl"
+          data-id="curl">
           4 · CURL
         </button>
 
-        <button class="test-btn infernus" data-id="infernus">
+        <button
+          class="test-btn infernus"
+          data-id="infernus">
           5 · INFERNUS
         </button>
 
-        <button class="test-btn channel" data-id="channel">
+        <button
+          class="test-btn channel"
+          data-id="channel">
           6 · CHANNELER
         </button>
 
-        <button class="test-btn rune" data-id="rune">
+        <button
+          class="test-btn rune"
+          data-id="rune">
           7 · RUNE SMOKE
         </button>
 
-        <button class="test-btn def" data-id="def">
+        <button
+          class="test-btn def"
+          data-id="def">
           8 · DEFENSIVE
         </button>
 
@@ -441,6 +693,10 @@
 
     </div>
 
+
+    <!-- ==========================================================
+         OCR / DEBUG
+         ========================================================== -->
 
     <div class="settings-section">
 
@@ -456,6 +712,10 @@
     </div>
 
 
+    <!-- ==========================================================
+         CONTROLS
+         ========================================================== -->
+
     <div class="settings-section">
 
       <div class="settings-title">
@@ -463,10 +723,12 @@
       </div>
 
       <div class="help">
+
         1–8 = test cue<br>
         9 = overlay colour test<br>
         Auto-read watches the RuneScape chatbox.<br>
         Keep Zamorak chat visible while auto-read is active.
+
       </div>
 
     </div>
@@ -488,8 +750,7 @@
   /* ================================================================
      CUES
 
-     IMPORTANT:
-     These remain based ONLY on the existing cue board.
+     ONLY actions from the existing cue board are used.
      ================================================================ */
 
   const CUES = {
@@ -498,9 +759,18 @@
       title: "STUN HIM NOW",
 
       actions: [
-        { type: "icon", src: "icons/freedom.png" },
-        { type: "icon", src: "icons/anticipation.png" },
-        { type: "text", text: "STUN" }
+        {
+          type: "icon",
+          src: "icons/freedom.png"
+        },
+        {
+          type: "icon",
+          src: "icons/anticipation.png"
+        },
+        {
+          type: "text",
+          text: "STUN"
+        }
       ],
 
       color: [220, 38, 38],
@@ -517,8 +787,14 @@
       title: "SLAM",
 
       actions: [
-        { type: "icon", src: "icons/deflect_melee.png" },
-        { type: "icon", src: "icons/debilitate.png" }
+        {
+          type: "icon",
+          src: "icons/deflect_melee.png"
+        },
+        {
+          type: "icon",
+          src: "icons/debilitate.png"
+        }
       ],
 
       color: [234, 88, 12],
@@ -535,9 +811,18 @@
       title: "CAGE",
 
       actions: [
-        { type: "icon", src: "icons/deflect_magic.png" },
-        { type: "icon", src: "icons/debilitate.png" },
-        { type: "icon", src: "icons/devotion.png" }
+        {
+          type: "icon",
+          src: "icons/deflect_magic.png"
+        },
+        {
+          type: "icon",
+          src: "icons/debilitate.png"
+        },
+        {
+          type: "icon",
+          src: "icons/devotion.png"
+        }
       ],
 
       color: [124, 58, 237],
@@ -554,8 +839,14 @@
       title: "CURL UP",
 
       actions: [
-        { type: "text", text: "SHIELD" },
-        { type: "icon", src: "icons/resonance.png" }
+        {
+          type: "text",
+          text: "SHIELD"
+        },
+        {
+          type: "icon",
+          src: "icons/resonance.png"
+        }
       ],
 
       color: [37, 99, 235],
@@ -572,9 +863,18 @@
       title: "INFERNUS",
 
       actions: [
-        { type: "text", text: "MATCH RUNE" },
-        { type: "text", text: "STUN ZAMMY" },
-        { type: "text", text: "FINISH DEMON" }
+        {
+          type: "text",
+          text: "MATCH RUNE"
+        },
+        {
+          type: "text",
+          text: "STUN ZAMMY"
+        },
+        {
+          type: "text",
+          text: "FINISH DEMON"
+        }
       ],
 
       color: [180, 83, 9],
@@ -591,7 +891,10 @@
       title: "CHANNELER / WITCH",
 
       actions: [
-        { type: "text", text: "KILL THE WITCH IN INFERNUS" }
+        {
+          type: "text",
+          text: "KILL THE WITCH IN INFERNUS"
+        }
       ],
 
       color: [190, 24, 93],
@@ -607,8 +910,14 @@
       title: "RUNE SMOKE",
 
       actions: [
-        { type: "icon", src: "icons/anticipation.png" },
-        { type: "icon", src: "icons/freedom.png" }
+        {
+          type: "icon",
+          src: "icons/anticipation.png"
+        },
+        {
+          type: "icon",
+          src: "icons/freedom.png"
+        }
       ],
 
       color: [5, 150, 105],
@@ -626,10 +935,22 @@
       title: "DEFENSIVE",
 
       actions: [
-        { type: "icon", src: "icons/debilitate.png" },
-        { type: "icon", src: "icons/reflect.png" },
-        { type: "icon", src: "icons/devotion.png" },
-        { type: "text", text: "PROTECT" }
+        {
+          type: "icon",
+          src: "icons/debilitate.png"
+        },
+        {
+          type: "icon",
+          src: "icons/reflect.png"
+        },
+        {
+          type: "icon",
+          src: "icons/devotion.png"
+        },
+        {
+          type: "text",
+          text: "PROTECT"
+        }
       ],
 
       color: [75, 85, 99],
@@ -651,8 +972,28 @@
   let pollTimer = null;
   let foundChat = false;
   let lastLogged = "";
-
   let currentCue = null;
+
+
+  /* ================================================================
+     DISPLAY SETTINGS
+     ================================================================ */
+
+  const DEFAULT_ICON_SIZE =
+    80;
+
+  const MIN_ICON_SIZE =
+    32;
+
+  const MAX_ICON_SIZE =
+    200;
+
+
+  let iconSize =
+    DEFAULT_ICON_SIZE;
+
+  let transparentBackground =
+    false;
 
 
   /* ================================================================
@@ -660,31 +1001,288 @@
      ================================================================ */
 
   const statusEl =
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
 
   const logEl =
-    document.getElementById("log");
+    document.getElementById(
+      "log"
+    );
 
   const autoToggle =
-    document.getElementById("autoToggle");
+    document.getElementById(
+      "autoToggle"
+    );
 
   const cueBoard =
-    document.getElementById("cueBoard");
+    document.getElementById(
+      "cueBoard"
+    );
 
   const settings =
-    document.getElementById("settings");
+    document.getElementById(
+      "settings"
+    );
 
   const settingsBtn =
-    document.getElementById("settingsBtn");
+    document.getElementById(
+      "settingsBtn"
+    );
 
   const waiting =
-    document.getElementById("waiting");
+    document.getElementById(
+      "waiting"
+    );
 
   const cueDisplay =
-    document.getElementById("cueDisplay");
+    document.getElementById(
+      "cueDisplay"
+    );
 
   const actionsEl =
-    document.getElementById("actions");
+    document.getElementById(
+      "actions"
+    );
+
+  const transparentToggle =
+    document.getElementById(
+      "transparentToggle"
+    );
+
+  const iconSizeSlider =
+    document.getElementById(
+      "iconSize"
+    );
+
+  const iconSizeValue =
+    document.getElementById(
+      "iconSizeValue"
+    );
+
+
+  /* ================================================================
+     LOAD DISPLAY SETTINGS
+     ================================================================ */
+
+  function loadDisplaySettings() {
+
+    try {
+
+      const savedSize =
+        localStorage.getItem(
+          "zamorak_icon_size"
+        );
+
+      const savedTransparent =
+        localStorage.getItem(
+          "zamorak_transparent"
+        );
+
+
+      if (
+        savedSize !== null
+      ) {
+
+        const parsed =
+          Number(
+            savedSize
+          );
+
+
+        if (
+          Number.isFinite(parsed)
+        ) {
+
+          iconSize =
+            Math.max(
+              MIN_ICON_SIZE,
+              Math.min(
+                MAX_ICON_SIZE,
+                parsed
+              )
+            );
+
+        }
+
+      }
+
+
+      if (
+        savedTransparent !== null
+      ) {
+
+        transparentBackground =
+          savedTransparent ===
+          "true";
+
+      }
+
+    }
+
+    catch (e) {
+
+      console.warn(
+        "Could not load display settings",
+        e
+      );
+
+    }
+
+
+    iconSizeSlider.value =
+      iconSize;
+
+    transparentToggle.classList.toggle(
+      "on",
+      transparentBackground
+    );
+
+    applyDisplaySettings();
+
+  }
+
+
+  /* ================================================================
+     SAVE DISPLAY SETTINGS
+     ================================================================ */
+
+  function saveDisplaySettings() {
+
+    try {
+
+      localStorage.setItem(
+        "zamorak_icon_size",
+        String(
+          iconSize
+        )
+      );
+
+      localStorage.setItem(
+        "zamorak_transparent",
+        String(
+          transparentBackground
+        )
+      );
+
+    }
+
+    catch (e) {
+
+      console.warn(
+        "Could not save display settings",
+        e
+      );
+
+    }
+
+  }
+
+
+  /* ================================================================
+     APPLY DISPLAY SETTINGS
+     ================================================================ */
+
+  function applyDisplaySettings() {
+
+    /*
+     * The image is deliberately slightly smaller than the box
+     * so the ability icon has a little breathing room.
+     */
+    const imageSize =
+      Math.max(
+        16,
+        Math.round(
+          iconSize *
+          0.78
+        )
+      );
+
+
+    document.body.style.setProperty(
+      "--icon-size",
+      iconSize + "px"
+    );
+
+
+    document.body.style.setProperty(
+      "--icon-image-size",
+      imageSize + "px"
+    );
+
+
+    document.body.classList.toggle(
+      "transparent-mode",
+      transparentBackground
+    );
+
+
+    iconSizeSlider.value =
+      iconSize;
+
+
+    iconSizeValue.textContent =
+      iconSize + "px";
+
+
+    transparentToggle.classList.toggle(
+      "on",
+      transparentBackground
+    );
+
+
+    saveDisplaySettings();
+
+  }
+
+
+  /* ================================================================
+     ICON SIZE SLIDER
+     ================================================================ */
+
+  iconSizeSlider.addEventListener(
+    "input",
+    () => {
+
+      iconSize =
+        Number(
+          iconSizeSlider.value
+        );
+
+
+      applyDisplaySettings();
+
+    }
+  );
+
+
+  /* ================================================================
+     TRANSPARENT TOGGLE
+     ================================================================ */
+
+  transparentToggle.addEventListener(
+    "click",
+    () => {
+
+      transparentBackground =
+        !transparentBackground;
+
+
+      applyDisplaySettings();
+
+
+      log(
+        "Transparent background " +
+        (
+          transparentBackground
+            ? "enabled"
+            : "disabled"
+        ),
+        "info"
+      );
+
+    }
+  );
 
 
   /* ================================================================
@@ -696,12 +1294,19 @@
     () => {
 
       const showingSettings =
-        settings.style.display === "block";
+        settings.style.display ===
+        "block";
 
-      if (showingSettings) {
 
-        settings.style.display = "none";
-        cueBoard.style.display = "block";
+      if (
+        showingSettings
+      ) {
+
+        settings.style.display =
+          "none";
+
+        cueBoard.style.display =
+          "block";
 
         settingsBtn.textContent =
           "⚙ Settings";
@@ -710,8 +1315,11 @@
 
       else {
 
-        settings.style.display = "block";
-        cueBoard.style.display = "none";
+        settings.style.display =
+          "block";
+
+        cueBoard.style.display =
+          "none";
 
         settingsBtn.textContent =
           "← Cue Board";
@@ -726,30 +1334,50 @@
      LOGGING
      ================================================================ */
 
-  function setStatus(msg, cls = "") {
+  function setStatus(
+    msg,
+    cls = ""
+  ) {
 
-    statusEl.textContent = msg;
-    statusEl.className = "status " + cls;
+    statusEl.textContent =
+      msg;
+
+    statusEl.className =
+      "status " +
+      cls;
 
   }
 
 
-  function log(msg, cls = "") {
+  function log(
+    msg,
+    cls = ""
+  ) {
 
     const d =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    d.className = cls;
+
+    d.className =
+      cls;
+
 
     d.textContent =
       new Date().toLocaleTimeString() +
       "  " +
       msg;
 
-    logEl.prepend(d);
+
+    logEl.prepend(
+      d
+    );
+
 
     while (
-      logEl.children.length > 80
+      logEl.children.length >
+      80
     ) {
 
       logEl.removeChild(
@@ -763,50 +1391,73 @@
 
   /* ================================================================
      GAMEPLAY CUE DISPLAY
-
-     This is the important new part.
-
-     The main app displays ONLY the actions.
-     It deliberately does NOT display cue.title.
      ================================================================ */
 
-  function renderCue(id) {
+  function renderCue(
+    id
+  ) {
 
     const cue =
       CUES[id];
 
-    if (!cue) {
+
+    if (
+      !cue
+    ) {
+
       return;
+
     }
+
 
     currentCue =
       id;
 
+
     waiting.style.display =
       "none";
+
 
     cueDisplay.style.display =
       "flex";
 
-    cueDisplay.style.borderColor =
-      `rgb(${cue.color[0]}, ${cue.color[1]}, ${cue.color[2]})`;
 
-    actionsEl.innerHTML = "";
+    cueDisplay.style.borderColor =
+      `rgb(
+        ${cue.color[0]},
+        ${cue.color[1]},
+        ${cue.color[2]}
+      )`;
+
+
+    actionsEl.innerHTML =
+      "";
 
 
     cue.actions.forEach(
-      (action, index) => {
+      (
+        action,
+        index
+      ) => {
 
-        if (index > 0) {
+
+        if (
+          index > 0
+        ) {
 
           const arrow =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
+
 
           arrow.className =
             "arrow";
 
+
           arrow.textContent =
             "→";
+
 
           actionsEl.appendChild(
             arrow
@@ -815,21 +1466,34 @@
         }
 
 
-        if (action.type === "icon") {
+        if (
+          action.type ===
+          "icon"
+        ) {
 
           const box =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
+
 
           box.className =
             "action icon";
 
+
           const img =
-            document.createElement("img");
+            document.createElement(
+              "img"
+            );
+
 
           img.src =
             action.src;
 
-          img.alt = "";
+
+          img.alt =
+            "";
+
 
           img.onerror =
             () => {
@@ -837,14 +1501,17 @@
               box.className =
                 "action text";
 
+
               box.textContent =
                 "ICON MISSING";
 
             };
 
+
           box.appendChild(
             img
           );
+
 
           actionsEl.appendChild(
             box
@@ -855,13 +1522,18 @@
         else {
 
           const box =
-            document.createElement("div");
+            document.createElement(
+              "div"
+            );
+
 
           box.className =
             "action text";
 
+
           box.textContent =
             action.text;
+
 
           actionsEl.appendChild(
             box
@@ -880,13 +1552,17 @@
     currentCue =
       null;
 
+
     cueDisplay.style.display =
       "none";
+
 
     waiting.style.display =
       "flex";
 
-    actionsEl.innerHTML = "";
+
+    actionsEl.innerHTML =
+      "";
 
   }
 
@@ -895,12 +1571,17 @@
      ALT1 COLOUR
      ================================================================ */
 
-  function color(r, g, b) {
+  function color(
+    r,
+    g,
+    b
+  ) {
 
     const lib =
       window.A1lib ||
       window.a1lib ||
       null;
+
 
     if (
       lib &&
@@ -915,6 +1596,7 @@
       );
 
     }
+
 
     return (
       (
@@ -931,22 +1613,46 @@
   const COLORS = {
 
     black:
-      color(0, 0, 0),
+      color(
+        0,
+        0,
+        0
+      ),
 
     white:
-      color(255, 255, 255),
+      color(
+        255,
+        255,
+        255
+      ),
 
     yellow:
-      color(255, 235, 40),
+      color(
+        255,
+        235,
+        40
+      ),
 
     red:
-      color(255, 30, 30),
+      color(
+        255,
+        30,
+        30
+      ),
 
     green:
-      color(0, 255, 80),
+      color(
+        0,
+        255,
+        80
+      ),
 
     blue:
-      color(60, 160, 255)
+      color(
+        60,
+        160,
+        255
+      )
 
   };
 
@@ -1019,7 +1725,12 @@
   ) {
 
     const shadow =
-      color(0, 0, 0);
+      color(
+        0,
+        0,
+        0
+      );
+
 
     alt1.overLayText(
       text,
@@ -1029,6 +1740,7 @@
       y + 3,
       duration
     );
+
 
     alt1.overLayText(
       text,
@@ -1056,11 +1768,14 @@
       size *
       0.48;
 
+
     const x =
       Math.round(
         cx -
-        approxWidth / 2
+        approxWidth /
+        2
       );
+
 
     textWithShadow(
       text,
@@ -1076,29 +1791,31 @@
 
   /* ================================================================
      SHOW CUE
-
-     Native Alt1 overlay is retained for now, but the mechanic
-     name is removed from it too.
-
-     Icons remain in the HTML Cue Board because classic Alt1's
-     overlay API does not provide the simple arbitrary-PNG overlay
-     call we would need here.
      ================================================================ */
 
-  function showBanner(id) {
+  function showBanner(
+    id
+  ) {
 
     const cue =
       CUES[id];
 
+
     if (
       !cue
     ) {
+
       return;
+
     }
 
 
-    /* Update the actual Cue Board immediately. */
-    renderCue(id);
+    /*
+     * Update the actual Cue Board immediately.
+     */
+    renderCue(
+      id
+    );
 
 
     if (
@@ -1141,6 +1858,7 @@
         "zamcue"
       );
 
+
       alt1.overLaySetGroup(
         "zamcue"
       );
@@ -1148,17 +1866,21 @@
 
       const cx =
         Math.round(
-          alt1.rsWidth / 2
+          alt1.rsWidth /
+          2
         );
+
 
       const cy =
         Math.round(
-          alt1.rsHeight / 2
+          alt1.rsHeight /
+          2
         );
 
 
       const panelW =
         720;
+
 
       const panelH =
         155;
@@ -1167,13 +1889,16 @@
       const x =
         cx -
         Math.round(
-          panelW / 2
+          panelW /
+          2
         );
+
 
       const y =
         cy -
         Math.round(
-          panelH / 2
+          panelH /
+          2
         );
 
 
@@ -1220,18 +1945,21 @@
 
       /*
        * NO MECHANIC NAME.
-       *
-       * Build the overlay from the same cue-board actions.
        */
       const overlayText =
         cue.actions
           .map(
             action =>
-              action.type === "icon"
-                ? iconName(action.src)
+              action.type ===
+              "icon"
+                ? iconName(
+                    action.src
+                  )
                 : action.text
           )
-          .join("  →  ");
+          .join(
+            "  →  "
+          );
 
 
       centeredText(
@@ -1268,7 +1996,9 @@
   }
 
 
-  function iconName(src) {
+  function iconName(
+    src
+  ) {
 
     const names = {
 
@@ -1298,6 +2028,7 @@
 
     };
 
+
     return (
       names[src] ||
       ""
@@ -1315,7 +2046,9 @@
     if (
       !window.alt1
     ) {
+
       return;
+
     }
 
 
@@ -1325,6 +2058,7 @@
         "zamcue-test"
       );
 
+
       alt1.overLaySetGroup(
         "zamcue-test"
       );
@@ -1332,7 +2066,8 @@
 
       const cx =
         Math.round(
-          alt1.rsWidth / 2
+          alt1.rsWidth /
+          2
         );
 
 
@@ -1360,34 +2095,53 @@
 
       centeredText(
         "RED TEST",
-        color(255, 0, 0),
+        color(
+          255,
+          0,
+          0
+        ),
         32,
         cx,
         120,
         8000
       );
 
+
       centeredText(
         "GREEN TEST",
-        color(0, 255, 0),
+        color(
+          0,
+          255,
+          0
+        ),
         32,
         cx,
         170,
         8000
       );
 
+
       centeredText(
         "BLUE TEST",
-        color(0, 100, 255),
+        color(
+          0,
+          100,
+          255
+        ),
         32,
         cx,
         220,
         8000
       );
 
+
       centeredText(
         "WHITE TEST",
-        color(255, 255, 255),
+        color(
+          255,
+          255,
+          255
+        ),
         32,
         cx,
         270,
@@ -1453,10 +2207,14 @@
     e => {
 
       if (
-        e.target.tagName === "INPUT" ||
-        e.target.tagName === "TEXTAREA"
+        e.target.tagName ===
+          "INPUT" ||
+        e.target.tagName ===
+          "TEXTAREA"
       ) {
+
         return;
+
       }
 
 
@@ -1475,7 +2233,8 @@
 
 
       if (
-        e.key === "9"
+        e.key ===
+        "9"
       ) {
 
         e.preventDefault();
@@ -1577,12 +2336,15 @@
         "err"
       );
 
+
       autoEnabled =
         false;
+
 
       autoToggle.classList.remove(
         "on"
       );
+
 
       return;
 
@@ -1762,6 +2524,7 @@
         pollTimer
       );
 
+
       pollTimer =
         null;
 
@@ -1865,11 +2628,16 @@
 
 
     if (
-      typeof obj === "object" &&
-      typeof obj.x === "number" &&
-      typeof obj.y === "number" &&
-      typeof obj.width === "number" &&
-      typeof obj.height === "number" &&
+      typeof obj ===
+        "object" &&
+      typeof obj.x ===
+        "number" &&
+      typeof obj.y ===
+        "number" &&
+      typeof obj.width ===
+        "number" &&
+      typeof obj.height ===
+        "number" &&
       obj.width > 30 &&
       obj.height > 10
     ) {
@@ -1902,7 +2670,8 @@
 
 
     if (
-      typeof obj !== "object"
+      typeof obj !==
+      "object"
     ) {
 
       return null;
@@ -1961,6 +2730,7 @@
         "info"
       );
 
+
       return;
 
     }
@@ -1971,6 +2741,7 @@
       alt1.overLayClearGroup(
         "zamcue-chat"
       );
+
 
       alt1.overLaySetGroup(
         "zamcue-chat"
@@ -2174,6 +2945,7 @@
             "warn"
           );
 
+
           return;
 
         }
@@ -2270,20 +3042,20 @@
       clean(
         text
       )
-      .replace(
-        /\s/g,
-        ""
-      );
+        .replace(
+          /\s/g,
+          ""
+        );
 
 
     const b =
       clean(
         trigger
       )
-      .replace(
-        /\s/g,
-        ""
-      );
+        .replace(
+          /\s/g,
+          ""
+        );
 
 
     if (
@@ -2312,7 +3084,8 @@
   ) {
 
     for (
-      const line of lines
+      const line of
+      lines
     ) {
 
       let raw =
@@ -2348,9 +3121,12 @@
           line.fragments
             .map(
               f =>
-                f.text || ""
+                f.text ||
+                ""
             )
-            .join("");
+            .join(
+              ""
+            );
 
       }
 
@@ -2383,7 +3159,8 @@
 
       if (
         !text ||
-        text.length < 4
+        text.length <
+        4
       ) {
 
         continue;
@@ -2397,8 +3174,9 @@
 
       if (
         text !==
-        lastLogged &&
-        text.length > 8
+          lastLogged &&
+        text.length >
+          8
       ) {
 
         lastLogged =
@@ -2471,6 +3249,12 @@
 
   function init() {
 
+    /*
+     * Load our visual settings first.
+     */
+    loadDisplaySettings();
+
+
     if (
       !window.alt1
     ) {
@@ -2492,8 +3276,10 @@
 
 
     if (
-      alt1.permissionPixel === false ||
-      alt1.permissionOverlay === false
+      alt1.permissionPixel ===
+        false ||
+      alt1.permissionOverlay ===
+        false
     ) {
 
       setStatus(
@@ -2529,7 +3315,7 @@
         if (
           lib &&
           typeof lib.mixColor ===
-          "function"
+            "function"
         ) {
 
           log(
