@@ -61,7 +61,7 @@
       border-radius: 8px;
       cursor: pointer;
       color: #fff;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
       transition: transform 0.08s, filter 0.08s;
     }
 
@@ -81,37 +81,14 @@
       margin-top: 2px;
     }
 
-    .stun {
-      background: #dc2626;
-    }
-
-    .slam {
-      background: #ea580c;
-    }
-
-    .cage {
-      background: #7c3aed;
-    }
-
-    .curl {
-      background: #2563eb;
-    }
-
-    .infernus {
-      background: #b45309;
-    }
-
-    .channel {
-      background: #be185d;
-    }
-
-    .rune {
-      background: #059669;
-    }
-
-    .def {
-      background: #4b5563;
-    }
+    .stun     { background: #dc2626; }
+    .slam     { background: #ea580c; }
+    .cage     { background: #7c3aed; }
+    .curl     { background: #2563eb; }
+    .infernus { background: #b45309; }
+    .channel  { background: #be185d; }
+    .rune     { background: #059669; }
+    .def      { background: #4b5563; }
 
     .auto-row {
       display: flex;
@@ -202,6 +179,7 @@
 
   <div class="auto-row">
     <label>Auto-read chat</label>
+
     <div
       id="autoToggle"
       class="toggle"
@@ -281,7 +259,7 @@
 
 
   <!-- =========================================================
-       OFFICIAL ALT1 LIBRARIES
+       ALT1 LIBRARIES
        ========================================================= -->
 
   <script src="https://unpkg.com/alt1@0.1.3/dist/base/index.js"></script>
@@ -299,7 +277,7 @@
 
       stun: {
         title: "STUN HIM NOW",
-        text: "Freedom / Anticipation → Stun Zamorak",
+        text: "Freedom / Anticipation → STUN ZAMORAK",
         color: [220, 38, 38],
         duration: 4000,
         triggers: [
@@ -310,7 +288,7 @@
 
       slam: {
         title: "SLAM – DEBILITATE",
-        text: "Pray Melee · Walk under · Debilitate",
+        text: "PRAY MELEE  •  WALK UNDER  •  DEBILITATE",
         color: [234, 88, 12],
         duration: 5000,
         triggers: [
@@ -321,7 +299,7 @@
 
       cage: {
         title: "CAGE – PRAY MAGE",
-        text: "Pray Mage · Debilitate or Devotion",
+        text: "PRAY MAGE  •  DEBILITATE / DEVOTION",
         color: [124, 58, 237],
         duration: 5000,
         triggers: [
@@ -332,7 +310,7 @@
 
       curl: {
         title: "CURL UP – RESONATE",
-        text: "Equip shield · Resonate the hit",
+        text: "EQUIP SHIELD  •  RESONATE THE HIT",
         color: [37, 99, 235],
         duration: 5000,
         triggers: [
@@ -343,7 +321,7 @@
 
       infernus: {
         title: "INFERNUS",
-        text: "Match rune → Stun Zammy → Finish demon\n(500%+: all on rune together)",
+        text: "MATCH RUNE  •  STUN ZAMMY  •  FINISH DEMON",
         color: [180, 83, 9],
         duration: 7000,
         triggers: [
@@ -354,7 +332,7 @@
 
       channel: {
         title: "CHANNELER / WITCH",
-        text: "Witch in Infernus – go kill her\n(500%+: starts with Asphyxiate)",
+        text: "KILL THE WITCH IN INFERNUS",
         color: [190, 24, 93],
         duration: 6000,
         triggers: [
@@ -364,7 +342,7 @@
 
       rune: {
         title: "RUNE SMOKE",
-        text: "Anticipate / Freedom over black smoke",
+        text: "ANTICIPATE / FREEDOM OVER BLACK SMOKE",
         color: [5, 150, 105],
         duration: 4500,
         triggers: [
@@ -376,7 +354,7 @@
 
       def: {
         title: "DEFENSIVE",
-        text: "Debilitate · Reflect · Devotion · Protect",
+        text: "DEBILITATE  •  REFLECT  •  DEVOTION  •  PROTECT",
         color: [75, 85, 99],
         duration: 4000,
         triggers: []
@@ -394,12 +372,19 @@
     let reader = null;
     let pollTimer = null;
     let foundChat = false;
-
     let lastLogged = '';
 
-    const statusEl = document.getElementById('status');
-    const logEl = document.getElementById('log');
-    const autoToggle = document.getElementById('autoToggle');
+    let currentChatRect = null;
+
+
+    const statusEl =
+      document.getElementById('status');
+
+    const logEl =
+      document.getElementById('log');
+
+    const autoToggle =
+      document.getElementById('autoToggle');
 
 
     // =========================================================
@@ -420,7 +405,8 @@
 
     function log(msg, cls = '') {
 
-      const d = document.createElement('div');
+      const d =
+        document.createElement('div');
 
       d.className = cls;
 
@@ -431,109 +417,392 @@
 
       logEl.prepend(d);
 
-      while (logEl.children.length > 50) {
-        logEl.removeChild(logEl.lastChild);
+      while (
+        logEl.children.length > 60
+      ) {
+
+        logEl.removeChild(
+          logEl.lastChild
+        );
+
       }
 
     }
 
 
     // =========================================================
-    // RGB → ALT1 COLOUR
+    // ALT1 COLOUR
+    //
+    // IMPORTANT:
+    // Alt1 expects an RGBA colour integer.
+    // Prefer A1lib.mixColor(), which is the documented
+    // helper used by Alt1 applications.
     // =========================================================
 
-    function rgbToHex(rgb) {
+    function altColor(
+      r,
+      g,
+      b,
+      a = 255
+    ) {
+
+      const lib =
+        window.A1lib ||
+        window.a1lib ||
+        null;
+
+
+      if (
+        lib &&
+        typeof lib.mixColor === 'function'
+      ) {
+
+        return lib.mixColor(
+          r,
+          g,
+          b,
+          a
+        );
+
+      }
+
+
+      /*
+       * Fallback.
+
+       * This is only used if A1lib isn't exposed.
+       * The normal path above should be used in Alt1.
+       */
 
       return (
-        ((rgb[0] & 255) << 16) |
-        ((rgb[1] & 255) << 8) |
-        (rgb[2] & 255)
+        ((r & 255) << 24) |
+        ((g & 255) << 16) |
+        ((b & 255) << 8) |
+        (a & 255)
       );
 
     }
 
 
     // =========================================================
-    // CUE OVERLAY
+    // DRAW FILLED RECTANGLE
     //
-    // IMPORTANT:
-    // Alt1 overLayRect() draws an outline rather than a filled
-    // rectangle. We therefore build a dark-looking panel using
-    // several thick rectangles and strong text shadows.
+    // Alt1's documented overLayRect() is an OUTLINE.
+    //
+    // To make an actual filled rectangle we draw horizontal
+    // lines very close together.
+    //
+    // This is deliberately kept in one function so the rest
+    // of the application doesn't care how the fill works.
     // =========================================================
 
-    function showBanner(cueId) {
-
-      const cue = CUES[cueId];
-
-      if (!cue || !window.alt1) {
-
-        log(
-          'showBanner failed – no cue or no alt1',
-          'info'
-        );
-
-        return;
-      }
-
-
-      const now = Date.now();
-
-
-      // Prevent the same cue from firing repeatedly while
-      // OCR sees the same chat line over several frames.
+    function drawFilledRect(
+      color,
+      x,
+      y,
+      w,
+      h,
+      duration,
+      lineHeight = 2
+    ) {
 
       if (
-        lastFired[cueId] &&
-        now - lastFired[cueId] < 2500
+        w <= 0 ||
+        h <= 0
       ) {
         return;
       }
 
 
-      lastFired[cueId] = now;
+      const step =
+        Math.max(
+          1,
+          lineHeight
+        );
+
+
+      for (
+        let yy = y;
+        yy < y + h;
+        yy += step
+      ) {
+
+        const remaining =
+          (y + h) - yy;
+
+        const width =
+          Math.min(
+            w,
+            Math.max(
+              1,
+              remaining > 0
+                ? w
+                : 1
+            )
+          );
+
+
+        alt1.overLayLine(
+          color,
+          step,
+          x,
+          yy,
+          x + width,
+          yy,
+          duration
+        );
+
+      }
+
+    }
+
+
+    // =========================================================
+    // DRAW OUTLINE
+    // =========================================================
+
+    function drawOutline(
+      color,
+      x,
+      y,
+      w,
+      h,
+      duration,
+      width = 5
+    ) {
+
+      alt1.overLayRect(
+        color,
+        x,
+        y,
+        w,
+        h,
+        duration,
+        width
+      );
+
+    }
+
+
+    // =========================================================
+    // TEXT WITH BLACK OUTLINE
+    //
+    // Alt1's basic overLayText() doesn't provide an outline.
+    // So draw black text slightly offset first, then draw the
+    // actual text on top.
+    // =========================================================
+
+    function drawOutlinedText(
+      text,
+      color,
+      size,
+      x,
+      y,
+      duration,
+      offset = 2
+    ) {
+
+      const shadow =
+        altColor(
+          0,
+          0,
+          0,
+          255
+        );
+
+
+      alt1.overLayText(
+        text,
+        shadow,
+        size,
+        x + offset,
+        y + offset,
+        duration
+      );
+
+
+      alt1.overLayText(
+        text,
+        color,
+        size,
+        x,
+        y,
+        duration
+      );
+
+    }
+
+
+    // =========================================================
+    // CUE BANNER
+    // =========================================================
+
+    function showBanner(cueId) {
+
+      const cue =
+        CUES[cueId];
+
+
+      if (
+        !cue ||
+        !window.alt1
+      ) {
+
+        log(
+          'showBanner failed – no cue or no Alt1',
+          'info'
+        );
+
+        return;
+
+      }
+
+
+      const now =
+        Date.now();
+
+
+      // Same cue cannot fire repeatedly while OCR continues
+      // seeing the same line.
+
+      if (
+        lastFired[cueId] &&
+        now -
+        lastFired[cueId] <
+        2500
+      ) {
+
+        return;
+
+      }
+
+
+      lastFired[cueId] =
+        now;
 
 
       try {
 
         const cx =
-          Math.round(alt1.rsWidth / 2);
+          Math.round(
+            alt1.rsWidth / 2
+          );
 
         const cy =
-          Math.round(alt1.rsHeight / 2);
-
-
-        const panelX = cx - 340;
-        const panelY = cy - 85;
-        const panelW = 680;
-        const panelH = 165;
-
-
-        const colour =
-          rgbToHex(cue.color);
+          Math.round(
+            alt1.rsHeight / 2
+          );
 
 
         // -----------------------------------------------------
-        // Clear previous cue overlay
+        // Panel dimensions
         // -----------------------------------------------------
 
-        alt1.overLayClearGroup('zamcue');
+        const panelW = 700;
+        const panelH = 155;
 
-        alt1.overLaySetGroup('zamcue');
+        const panelX =
+          cx -
+          Math.floor(
+            panelW / 2
+          );
+
+        const panelY =
+          cy -
+          Math.floor(
+            panelH / 2
+          );
 
 
         // -----------------------------------------------------
-        // OUTER WARNING BORDER
+        // Colours
         // -----------------------------------------------------
 
-        alt1.overLayRect(
-          colour,
+        const background =
+          altColor(
+            8,
+            8,
+            12,
+            235
+          );
+
+
+        const border =
+          altColor(
+            cue.color[0],
+            cue.color[1],
+            cue.color[2],
+            255
+          );
+
+
+        const innerBorder =
+          altColor(
+            255,
+            255,
+            255,
+            220
+          );
+
+
+        const yellow =
+          altColor(
+            255,
+            230,
+            60,
+            255
+          );
+
+
+        const white =
+          altColor(
+            255,
+            255,
+            255,
+            255
+          );
+
+
+        // -----------------------------------------------------
+        // Clear previous banner
+        // -----------------------------------------------------
+
+        alt1.overLayClearGroup(
+          'zamcue'
+        );
+
+        alt1.overLaySetGroup(
+          'zamcue'
+        );
+
+
+        // -----------------------------------------------------
+        // FILLED BACKGROUND
+        // -----------------------------------------------------
+
+        drawFilledRect(
+          background,
           panelX,
           panelY,
           panelW,
           panelH,
           cue.duration,
-          12
+          3
+        );
+
+
+        // -----------------------------------------------------
+        // COLOURED BORDER
+        // -----------------------------------------------------
+
+        drawOutline(
+          border,
+          panelX,
+          panelY,
+          panelW,
+          panelH,
+          cue.duration,
+          10
         );
 
 
@@ -541,50 +810,14 @@
         // INNER WHITE BORDER
         // -----------------------------------------------------
 
-        alt1.overLayRect(
-          0xFFFFFF,
-          panelX + 8,
-          panelY + 8,
-          panelW - 16,
-          panelH - 16,
+        drawOutline(
+          innerBorder,
+          panelX + 9,
+          panelY + 9,
+          panelW - 18,
+          panelH - 18,
           cue.duration,
-          3
-        );
-
-
-        // -----------------------------------------------------
-        // ADD MORE OUTLINE LAYERS
-        //
-        // These don't technically fill the rectangle, but
-        // they make the banner substantially more visible
-        // against the RS3 game background.
-        // -----------------------------------------------------
-
-        alt1.overLayRect(
-          colour,
-          panelX + 15,
-          panelY + 15,
-          panelW - 30,
-          panelH - 30,
-          cue.duration,
-          4
-        );
-
-
-        // -----------------------------------------------------
-        // TITLE SHADOW
-        // -----------------------------------------------------
-
-        alt1.overLayTextEx(
-          cue.title,
-          0x000000,
-          46,
-          cx + 3,
-          cy - 25 + 3,
-          cue.duration,
-          '',
-          true,
-          true
+          2
         );
 
 
@@ -592,60 +825,53 @@
         // TITLE
         // -----------------------------------------------------
 
-        alt1.overLayTextEx(
+        drawOutlinedText(
           cue.title,
-          0xFFFF00,
-          46,
-          cx,
+          yellow,
+          42,
+          cx - 210,
           cy - 25,
           cue.duration,
-          '',
-          true,
-          true
-        );
-
-
-        // -----------------------------------------------------
-        // INSTRUCTION SHADOW
-        // -----------------------------------------------------
-
-        alt1.overLayTextEx(
-          cue.text,
-          0x000000,
-          23,
-          cx + 3,
-          cy + 32 + 3,
-          cue.duration,
-          '',
-          true,
-          true
+          3
         );
 
 
         // -----------------------------------------------------
         // INSTRUCTION
+        //
+        // We use two separate lines for better readability.
         // -----------------------------------------------------
 
-        alt1.overLayTextEx(
-          cue.text,
-          0xFFFFFF,
-          23,
-          cx,
-          cy + 32,
+        let instruction =
+          cue.text;
+
+
+        if (
+          instruction.includes('\n')
+        ) {
+
+          instruction =
+            instruction
+              .split('\n')
+              .join('  ');
+
+        }
+
+
+        drawOutlinedText(
+          instruction,
+          white,
+          21,
+          cx - 300,
+          cy + 25,
           cue.duration,
-          '',
-          true,
-          true
+          2
         );
 
 
         log(
           'BANNER → ' +
-          cue.title +
-          ' at ' +
-          cx +
-          ',' +
-          cy,
+          cue.title,
           'hit'
         );
 
@@ -655,7 +881,10 @@
 
         log(
           'Banner overlay error: ' +
-          (e.message || e),
+          (
+            e.message ||
+            e
+          ),
           'info'
         );
 
@@ -669,22 +898,27 @@
     // =========================================================
 
     document
-      .querySelectorAll('button.cue')
+      .querySelectorAll(
+        'button.cue'
+      )
       .forEach(btn => {
 
-        btn.addEventListener('click', () => {
+        btn.addEventListener(
+          'click',
+          () => {
 
-          showBanner(
-            btn.dataset.id
-          );
+            showBanner(
+              btn.dataset.id
+            );
 
-        });
+          }
+        );
 
       });
 
 
     // =========================================================
-    // KEYBOARD SHORTCUTS
+    // KEYBOARD
     // =========================================================
 
     document.addEventListener(
@@ -695,7 +929,9 @@
           e.target.tagName === 'INPUT' ||
           e.target.tagName === 'TEXTAREA'
         ) {
+
           return;
+
         }
 
 
@@ -713,7 +949,9 @@
         };
 
 
-        if (map[e.key]) {
+        if (
+          map[e.key]
+        ) {
 
           e.preventDefault();
 
@@ -745,7 +983,9 @@
         );
 
 
-        if (autoEnabled) {
+        if (
+          autoEnabled
+        ) {
 
           startAuto();
 
@@ -755,12 +995,18 @@
 
           stopAuto();
 
+          alt1.overLayClearGroup(
+            'zamcue-chat'
+          );
+
+
           setStatus(
             foundChat
               ? 'Chat found – Auto OFF'
               : 'Auto OFF',
             ''
           );
+
 
           log(
             'Auto-read disabled'
@@ -778,26 +1024,37 @@
 
     function startAuto() {
 
-      if (!window.alt1) {
+      if (
+        !window.alt1
+      ) {
 
         setStatus(
           'Alt1 not detected',
           'err'
         );
 
-        autoEnabled = false;
 
-        autoToggle.classList.remove('on');
+        autoEnabled =
+          false;
+
+
+        autoToggle.classList.remove(
+          'on'
+        );
+
 
         return;
+
       }
 
 
       // -------------------------------------------------------
-      // Create ChatBoxReader
+      // ChatBoxReader
       // -------------------------------------------------------
 
-      if (!reader) {
+      if (
+        !reader
+      ) {
 
         try {
 
@@ -809,14 +1066,17 @@
             );
 
 
-          if (CB) {
+          if (
+            CB
+          ) {
 
-            reader = new CB();
+            reader =
+              new CB();
 
 
-            // -------------------------------------------------
+            // -----------------------------------------------
             // Zamorak chat colours
-            // -------------------------------------------------
+            // -----------------------------------------------
 
             const lib =
               window.A1lib ||
@@ -826,11 +1086,13 @@
 
             if (
               lib &&
-              lib.mixColor
+              typeof lib.mixColor ===
+              'function'
             ) {
 
               reader.readargs =
-                reader.readargs || {};
+                reader.readargs ||
+                {};
 
 
               reader.readargs.colors = [
@@ -875,16 +1137,7 @@
 
 
               log(
-                'Zamorak colours loaded (green + red)',
-                'info'
-              );
-
-            }
-
-            else {
-
-              log(
-                'A1lib not found – colours may be limited',
+                'Zamorak colours loaded',
                 'info'
               );
 
@@ -901,7 +1154,7 @@
           else {
 
             log(
-              'ChatBoxReader global not found – using limited mode',
+              'ChatBoxReader global not found',
               'info'
             );
 
@@ -922,20 +1175,34 @@
       }
 
 
-      // -------------------------------------------------------
-      // Force fresh chatbox detection
-      // -------------------------------------------------------
+      // Force fresh detection.
 
-      if (reader) {
-        reader.pos = null;
+      if (
+        reader
+      ) {
+
+        reader.pos =
+          null;
+
       }
 
 
-      foundChat = false;
+      foundChat =
+        false;
 
 
-      if (pollTimer) {
-        clearInterval(pollTimer);
+      currentChatRect =
+        null;
+
+
+      if (
+        pollTimer
+      ) {
+
+        clearInterval(
+          pollTimer
+        );
+
       }
 
 
@@ -953,7 +1220,8 @@
 
 
       log(
-        'Auto-read started'
+        'Auto-read started',
+        'info'
       );
 
     }
@@ -965,13 +1233,16 @@
 
     function stopAuto() {
 
-      if (pollTimer) {
+      if (
+        pollTimer
+      ) {
 
         clearInterval(
           pollTimer
         );
 
-        pollTimer = null;
+        pollTimer =
+          null;
 
       }
 
@@ -979,19 +1250,21 @@
 
 
     // =========================================================
-    // RECURSIVELY FIND A RECTANGLE
-    //
-    // ChatBoxReader structures can vary. Instead of assuming
-    // reader.pos.mainbox.rect, search the position object for
-    // anything that looks like:
-    //
-    // { x, y, width, height }
+    // FIND RECTANGLE
     // =========================================================
 
-    function findRect(obj, depth = 0) {
+    function findRect(
+      obj,
+      depth = 0
+    ) {
 
-      if (!obj || depth > 6) {
+      if (
+        !obj ||
+        depth > 7
+      ) {
+
         return null;
+
       }
 
 
@@ -1001,16 +1274,16 @@
         typeof obj.y === 'number' &&
         typeof obj.width === 'number' &&
         typeof obj.height === 'number' &&
-        obj.width > 10 &&
+        obj.width > 20 &&
         obj.height > 10
       ) {
 
         return {
 
-          x: obj.x,
-          y: obj.y,
-          width: obj.width,
-          height: obj.height
+          x: Math.round(obj.x),
+          y: Math.round(obj.y),
+          width: Math.round(obj.width),
+          height: Math.round(obj.height)
 
         };
 
@@ -1020,12 +1293,15 @@
       if (
         typeof obj !== 'object'
       ) {
+
         return null;
+
       }
 
 
       for (
-        const key of Object.keys(obj)
+        const key
+        of Object.keys(obj)
       ) {
 
         try {
@@ -1037,8 +1313,12 @@
             );
 
 
-          if (result) {
+          if (
+            result
+          ) {
+
             return result;
+
           }
 
         }
@@ -1054,15 +1334,19 @@
 
 
     // =========================================================
-    // HIGHLIGHT CHATBOX
+    // CHATBOX HIGHLIGHT
     // =========================================================
 
-    function highlightChat(r) {
+    function highlightChat(
+      r
+    ) {
 
-      if (!r) {
+      if (
+        !r
+      ) {
 
         log(
-          'Chat found but no rectangle was available',
+          'Chat found but no rectangle found',
           'info'
         );
 
@@ -1072,6 +1356,10 @@
 
 
       try {
+
+        currentChatRect =
+          r;
+
 
         alt1.overLayClearGroup(
           'zamcue-chat'
@@ -1083,17 +1371,50 @@
 
 
         // -----------------------------------------------------
-        // Large green outer border
+        // Green semi-transparent fill
         // -----------------------------------------------------
 
-        alt1.overLayRect(
-          0x00FF00,
+        const fill =
+          altColor(
+            0,
+            255,
+            60,
+            35
+          );
+
+
+        drawFilledRect(
+          fill,
           r.x,
           r.y,
           r.width,
           r.height,
           10000,
-          8
+          3
+        );
+
+
+        // -----------------------------------------------------
+        // Green outer border
+        // -----------------------------------------------------
+
+        const green =
+          altColor(
+            0,
+            255,
+            60,
+            255
+          );
+
+
+        drawOutline(
+          green,
+          r.x,
+          r.y,
+          r.width,
+          r.height,
+          10000,
+          7
         );
 
 
@@ -1101,65 +1422,63 @@
         // Yellow inner border
         // -----------------------------------------------------
 
-        alt1.overLayRect(
-          0xFFFF00,
+        const yellow =
+          altColor(
+            255,
+            255,
+            0,
+            255
+          );
+
+
+        drawOutline(
+          yellow,
           r.x + 4,
           r.y + 4,
-          Math.max(1, r.width - 8),
-          Math.max(1, r.height - 8),
+          Math.max(
+            1,
+            r.width - 8
+          ),
+          Math.max(
+            1,
+            r.height - 8
+          ),
           10000,
-          3
+          2
         );
 
 
         // -----------------------------------------------------
-        // Detection label
+        // CHAT DETECTED label
         // -----------------------------------------------------
 
         const labelX =
-          r.x +
-          Math.floor(r.width / 2);
+          Math.round(
+            r.x +
+            r.width / 2
+          );
 
 
         const labelY =
           Math.max(
             20,
-            r.y - 18
+            r.y - 20
           );
 
 
-        // Shadow
-
-        alt1.overLayTextEx(
+        drawOutlinedText(
           'CHAT DETECTED',
-          0x000000,
-          19,
-          labelX + 2,
-          labelY + 2,
-          10000,
-          '',
-          true,
-          true
-        );
-
-
-        // Green text
-
-        alt1.overLayTextEx(
-          'CHAT DETECTED',
-          0x00FF00,
-          19,
-          labelX,
+          green,
+          18,
+          labelX - 70,
           labelY,
           10000,
-          '',
-          true,
-          true
+          2
         );
 
 
         log(
-          'Highlighted chat box at ' +
+          'Chat highlight: ' +
           r.x +
           ',' +
           r.y +
@@ -1167,7 +1486,7 @@
           r.width +
           'x' +
           r.height,
-          'info'
+          'hit'
         );
 
       }
@@ -1175,8 +1494,11 @@
       catch (e) {
 
         log(
-          'Highlight error: ' +
-          (e.message || e),
+          'Chat highlight error: ' +
+          (
+            e.message ||
+            e
+          ),
           'info'
         );
 
@@ -1186,7 +1508,84 @@
 
 
     // =========================================================
-    // CAPTURE / OCR TICK
+    // CAPTURE
+    // =========================================================
+
+    function getCapture() {
+
+      let img =
+        null;
+
+
+      const lib =
+        window.A1lib ||
+        window.a1lib ||
+        null;
+
+
+      try {
+
+        if (
+          lib &&
+          typeof lib.captureHoldFullRs ===
+          'function'
+        ) {
+
+          img =
+            lib.captureHoldFullRs();
+
+        }
+
+        else if (
+          lib &&
+          typeof lib.captureHold ===
+          'function'
+        ) {
+
+          img =
+            lib.captureHold(
+              0,
+              0,
+              alt1.rsWidth,
+              alt1.rsHeight
+            );
+
+        }
+
+        else if (
+          window.alt1 &&
+          typeof alt1.captureHoldFullRs ===
+          'function'
+        ) {
+
+          img =
+            alt1.captureHoldFullRs();
+
+        }
+
+      }
+
+      catch (e) {
+
+        log(
+          'Capture error: ' +
+          (
+            e.message ||
+            e
+          ),
+          'info'
+        );
+
+      }
+
+
+      return img;
+
+    }
+
+
+    // =========================================================
+    // AUTO TICK
     // =========================================================
 
     function tick() {
@@ -1195,172 +1594,151 @@
         !autoEnabled ||
         !window.alt1
       ) {
+
         return;
+
       }
 
 
       try {
 
         if (
-          reader &&
-          typeof reader.find === 'function'
+          !reader ||
+          typeof reader.find !==
+          'function'
         ) {
 
+          return;
 
-          // ---------------------------------------------------
-          // Capture RS3
-          // ---------------------------------------------------
-
-          let img = null;
+        }
 
 
-          const lib =
-            window.A1lib ||
-            window.a1lib ||
-            null;
+        const img =
+          getCapture();
 
 
-          if (lib) {
+        if (
+          !img
+        ) {
 
-            if (
-              lib.captureHoldFullRs
-            ) {
+          return;
 
-              img =
-                lib.captureHoldFullRs();
+        }
 
-            }
 
-            else if (
-              lib.captureHold
-            ) {
+        // -----------------------------------------------------
+        // Find chatbox
+        // -----------------------------------------------------
 
-              img =
-                lib.captureHold(
-                  0,
-                  0,
-                  alt1.rsWidth,
-                  alt1.rsHeight
-                );
+        if (
+          !reader.pos
+        ) {
 
-            }
-
-          }
+          const pos =
+            reader.find(
+              img
+            );
 
 
           if (
-            !img &&
-            window.alt1 &&
-            alt1.captureHoldFullRs
+            pos
           ) {
 
-            img =
-              alt1.captureHoldFullRs();
-
-          }
+            foundChat =
+              true;
 
 
-          // ---------------------------------------------------
-          // Find chatbox
-          // ---------------------------------------------------
-
-          if (!reader.pos) {
-
-            const pos =
-              reader.find(img);
+            setStatus(
+              'Chat found – watching…',
+              'ok'
+            );
 
 
-            if (pos) {
+            log(
+              'Chatbox located',
+              'hit'
+            );
 
-              foundChat = true;
 
+            // -----------------------------------------------
+            // Find actual rectangle in reader.pos
+            // -----------------------------------------------
 
-              setStatus(
-                'Chat found – watching…',
-                'ok'
+            const r =
+              findRect(
+                reader.pos
               );
 
 
-              log(
-                'Chatbox located',
-                'info'
+            if (
+              r
+            ) {
+
+              highlightChat(
+                r
               );
-
-
-              // -----------------------------------------------
-              // Find rectangle inside reader.pos
-              // -----------------------------------------------
-
-              const r =
-                findRect(
-                  reader.pos
-                );
-
-
-              if (r) {
-
-                highlightChat(r);
-
-              }
-
-              else {
-
-                log(
-                  'Chat found, but could not locate a rectangle',
-                  'info'
-                );
-
-
-                try {
-
-                  log(
-                    'Chat position keys: ' +
-                    Object.keys(
-                      reader.pos || {}
-                    ).join(', '),
-                    'info'
-                  );
-
-                }
-
-                catch (_) {}
-
-              }
 
             }
 
             else {
 
-              setStatus(
-                'Looking for chatbox… (keep it visible)',
-                'warn'
+              log(
+                'No rectangle found in reader.pos',
+                'info'
               );
 
-              return;
+
+              try {
+
+                log(
+                  'Position keys: ' +
+                  Object.keys(
+                    reader.pos
+                  ).join(', '),
+                  'info'
+                );
+
+              }
+
+              catch (_) {}
 
             }
 
           }
 
+          else {
 
-          // ---------------------------------------------------
-          // OCR chat
-          // ---------------------------------------------------
-
-          const lines =
-            reader.read(img);
-
-
-          if (
-            lines &&
-            lines.length
-          ) {
-
-            processLines(
-              lines
+            setStatus(
+              'Looking for chatbox… (keep it visible)',
+              'warn'
             );
 
+
+            return;
+
           }
+
+        }
+
+
+        // -----------------------------------------------------
+        // Read chat
+        // -----------------------------------------------------
+
+        const lines =
+          reader.read(
+            img
+          );
+
+
+        if (
+          lines &&
+          lines.length
+        ) {
+
+          processLines(
+            lines
+          );
 
         }
 
@@ -1368,10 +1746,9 @@
 
       catch (err) {
 
-        // Avoid flooding the log.
-
         if (
-          Math.random() < 0.05
+          Math.random() <
+          0.05
         ) {
 
           log(
@@ -1391,32 +1768,37 @@
 
 
     // =========================================================
-    // OCR NORMALISATION
-    //
-    // Removes punctuation and spacing differences so:
-    //
-    // You're already dead
-    // Youre already dead
-    // YOU'RE   ALREADY   DEAD
-    //
-    // all become comparable.
+    // CLEAN OCR
     // =========================================================
 
-    function clean(str) {
+    function clean(
+      str
+    ) {
 
-      return (str || '')
+      return (
+        str || ''
+      )
         .toString()
         .toLowerCase()
-        .replace(/['’]/g, '')
-        .replace(/[^a-z0-9\s]/g, ' ')
-        .replace(/\s+/g, ' ')
+        .replace(
+          /['’]/g,
+          ''
+        )
+        .replace(
+          /[^a-z0-9\s]/g,
+          ' '
+        )
+        .replace(
+          /\s+/g,
+          ' '
+        )
         .trim();
 
     }
 
 
     // =========================================================
-    // STRONGER OCR MATCH
+    // OCR MATCH
     // =========================================================
 
     function matchesTrigger(
@@ -1426,16 +1808,27 @@
 
       const a =
         clean(text)
-          .replace(/\s+/g, '');
+          .replace(
+            /\s+/g,
+            ''
+          );
 
 
       const b =
         clean(trigger)
-          .replace(/\s+/g, '');
+          .replace(
+            /\s+/g,
+            ''
+          );
 
 
-      if (!a || !b) {
+      if (
+        !a ||
+        !b
+      ) {
+
         return false;
+
       }
 
 
@@ -1445,28 +1838,29 @@
 
 
     // =========================================================
-    // PROCESS OCR LINES
+    // PROCESS OCR
     // =========================================================
 
-    function processLines(lines) {
+    function processLines(
+      lines
+    ) {
 
       for (
-        const line of lines
+        const line
+        of lines
       ) {
 
-
-        // -----------------------------------------------------
-        // ChatBoxReader normally provides .text.
-        // -----------------------------------------------------
-
-        let raw = '';
+        let raw =
+          '';
 
 
         if (
-          typeof line === 'string'
+          typeof line ===
+          'string'
         ) {
 
-          raw = line;
+          raw =
+            line;
 
         }
 
@@ -1475,7 +1869,8 @@
           line.text
         ) {
 
-          raw = line.text;
+          raw =
+            line.text;
 
         }
 
@@ -1487,7 +1882,8 @@
           raw =
             line.fragments
               .map(
-                f => f.text || ''
+                f =>
+                  f.text || ''
               )
               .join('');
 
@@ -1506,7 +1902,8 @@
 
           catch (_) {
 
-            raw = '';
+            raw =
+              '';
 
           }
 
@@ -1514,7 +1911,9 @@
 
 
         const text =
-          clean(raw);
+          clean(
+            raw
+          );
 
 
         if (
@@ -1528,15 +1927,17 @@
 
 
         // -----------------------------------------------------
-        // Debug OCR output
+        // Debug OCR
         // -----------------------------------------------------
 
         if (
-          text !== lastLogged &&
+          text !==
+          lastLogged &&
           text.length > 8
         ) {
 
-          lastLogged = text;
+          lastLogged =
+            text;
 
 
           log(
@@ -1552,12 +1953,14 @@
 
 
         // -----------------------------------------------------
-        // Check every cue
+        // Match cues
         // -----------------------------------------------------
 
         for (
           const [id, cue]
-          of Object.entries(CUES)
+          of Object.entries(
+            CUES
+          )
         ) {
 
           for (
@@ -1579,7 +1982,9 @@
               );
 
 
-              showBanner(id);
+              showBanner(
+                id
+              );
 
 
               return;
@@ -1601,7 +2006,9 @@
 
     function init() {
 
-      if (!window.alt1) {
+      if (
+        !window.alt1
+      ) {
 
         setStatus(
           'Open this page inside Alt1 Toolkit',
@@ -1610,7 +2017,7 @@
 
 
         log(
-          'Not running inside Alt1'
+          'Alt1 not detected'
         );
 
 
@@ -1620,12 +2027,14 @@
 
 
       // -------------------------------------------------------
-      // Permission check
+      // Permissions
       // -------------------------------------------------------
 
       if (
-        alt1.permissionPixel === false ||
-        alt1.permissionOverlay === false
+        alt1.permissionPixel ===
+        false ||
+        alt1.permissionOverlay ===
+        false
       ) {
 
         setStatus(
@@ -1643,7 +2052,7 @@
       else {
 
         setStatus(
-          'Ready – turn on Auto-read or press 1-8',
+          'Ready – turn on Auto-read or press 1–8',
           'ok'
         );
 
@@ -1651,7 +2060,7 @@
 
 
       // -------------------------------------------------------
-      // Library status
+      // Library check
       // -------------------------------------------------------
 
       setTimeout(
@@ -1673,7 +2082,7 @@
           else {
 
             log(
-              'Libraries present – buttons fully work',
+              'Alt1 detected; optional library globals not found',
               'info'
             );
 
@@ -1690,7 +2099,9 @@
     // START
     // =========================================================
 
-    if (window.alt1) {
+    if (
+      window.alt1
+    ) {
 
       init();
 
@@ -1707,7 +2118,7 @@
 
 
     // =========================================================
-    // EXPOSE FOR DEBUGGING
+    // DEBUG EXPORTS
     // =========================================================
 
     window.showBanner =
@@ -1718,6 +2129,9 @@
 
     window.processLines =
       processLines;
+
+    window.findRect =
+      findRect;
 
   </script>
 
