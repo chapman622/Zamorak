@@ -1569,6 +1569,47 @@
 
 
   /* ================================================================
+     TEXT WIDTH MEASUREMENT
+
+     Uses an offscreen canvas to measure text the way a real font
+     renderer would (accounting for wide letters like M/W vs narrow
+     ones like I or the arrow glyph), instead of a flat per-character
+     guess. Font here is a best-effort match to the overlay's look —
+     it won't be pixel-perfect against Alt1's own renderer, but it
+     tracks actual character-width variance far better than a flat
+     multiplier does.
+     ================================================================ */
+
+  const measureCanvas =
+    document.createElement(
+      "canvas"
+    );
+
+  const measureCtx =
+    measureCanvas.getContext(
+      "2d"
+    );
+
+
+  function measureTextWidth(
+    text,
+    size
+  ) {
+
+    measureCtx.font =
+      "bold " +
+      size +
+      "px sans-serif";
+
+
+    return measureCtx.measureText(
+      text
+    ).width;
+
+  }
+
+
+  /* ================================================================
      ALT1 COLOUR
      ================================================================ */
 
@@ -1765,9 +1806,10 @@
   ) {
 
     const approxWidth =
-      text.length *
-      size *
-      0.48;
+      measureTextWidth(
+        text,
+        size
+      );
 
 
     const x =
@@ -1925,18 +1967,20 @@
 
 
       /*
-       * Same width estimate centeredText() uses internally,
-       * reused here so the box actually fits the text instead
-       * of always being a fixed 720px regardless of content.
+       * Actual measured text width, rather than a flat
+       * per-character guess — this tracks real character-width
+       * variance (wide letters like M/W vs narrow ones like I
+       * or the arrow) far more closely.
        */
       const estTextWidth =
-        overlayText.length *
-        textSize *
-        0.48;
+        measureTextWidth(
+          overlayText,
+          textSize
+        );
 
 
       const horizontalPadding =
-        60;
+        40;
 
 
       const minPanelW =
