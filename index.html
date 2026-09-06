@@ -1989,17 +1989,12 @@
        * box comfortably contains the real text even when the
        * estimate runs low.
        */
-      const widthSafetyFactor =
-        2.0;
-
-
-      const estTextWidth =
-        measuredTextWidth *
-        widthSafetyFactor;
+            const estTextWidth =
+        measuredTextWidth;
 
 
       const horizontalPadding =
-        100;
+        40;
 
 
       const minPanelW =
@@ -2007,7 +2002,7 @@
 
 
       const maxPanelW =
-        900;
+        1200;
 
 
       const panelW =
@@ -2024,11 +2019,12 @@
 
 
       const panelH =
-        155;
+        55;
 
 
       const rowGap =
-        12;
+        16;
+
 
 
       const cx =
@@ -2101,7 +2097,7 @@
         COLORS.white,
         textSize,
         cx,
-        y + 70,
+        y + 38,
         cue.duration
       );
 
