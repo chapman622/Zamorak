@@ -951,24 +951,24 @@ shieldToggle.addEventListener("click", () => {
    * numeric value we hand to an alt1.overLay* call goes through this
    * first.
    */
-  function i(n) {
+  function rnd(n) {
     return Math.round(n);
   }
 
   function filledRect(col, x, y, w, h, duration, spacing = 3) {
     for (let yy = y; yy < y + h; yy += spacing) {
-      alt1.overLayLine(col, i(spacing), i(x), i(yy), i(x + w), i(yy), i(duration));
+      alt1.overLayLine(col, rnd(spacing), rnd(x), rnd(yy), rnd(x + w), rnd(yy), rnd(duration));
     }
   }
 
   function outline(col, x, y, w, h, duration, lineWidth) {
-    alt1.overLayRect(col, i(x), i(y), i(w), i(h), i(duration), i(lineWidth));
+    alt1.overLayRect(col, rnd(x), rnd(y), rnd(w), rnd(h), rnd(duration), rnd(lineWidth));
   }
 
   function textWithShadow(text, col, size, x, y, duration) {
     const shadow = color(0, 0, 0);
-    alt1.overLayText(text, shadow, i(size), i(x + 3), i(y + 3), i(duration));
-    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
+    alt1.overLayText(text, shadow, rnd(size), rnd(x + 3), rnd(y + 3), rnd(duration));
+    alt1.overLayText(text, col, rnd(size), rnd(x), rnd(y), rnd(duration));
   }
 
   /*
@@ -984,8 +984,8 @@ shieldToggle.addEventListener("click", () => {
     const x = boxLeftEdge + leftPadding;
     const shadow = color(0, 0, 0);
 
-    alt1.overLayText(text, shadow, i(size), i(x + 3), i(y + 3), i(duration));
-    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
+    alt1.overLayText(text, shadow, rnd(size), rnd(x + 3), rnd(y + 3), rnd(duration));
+    alt1.overLayText(text, col, rnd(size), rnd(x), rnd(y), rnd(duration));
   }
 
   /*
@@ -998,8 +998,8 @@ shieldToggle.addEventListener("click", () => {
     const x = Math.round(centerX - w / 2);
     const shadow = color(0, 0, 0);
 
-    alt1.overLayText(text, shadow, i(size), i(x + 2), i(y + 2), i(duration));
-    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
+    alt1.overLayText(text, shadow, rnd(size), rnd(x + 2), rnd(y + 2), rnd(duration));
+    alt1.overLayText(text, col, rnd(size), rnd(x), rnd(y), rnd(duration));
   }
 
 
@@ -1170,7 +1170,7 @@ shieldToggle.addEventListener("click", () => {
               // wants (x, y, imgstr, width, time) — position first,
               // then the encoded image, then size/time. Every numeric
               // arg must be a whole number or the native call throws.
-              alt1.overLayImage(i(ix), i(iy), cached.data, i(iconDrawSize), i(cue.duration));
+              alt1.overLayImage(rnd(ix), rnd(iy), cached.data, rnd(iconDrawSize), rnd(cue.duration));
             } catch (e) {
               log("overLayImage failed for " + s.src + ": " + (e.message || e), "info");
             }
