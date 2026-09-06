@@ -2005,14 +2005,13 @@
        * automatically scale the box width out to a massive 1100px so nothing clips.
        * For standard short arrays, lock tightly to your uniform 750px grid alignment.
        */
-            /*
-       * Smart adaptive sizing: Custom characters-to-pixels formula
-       * designed to let row 8 squeeze flawlessly into your uniform 750px grid footprint.
+                  /*
+       * Cache-Destruction Matrix: Combines an ultra-wide 880px layout threshold
+       * with a dynamic mathematical function to force Alt1's engine to redraw.
        */
-      const realTextPixelSize = textLen * 11.2;
+      const cacheBusterValue = Math.floor(Math.random() * 2);
+      let panelW = 880 + cacheBusterValue;
 
-
-      let panelW = 830;
 
       const panelH =
         60;
@@ -2020,6 +2019,7 @@
 
       const rowGap =
         16;
+
 
 
 
