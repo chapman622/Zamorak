@@ -666,6 +666,13 @@
   let includeShieldCue = true;
   let masterVoiceVolume = 1.0;
 
+  // Cache of icon images prepared for the in-game (Alt1) overlay.
+  // Keyed by icon src. Each entry is one of:
+  //   { status: "pending" }
+  //   { status: "ready", data: <encoded string for alt1.overLayImage>, width, height }
+  //   { status: "error" }
+  const overlayIconCache = {};
+
 
   /* ================================================================
      DISPLAY SETTINGS
@@ -914,7 +921,8 @@ shieldToggle.addEventListener("click", () => {
    * Left-anchors text a fixed distance from the box's left edge,
    * rather than true centering. panelW is REQUIRED — every caller
    * must pass the box width it's drawing against, or x/boxLeftEdge
-   * will come out NaN.
+   * will come out NaN. Kept for the colour test and any other
+   * single-line, whole-panel text.
    */
   function centeredText(text, col, size, cx, y, duration, panelW) {
     const boxLeftEdge = cx - Math.round(panelW / 2);
@@ -924,6 +932,88 @@ shieldToggle.addEventListener("click", () => {
 
     alt1.overLayText(text, shadow, size, x + 3, y + 3, duration);
     alt1.overLayText(text, col, size, x, y, duration);
+  }
+
+  /*
+   * True horizontal centering around a given center-x, based on
+   * measured text width. Used for laying out individual cue-step
+   * labels/arrows side-by-side on the overlay banner.
+   */
+  function textCenteredAt(text, col, size, centerX, y, duration) {
+    const w = measureTextWidth(text, size);
+    const x = Math.round(centerX - w / 2);
+    const shadow = color(0, 0, 0);
+
+    alt1.overLayText(text, shadow, size, x + 2, y + 2, duration);
+    alt1.overLayText(text, col, size, x, y, duration);
+  }
+
+
+  /* ================================================================
+     OVERLAY ICON PREPARATION
+     ================================================================
+     Alt1's overlay image draw call needs the icon pre-encoded (it
+     can't just fetch a URL like the browser board's <img> tags do).
+     We load every icon used in CUES once at startup, draw it to an
+     off-screen canvas, and hand the pixel data to a1lib's encoder.
+     If that encoder isn't available for any reason, we fall back to
+     showing just the text label for that step — the cue itself
+     still fires correctly either way.
+  */
+
+  function collectIconSrcs() {
+    const srcs = new Set();
+    Object.values(CUES).forEach(cue => {
+      cue.actions.forEach(action => {
+        if (action.type === "icon") srcs.add(action.src);
+      });
+    });
+    return srcs;
+  }
+
+  function loadIconForOverlay(src) {
+    if (overlayIconCache[src]) return;
+    overlayIconCache[src] = { status: "pending" };
+
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || 32;
+        canvas.height = img.naturalHeight || 32;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        const lib = window.A1lib || window.a1lib || null;
+
+        if (lib && typeof lib.encodeImageString === "function") {
+          const encoded = lib.encodeImageString(imageData);
+          overlayIconCache[src] = {
+            status: "ready",
+            data: encoded,
+            width: canvas.width,
+            height: canvas.height
+          };
+          log("Overlay icon ready: " + src, "info");
+        } else {
+          overlayIconCache[src] = { status: "error" };
+          log("a1lib has no image encoder — " + src + " will show as text only on the overlay", "info");
+        }
+      } catch (e) {
+        overlayIconCache[src] = { status: "error" };
+        log("Overlay icon encode failed for " + src + ": " + (e.message || e), "info");
+      }
+    };
+    img.onerror = () => {
+      overlayIconCache[src] = { status: "error" };
+      log("Overlay icon failed to load: " + src, "info");
+    };
+    img.src = src;
+  }
+
+  function preloadOverlayIcons() {
+    collectIconSrcs().forEach(loadIconForOverlay);
   }
 
 
@@ -951,42 +1041,104 @@ shieldToggle.addEventListener("click", () => {
 
       alt1.overLaySetGroup("zamcue");
 
-      // Filter shield actions if the setting is unchecked, then loop through filteredActions instead of cue.actions
-const filteredActions = cue.actions.filter(action => {
-    if (!includeShieldCue && action.text === "SHIELD") return false;
-    return true;
-});
-filteredActions.forEach((action, index) => { /* render actions normally */ });
+      const filteredActions = cue.actions.filter(action => {
+        if (!includeShieldCue && action.text === "SHIELD") return false;
+        return true;
+      });
 
+      const textSize = 22;
+      const labelSize = 13;
+      const arrowGap = 34;
+      const slotPadding = 14;
+      const iconDrawSize = 46;
 
-      const overlayText = filteredActions
-        .map(action => action.type === "icon" ? iconName(action.src) : action.text)
-        .join(" \u2192 ");
+      // Build a layout slot per action: icon+label, or plain text.
+      const slots = filteredActions.map(action => {
+        if (action.type === "icon") {
+          const label = iconName(action.src);
+          const labelWidth = measureTextWidth(label, labelSize);
+          return {
+            kind: "icon",
+            src: action.src,
+            label: label,
+            width: Math.max(iconDrawSize, labelWidth) + slotPadding
+          };
+        }
+        return {
+          kind: "text",
+          label: action.text,
+          width: measureTextWidth(action.text, textSize) + slotPadding * 2
+        };
+      });
 
-      const textSize = 25;
+      const hasIconSlot = slots.some(s => s.kind === "icon");
+      const panelH = hasIconSlot ? 92 : 60;
 
-      let panelW = 770;
-      if (id === "infernus" || id === "def") {
-        panelW = 890;
-      }
+      let totalWidth = 0;
+      slots.forEach((s, i) => {
+        totalWidth += s.width;
+        if (i > 0) totalWidth += arrowGap;
+      });
 
-      const panelH = 60;
+      const outerPad = 40;
+      const panelW = Math.max(300, totalWidth + outerPad);
       const rowGap = 16;
 
       const cx = Math.round(alt1.rsWidth / 2);
       const cy = Math.round(alt1.rsHeight / 2);
       const x = cx - Math.round(panelW / 2);
-
       const y = (cy - Math.round(panelH / 2)) + slot * (panelH + rowGap);
 
       const cueColor = color(cue.color[0], cue.color[1], cue.color[2]);
       outline(cueColor, x, y, panelW, panelH, cue.duration, 4);
 
-      centeredText(overlayText, COLORS.white, textSize, cx, y + 16, cue.duration, panelW);
+      let cursorX = x + Math.round((panelW - totalWidth) / 2);
+      const panelMidY = y + Math.round(panelH / 2);
 
-      log("CUE → " + overlayText + " (slot " + slot + ")", "hit");
+      slots.forEach((s, i) => {
+        if (i > 0) {
+          const arrowCx = cursorX + Math.round(arrowGap / 2);
+          textCenteredAt("\u2192", COLORS.white, 22, arrowCx, panelMidY - 11, cue.duration);
+          cursorX += arrowGap;
+        }
 
-      speakActions(overlayText);
+        const slotCx = cursorX + Math.round(s.width / 2);
+
+        if (s.kind === "icon") {
+          const cached = overlayIconCache[s.src];
+
+          if (cached && cached.status === "ready") {
+            const ix = slotCx - Math.round(iconDrawSize / 2);
+            const iy = y + 10;
+
+            try {
+              // Best-known call shape for this Alt1 build: content
+              // first, then position/size/time — matching the
+              // pattern of overLayText/overLayRect in this file.
+              // If icons don't render in-game, check this line first.
+              alt1.overLayImage(cached.data, ix, iy, iconDrawSize, cue.duration);
+            } catch (e) {
+              log("overLayImage failed for " + s.src + ": " + (e.message || e), "info");
+            }
+
+            textCenteredAt(s.label, COLORS.white, labelSize, slotCx, iy + iconDrawSize + 6, cue.duration);
+          } else {
+            // Icon not ready (or unsupported) — text label only, no broken cue.
+            textCenteredAt(s.label, COLORS.white, textSize, slotCx, panelMidY - 11, cue.duration);
+            if (!cached) loadIconForOverlay(s.src);
+          }
+        } else {
+          textCenteredAt(s.label, COLORS.white, textSize, slotCx, panelMidY - 11, cue.duration);
+        }
+
+        cursorX += s.width;
+      });
+
+      const overlayTextLog = slots.map(s => s.label).join(" \u2192 ");
+
+      log("CUE → " + overlayTextLog + " (slot " + slot + ")", "hit");
+
+      speakActions(overlayTextLog);
 
     } catch (e) {
       log("Overlay error: " + (e.message || e), "info");
@@ -1348,6 +1500,8 @@ filteredActions.forEach((action, index) => { /* render actions normally */ });
       } else {
         log("Chatbox library not exposed", "info");
       }
+
+      preloadOverlayIcons();
     }, 800);
 
     startAuto();
