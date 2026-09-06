@@ -944,20 +944,31 @@ shieldToggle.addEventListener("click", () => {
   };
 
 
+  /*
+   * Alt1's native bridge uses strict reflection: any argument declared
+   * as an int on the C# side throws if it receives a JS float (even
+   * something like 379.0000001 from measureText/rounding math). Every
+   * numeric value we hand to an alt1.overLay* call goes through this
+   * first.
+   */
+  function i(n) {
+    return Math.round(n);
+  }
+
   function filledRect(col, x, y, w, h, duration, spacing = 3) {
     for (let yy = y; yy < y + h; yy += spacing) {
-      alt1.overLayLine(col, spacing, x, yy, x + w, yy, duration);
+      alt1.overLayLine(col, i(spacing), i(x), i(yy), i(x + w), i(yy), i(duration));
     }
   }
 
   function outline(col, x, y, w, h, duration, lineWidth) {
-    alt1.overLayRect(col, x, y, w, h, duration, lineWidth);
+    alt1.overLayRect(col, i(x), i(y), i(w), i(h), i(duration), i(lineWidth));
   }
 
   function textWithShadow(text, col, size, x, y, duration) {
     const shadow = color(0, 0, 0);
-    alt1.overLayText(text, shadow, size, x + 3, y + 3, duration);
-    alt1.overLayText(text, col, size, x, y, duration);
+    alt1.overLayText(text, shadow, i(size), i(x + 3), i(y + 3), i(duration));
+    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
   }
 
   /*
@@ -973,8 +984,8 @@ shieldToggle.addEventListener("click", () => {
     const x = boxLeftEdge + leftPadding;
     const shadow = color(0, 0, 0);
 
-    alt1.overLayText(text, shadow, size, x + 3, y + 3, duration);
-    alt1.overLayText(text, col, size, x, y, duration);
+    alt1.overLayText(text, shadow, i(size), i(x + 3), i(y + 3), i(duration));
+    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
   }
 
   /*
@@ -987,8 +998,8 @@ shieldToggle.addEventListener("click", () => {
     const x = Math.round(centerX - w / 2);
     const shadow = color(0, 0, 0);
 
-    alt1.overLayText(text, shadow, size, x + 2, y + 2, duration);
-    alt1.overLayText(text, col, size, x, y, duration);
+    alt1.overLayText(text, shadow, i(size), i(x + 2), i(y + 2), i(duration));
+    alt1.overLayText(text, col, i(size), i(x), i(y), i(duration));
   }
 
 
@@ -1104,13 +1115,13 @@ shieldToggle.addEventListener("click", () => {
             kind: "icon",
             src: action.src,
             label: label,
-            width: Math.max(iconDrawSize, labelWidth) + slotPadding
+            width: Math.ceil(Math.max(iconDrawSize, labelWidth) + slotPadding)
           };
         }
         return {
           kind: "text",
           label: action.text,
-          width: measureTextWidth(action.text, textSize) + slotPadding * 2
+          width: Math.ceil(measureTextWidth(action.text, textSize) + slotPadding * 2)
         };
       });
 
@@ -1124,13 +1135,13 @@ shieldToggle.addEventListener("click", () => {
       });
 
       const outerPad = 40;
-      const panelW = Math.max(300, totalWidth + outerPad);
+      const panelW = Math.round(Math.max(300, totalWidth + outerPad));
       const rowGap = 16;
 
       const cx = Math.round(alt1.rsWidth / 2);
       const cy = Math.round(alt1.rsHeight / 2);
       const x = cx - Math.round(panelW / 2);
-      const y = (cy - Math.round(panelH / 2)) + slot * (panelH + rowGap);
+      const y = Math.round((cy - Math.round(panelH / 2)) + slot * (panelH + rowGap));
 
       const cueColor = color(cue.color[0], cue.color[1], cue.color[2]);
       outline(cueColor, x, y, panelW, panelH, cue.duration, 4);
@@ -1155,11 +1166,11 @@ shieldToggle.addEventListener("click", () => {
             const iy = y + 10;
 
             try {
-              // Best-known call shape for this Alt1 build: content
-              // first, then position/size/time — matching the
-              // pattern of overLayText/overLayRect in this file.
-              // If icons don't render in-game, check this line first.
-              alt1.overLayImage(cached.data, ix, iy, iconDrawSize, cue.duration);
+              // Confirmed from in-game error output: this Alt1 build
+              // wants (x, y, imgstr, width, time) — position first,
+              // then the encoded image, then size/time. Every numeric
+              // arg must be a whole number or the native call throws.
+              alt1.overLayImage(i(ix), i(iy), cached.data, i(iconDrawSize), i(cue.duration));
             } catch (e) {
               log("overLayImage failed for " + s.src + ": " + (e.message || e), "info");
             }
