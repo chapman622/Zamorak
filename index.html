@@ -1966,6 +1966,9 @@
       /*
        * NO MECHANIC NAME.
        */
+            /*
+       * Cleaned up mapping scope to fix the undefined length bug.
+       */
       const overlayText =
         cue.actions
           .map(
@@ -1973,12 +1976,12 @@
               action.type ===
               "icon"
                 ? iconName(
-                    action.src
-                  )
+                  action.src
+                )
                 : action.text
           )
           .join(
-            "     \u2192     "
+            " \u2192 "
           );
 
 
@@ -1986,13 +1989,16 @@
         25;
 
 
-    
-                 // Measures the text character length directly inside the function
-      let textLen = (typeof overlayText !== "undefined" && overlayText) ? overlayText.length : 45;
+      /*
+       * Measure text character length directly now that overlayText is properly scoped.
+       */
+      let textLen = overlayText ? overlayText.length : 0;
+
 
       /*
-       * If the string has more than 35 characters, it stretches the panel out.
-       * 1100px guarantees massive strings like Row 8 fit with room to spare.
+       * If any text sequence expands past 35 characters (like defensive row 8), 
+       * automatically scale the box width out to a massive 1100px so nothing clips.
+       * For standard short arrays, lock tightly to your uniform 750px grid alignment.
        */
       let panelW = (textLen > 35) ? 1100 : 750;
 
@@ -2003,6 +2009,7 @@
 
       const rowGap =
         16;
+
 
 
 
