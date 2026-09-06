@@ -2000,7 +2000,21 @@
        * automatically scale the box width out to a massive 1100px so nothing clips.
        * For standard short arrays, lock tightly to your uniform 750px grid alignment.
        */
-      let panelW = (textLen > 35) ? 1100 : 750;
+            /*
+       * Smart adaptive sizing: Custom characters-to-pixels formula
+       * designed to let row 8 squeeze flawlessly into your uniform 750px grid footprint.
+       */
+      const realTextPixelSize = textLen * 11.2;
+
+
+      let panelW =
+        Math.max(
+          750,
+          Math.round(
+            realTextPixelSize +
+            75
+          )
+        );
 
 
       const panelH =
@@ -2009,6 +2023,7 @@
 
       const rowGap =
         16;
+
 
 
 
