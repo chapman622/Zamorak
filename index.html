@@ -562,7 +562,7 @@ TOP BAR With Live Volume Controls
       <div id="settingsView" class="view" style="display: none;">
         <h2 style="margin-top: 0; color: #ff6b6b; font-size: 16px;">DISPLAY SETTINGS</h2>
         
-        <!-- Row 1: Transparent background setting toggle -->
+                <!-- Row 1: Transparent background setting toggle -->
         <div class="setting-row">
           <div>
             <div class="setting-label">Transparent background</div>
@@ -577,8 +577,9 @@ TOP BAR With Live Volume Controls
             <div class="setting-label">Include Shield Prep Cues</div>
             <div class="setting-description">Show/speak "SHIELD" text during Curl Up. Turn off to avoid sound clutter.</div>
           </div>
-          <div id="shieldToggle" class="toggle on"></div>
+          <div id="shieldToggle" class="toggle active"></div> <!-- Changed class from "on" to "active" -->
         </div>
+
 
       </div> <!-- Closes settingsView cleanly -->
 
@@ -1078,9 +1079,10 @@ voiceVolumeSlider.addEventListener("input", () => {
 
 shieldToggle.addEventListener("click", () => {
   includeShieldCue = !includeShieldCue;
-  shieldToggle.classList.toggle("on", includeShieldCue);
+  shieldToggle.classList.toggle("active", includeShieldCue); // Changed "on" to "active"
   log("Shield prep actions " + (includeShieldCue ? "enabled" : "disabled"), "info");
 });
+
 
 
   const cueBoard =
