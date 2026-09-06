@@ -1,7 +1,7 @@
 {
   "appName": "Zamorak Cue Board",
   "description": "Big on-screen cues for Zamorak (500%+). Manual buttons + auto chat reading.",
-  "appUrl": "./index.html",
+  "appUrl": "./index.html?v=10",
   "configUrl": "./appconfig.json",
   "iconUrl": "",
   "defaultWidth": 420,
