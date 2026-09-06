@@ -1972,15 +1972,33 @@
        * variance (wide letters like M/W vs narrow ones like I
        * or the arrow) far more closely.
        */
-      const estTextWidth =
+      const measuredTextWidth =
         measureTextWidth(
           overlayText,
           textSize
         );
 
 
+      /*
+       * Alt1's real overlay font renders slightly wider than
+       * the canvas "sans-serif" estimate, so text was sitting
+       * right up against (or past) the border. This safety
+       * factor pads the BOX only — the text itself still
+       * centers on the true measured width — to guarantee
+       * margin on both sides even if the estimate runs a
+       * little short.
+       */
+      const widthSafetyFactor =
+        1.2;
+
+
+      const estTextWidth =
+        measuredTextWidth *
+        widthSafetyFactor;
+
+
       const horizontalPadding =
-        40;
+        50;
 
 
       const minPanelW =
