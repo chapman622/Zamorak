@@ -549,27 +549,30 @@ TOP BAR With Live Volume Controls
          DISPLAY SETTINGS
          ========================================================== -->
 
-    <div class="settings-section">
-
-      <div class="settings-title">
-        Display
-      </div>
-
-
-      <div class="setting-row">
-
-        <div>
-          <div class="setting-label">
-            Transparent background
+          <!-- ============================================================
+      DISPLAY SETTINGS PANEL VIEW
+      ============================================================ -->
+      <div id="settingsView" class="view" style="display: none;">
+        <h2 style="margin-top: 0; color: #ff6b6b; font-size: 16px;">DISPLAY SETTINGS</h2>
+        
+        <!-- Row 1: Transparent background setting toggle -->
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Transparent background</div>
+            <div class="setting-description">Remove the Cue Board panel behind the actions.</div>
           </div>
+          <div id="transparentToggle" class="toggle"></div>
+        </div>
 
-          <div class="setting-row">
-  <div>
-    <div class="setting-label">Include Shield Prep Cues</div>
-    <div class="setting-description">Show/speak "SHIELD" text during Curl Up. Turn off to avoid sound clutter.</div>
-  </div>
-  <div id="shieldToggle" class="toggle on" title="Toggle shield cue activation"></div>
-</div>
+        <!-- Row 2: Include Shield Prep Cues setting toggle -->
+        <div class="setting-row" style="margin-top: 14px;">
+          <div>
+            <div class="setting-label">Include Shield Prep Cues</div>
+            <div class="setting-description">Show/speak "SHIELD" text during Curl Up. Turn off to avoid sound clutter.</div>
+          </div>
+          <div id="shieldToggle" class="toggle on"></div>
+        </div>
+
 
 
           <div class="setting-description">
