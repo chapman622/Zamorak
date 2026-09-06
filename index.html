@@ -1993,28 +1993,17 @@
        * or the arrow) far more closely.
        */
             /*
-      /*
-       * Dynamic box math using the local overlayText variable.
-       * Stretches the box for long cues like defensive sequence 8,
-       * but maintains a neat uniform 750px minimum width for rows 1-7.
-      /*
-       * Expanded dynamic math: Adjusted multiplier to 12.8 and padding to 100 
-       * to safely push the box wider and keep long lines from clipping the borders.
-       */
-      const approxWidth = overlayText.length * 12.8;
-
-
             /*
-       * Foolproof ID detection: If the active cue is the massive 
-       * defensive chain (id "def"), open the box to 960px.
-       * Otherwise, default to the clean uniform 750px width.
+       * Automatic layout scaling: If any text string on screen grows 
+       * longer than 40 characters, stretch the frame wide to 960px.
+       * Otherwise, lock it to the standard uniform 750px footprint.
        */
       let panelW = 750;
 
 
       if (
-        id ===
-        "def"
+        overlayText && 
+        overlayText.length > 40
       ) {
         
         panelW = 960;
@@ -2028,6 +2017,7 @@
 
       const rowGap =
         16;
+
 
 
 
