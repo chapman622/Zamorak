@@ -1797,39 +1797,54 @@
 
 
   function centeredText(
+  text,
+  col,
+  size,
+  cx,
+  y,
+  duration
+) {
+
+  /*
+   * Tell Alt1's native overlay rendering engine to center align 
+   * the text block relative to the center coordinate (cx).
+   */
+  alt1.overLaySetTextAlign(1); 
+
+
+  const shadow =
+    color(
+      0,
+      0,
+      0
+    );
+
+
+  alt1.overLayText(
+    text,
+    shadow,
+    size,
+    cx + 3,
+    y + 3,
+    duration
+  );
+
+
+  alt1.overLayText(
     text,
     col,
     size,
     cx,
     y,
     duration
-  ) {
-
-    const approxWidth =
-      measureTextWidth(
-        text,
-        size
-      );
+  );
 
 
-    const x =
-      Math.round(
-        cx -
-        approxWidth /
-        2
-      );
+  // Instantly resets text alignment to default left for other tools
+  alt1.overLaySetTextAlign(0); 
 
+}
 
-    textWithShadow(
-      text,
-      col,
-      size,
-      x,
-      y,
-      duration
-    );
-
-  }
 
 
   /* ================================================================
