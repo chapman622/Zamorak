@@ -527,7 +527,10 @@
 
     <!-- OCR / DEBUG -->
     <div class="settings-section">
-      <div class="settings-title">OCR / Debug Log</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div class="settings-title" style="margin-bottom:0;">OCR / Debug Log</div>
+        <button id="copyLogBtn" class="tab-btn" style="user-select:none;">📋 Copy Log</button>
+      </div>
       <div id="log" class="log"></div>
     </div>
 
@@ -808,6 +811,46 @@ shieldToggle.addEventListener("click", () => {
       logEl.removeChild(logEl.lastChild);
     }
   }
+
+  const copyLogBtn = document.getElementById("copyLogBtn");
+  copyLogBtn.addEventListener("click", () => {
+    // Log entries are prepended (newest first) — flip to oldest-first for a readable copy.
+    const lines = Array.from(logEl.children)
+      .map(d => d.textContent)
+      .reverse()
+      .join("\n");
+
+    const restoreLabel = () => {
+      setTimeout(() => { copyLogBtn.textContent = "📋 Copy Log"; }, 1200);
+    };
+
+    const fallbackCopy = () => {
+      const ta = document.createElement("textarea");
+      ta.value = lines;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand("copy");
+        copyLogBtn.textContent = "✅ Copied";
+      } catch (e) {
+        copyLogBtn.textContent = "❌ Copy failed";
+      }
+      document.body.removeChild(ta);
+      restoreLabel();
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lines).then(() => {
+        copyLogBtn.textContent = "✅ Copied";
+        restoreLabel();
+      }).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  });
 
 
   function renderCue(id) {
