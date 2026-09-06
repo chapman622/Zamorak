@@ -1806,10 +1806,18 @@
 ) {
 
   /*
-   * Tell Alt1's native overlay rendering engine to center align 
-   * the text block relative to the center coordinate (cx).
+   * Fixed estimation formula: Spacing letters at 13.5 pixels wide 
+   * fits Alt1's native font face and handles character count perfectly.
    */
-  alt1.overLaySetTextAlign(1); 
+  const approxWidth = text.length * 13.5;
+
+
+  const x =
+    Math.round(
+      cx -
+      approxWidth /
+      2
+    );
 
 
   const shadow =
@@ -1824,7 +1832,7 @@
     text,
     shadow,
     size,
-    cx + 3,
+    x + 3,
     y + 3,
     duration
   );
@@ -1834,16 +1842,13 @@
     text,
     col,
     size,
-    cx,
+    x,
     y,
     duration
   );
 
-
-  // Instantly resets text alignment to default left for other tools
-  alt1.overLaySetTextAlign(0); 
-
 }
+
 
 
 
