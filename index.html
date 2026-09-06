@@ -1811,18 +1811,27 @@ function centeredText(
 ) {
 
   /*
-   * Reliable layout math: Uses your built-in measureTextWidth canvas tool 
-   * to calculate the exact pixel footprint of the sentence.
+   * Left-alignment matrix: Forces the text baseline to lock onto 
+   * the left side of your uniform 770px boxes, rather than centering itself.
    */
-  const realPixelWidth = measureTextWidth(text, size);
+  const panelW = 770;
+
+
+  const boxLeftEdge =
+    cx -
+    Math.round(
+      panelW /
+      2
+    );
+
+
+  const leftPadding =
+    35;
 
 
   const x =
-    Math.round(
-      cx -
-      realPixelWidth /
-      2
-    );
+    boxLeftEdge +
+    leftPadding;
 
 
   const shadow =
@@ -2000,20 +2009,22 @@ function centeredText(
       let textLen = overlayText ? overlayText.length : 0;
 
 
-      /*
-       * If any text sequence expands past 35 characters (like defensive row 8), 
-       * automatically scale the box width out to a massive 1100px so nothing clips.
-       * For standard short arrays, lock tightly to your uniform 750px grid alignment.
-       */
-                  /*
-       * Cache-Destruction Matrix: Combines an ultra-wide 880px layout threshold
-       * with a dynamic mathematical function to force Alt1's engine to redraw.
-       */
-            /*
-       * Clean uniform grid layout footprint. 
-       * 770px provides flawless spacing across all 8 banner lines.
+           /*
+       * Smart grid layout footprint: If the line is your massive defensive chain,
+       * expand the frame to 830px so it has absolute breathing room on the ends.
+       * For all normal lines, keep your tight uniform 770px grid.
        */
       let panelW = 770;
+
+
+      if (
+        textLen >
+        35
+      ) {
+        
+        panelW = 830;
+
+      }
 
 
       const panelH =
@@ -2022,6 +2033,7 @@ function centeredText(
 
       const rowGap =
         16;
+
 
 
 
