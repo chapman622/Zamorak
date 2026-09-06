@@ -973,6 +973,7 @@
   let foundChat = false;
   let lastLogged = "";
   let currentCue = null;
+  let activeCues = [];
 
 
   /* ================================================================
@@ -1859,14 +1860,45 @@
 
     try {
 
-      alt1.overLayClearGroup(
-        "zamcue"
+      const now =
+        Date.now();
+
+
+      /*
+       * Drop any cues that have already expired, freeing up
+       * their slot for reuse.
+       */
+      activeCues =
+        activeCues.filter(
+          c => c.expiresAt > now
+        );
+
+
+      /*
+       * This cue takes the next slot down from whatever is
+       * still on screen, rather than clearing/overwriting it.
+       */
+      const slot =
+        activeCues.length;
+
+
+      activeCues.push(
+        { id: id, expiresAt: now + cue.duration }
       );
 
 
       alt1.overLaySetGroup(
         "zamcue"
       );
+
+      /*
+       * NOTE: overLayClearGroup("zamcue") is intentionally not
+       * called here anymore — clearing the group wiped out any
+       * cue that was still visible when a second one fired in
+       * quick succession. Alt1 expires each drawn element on
+       * its own once its duration elapses, so we don't need to
+       * clear manually.
+       */
 
 
       const cx =
@@ -1891,6 +1923,10 @@
         155;
 
 
+      const rowGap =
+        12;
+
+
       const x =
         cx -
         Math.round(
@@ -1899,11 +1935,22 @@
         );
 
 
+      /*
+       * Each new cue stacks below any previous one(s) still
+       * active, instead of drawing on top of them.
+       */
       const y =
-        cy -
-        Math.round(
-          panelH /
-          2
+        (
+          cy -
+          Math.round(
+            panelH /
+            2
+          )
+        ) +
+        slot *
+        (
+          panelH +
+          rowGap
         );
 
 
@@ -1962,7 +2009,10 @@
 
       log(
         "CUE → " +
-        overlayText,
+        overlayText +
+        " (slot " +
+        slot +
+        ")",
         "hit"
       );
 
