@@ -988,7 +988,7 @@ TOP BAR With Live Volume Controls
 /* ================================================================
 STATE
 =============================================================== */
-let autoEnabled = false;
+let autoEnabled = true;
 let lastFired = {};
 let reader = null;
 let pollTimer = null;
@@ -3516,7 +3516,7 @@ function centeredText(
       },
       800
     );
-
+startAuto();
   }
 
 
