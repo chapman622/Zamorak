@@ -1980,16 +1980,17 @@
 
 
       /*
-       * Alt1's real overlay font renders slightly wider than
-       * the canvas "sans-serif" estimate, so text was sitting
-       * right up against (or past) the border. This safety
-       * factor pads the BOX only — the text itself still
-       * centers on the true measured width — to guarantee
-       * margin on both sides even if the estimate runs a
-       * little short.
+       * Alt1's real overlay text is drawn by its own native
+       * renderer, NOT by this webpage's canvas/font engine — so
+       * the canvas measurement above is only ever an approximation
+       * of a DIFFERENT font, not a true measurement of what's
+       * actually drawn on screen. Rather than chase an exact
+       * match we can't reliably get, we pad generously so the
+       * box comfortably contains the real text even when the
+       * estimate runs low.
        */
       const widthSafetyFactor =
-        1.2;
+        1.5;
 
 
       const estTextWidth =
@@ -1998,7 +1999,7 @@
 
 
       const horizontalPadding =
-        50;
+        80;
 
 
       const minPanelW =
