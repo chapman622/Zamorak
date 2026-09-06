@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Zamorak Cue Board</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1a1e;
+      color: #e8e8e8;
+      padding: 12px;
+      user-select: none;
+    }
+
+    h1 {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 6px;
+      color: #ff6b6b;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+
+    .status.ok {
+      color: #4ade80;
+    }
+
+    .status.warn {
+      color: #fbbf24;
+    }
+
+    .status.err {
+      color: #f87171;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    button.cue {
+      padding: 13px 6px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      transition: transform 0.08s, filter 0.08s;
+    }
+
+    button.cue:hover {
+      filter: brightness(1.15);
+    }
+
+    button.cue:active {
+      transform: scale(0.96);
+    }
+
+    button.cue .key {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .stun {
+      background: #dc2626;
+    }
+
+    .slam {
+      background: #ea580c;
+    }
+
+    .cage {
+      background: #7c3aed;
+    }
+
+    .curl {
+      background: #2563eb;
+    }
+
+    .infernus {
+      background: #b45309;
+    }
+
+    .channel {
+      background: #be185d;
+    }
+
+    .rune {
+      background: #059669;
+    }
+
+    .def {
+      background: #4b5563;
+    }
+
+    .auto-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .auto-row label {
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: #374151;
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.on {
+      background: #16a34a;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: left 0.2s;
+    }
+
+    .toggle.on::after {
+      left: 23px;
+    }
+
+    .log {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 11px;
+      height: 110px;
+      overflow-y: auto;
+      font-family: monospace;
+      color: #9ca3af;
+    }
+
+    .log div {
+      margin-bottom: 2px;
+    }
+
+    .log .hit {
+      color: #4ade80;
+    }
+
+    .log .info {
+      color: #60a5fa;
+    }
+
+    .help {
+      font-size: 11px;
+      color: #888;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .help b {
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Zamorak Cue Board</h1>
+
+  <div id="status" class="status">
+    Loading libraries…
+  </div>
+
+  <div class="auto-row">
+    <label>Auto-read chat</label>
+    <div
+      id="autoToggle"
+      class="toggle"
+      title="Toggle auto chat reading">
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <button class="cue stun" data-id="stun">
+      STUN HIM NOW
+      <span class="key">
+        1 · “I will tear you asunder!”
+      </span>
+    </button>
+
+    <button class="cue slam" data-id="slam">
+      SLAM / DEBILITATE
+      <span class="key">
+        2 · “This world will burn”
+      </span>
+    </button>
+
+    <button class="cue cage" data-id="cage">
+      CAGE – PRAY MAGE
+      <span class="key">
+        3 · “CHAOS, UNFETTERED!”
+      </span>
+    </button>
+
+    <button class="cue curl" data-id="curl">
+      CURL UP – RESONATE
+      <span class="key">
+        4 · “FEEL THE RAGE OF A GOD”
+      </span>
+    </button>
+
+    <button class="cue infernus" data-id="infernus">
+      INFERNUS
+      <span class="key">
+        5 · “Step into the dark…”
+      </span>
+    </button>
+
+    <button class="cue channel" data-id="channel">
+      CHANNELER / WITCH
+      <span class="key">
+        6 · “HEED MY CALL!”
+      </span>
+    </button>
+
+    <button class="cue rune" data-id="rune">
+      RUNE SMOKE
+      <span class="key">
+        7 · “You're already dead.”
+      </span>
+    </button>
+
+    <button class="cue def" data-id="def">
+      DEFENSIVE
+      <span class="key">
+        8 · Debilitate / Pray / Prot
+      </span>
+    </button>
+
+  </div>
+
+  <div class="log" id="log"></div>
+
+  <div class="help">
+    <b>How to use</b><br>
+    • Click a button or press 1–8 for a big banner.<br>
+    • Turn on Auto-read to watch chat for the trigger phrases.<br>
+    • Best with timestamps on + chat font size 12 + 100% interface scaling.<br>
+    • 500%+: Channeler starts Asphyxiate · everyone must be on rune together in Infernus.
+  </div>
+
+
+  <!-- =========================================================
+       OFFICIAL ALT1 LIBRARIES
+       ========================================================= -->
+
+  <script src="https://unpkg.com/alt1@0.1.3/dist/base/index.js"></script>
+  <script src="https://unpkg.com/alt1@0.1.3/dist/ocr/index.js"></script>
+  <script src="https://unpkg.com/alt1@0.1.3/dist/chatbox/index.js"></script>
+
+
+  <script>
+
+    // =========================================================
+    // CUE DEFINITIONS
+    // =========================================================
+
+    const CUES = {
+
+      stun: {
+        title: "STUN HIM NOW",
+        text: "Freedom / Anticipation → Stun Zamorak",
+        color: [220, 38, 38],
+        duration: 4000,
+        triggers: [
+          "will tear you",
+          "i will tear you asunder"
+        ]
+      },
+
+      slam: {
+        title: "SLAM – DEBILITATE",
+        text: "Pray Melee · Walk under · Debilitate",
+        color: [234, 88, 12],
+        duration: 5000,
+        triggers: [
+          "world will burn",
+          "this world will burn"
+        ]
+      },
+
+      cage: {
+        title: "CAGE – PRAY MAGE",
+        text: "Pray Mage · Debilitate or Devotion",
+        color: [124, 58, 237],
+        duration: 5000,
+        triggers: [
+          "chaos, unfettered",
+          "chaos unfettered"
+        ]
+      },
+
+      curl: {
+        title: "CURL UP – RESONATE",
+        text: "Equip shield · Resonate the hit",
+        color: [37, 99, 235],
+        duration: 5000,
+        triggers: [
+          "feel the rage of a god",
+          "rage of a god"
+        ]
+      },
+
+      infernus: {
+        title: "INFERNUS",
+        text: "Match rune → Stun Zammy → Finish demon\n(500%+: all on rune together)",
+        color: [180, 83, 9],
+        duration: 7000,
+        triggers: [
+          "into the dark",
+          "step into the dark"
+        ]
+      },
+
+      channel: {
+        title: "CHANNELER / WITCH",
+        text: "Witch in Infernus – go kill her\n(500%+: starts with Asphyxiate)",
+        color: [190, 24, 93],
+        duration: 6000,
+        triggers: [
+          "heed my call"
+        ]
+      },
+
+      rune: {
+        title: "RUNE SMOKE",
+        text: "Anticipate / Freedom over black smoke",
+        color: [5, 150, 105],
+        duration: 4500,
+        triggers: [
+          "already dead",
+          "you're already dead",
+          "youre already dead"
+        ]
+      },
+
+      def: {
+        title: "DEFENSIVE",
+        text: "Debilitate · Reflect · Devotion · Protect",
+        color: [75, 85, 99],
+        duration: 4000,
+        triggers: []
+      }
+
+    };
+
+
+    // =========================================================
+    // STATE
+    // =========================================================
+
+    let autoEnabled = false;
+    let lastFired = {};
+    let reader = null;
+    let pollTimer = null;
+    let foundChat = false;
+
+    let lastLogged = '';
+
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    const autoToggle = document.getElementById('autoToggle');
+
+
+    // =========================================================
+    // STATUS
+    // =========================================================
+
+    function setStatus(msg, cls = '') {
+
+      statusEl.textContent = msg;
+      statusEl.className = 'status ' + cls;
+
+    }
+
+
+    // =========================================================
+    // LOG
+    // =========================================================
+
+    function log(msg, cls = '') {
+
+      const d = document.createElement('div');
+
+      d.className = cls;
+
+      d.textContent =
+        new Date().toLocaleTimeString() +
+        '  ' +
+        msg;
+
+      logEl.prepend(d);
+
+      while (logEl.children.length > 50) {
+        logEl.removeChild(logEl.lastChild);
+      }
+
+    }
+
+
+    // =========================================================
+    // RGB → ALT1 COLOUR
+    // =========================================================
+
+    function rgbToHex(rgb) {
+
+      return (
+        ((rgb[0] & 255) << 16) |
+        ((rgb[1] & 255) << 8) |
+        (rgb[2] & 255)
+      );
+
+    }
+
+
+    // =========================================================
+    // CUE OVERLAY
+    //
+    // IMPORTANT:
+    // Alt1 overLayRect() draws an outline rather than a filled
+    // rectangle. We therefore build a dark-looking panel using
+    // several thick rectangles and strong text shadows.
+    // =========================================================
+
+    function showBanner(cueId) {
+
+      const cue = CUES[cueId];
+
+      if (!cue || !window.alt1) {
+
+        log(
+          'showBanner failed – no cue or no alt1',
+          'info'
+        );
+
+        return;
+      }
+
+
+      const now = Date.now();
+
+
+      // Prevent the same cue from firing repeatedly while
+      // OCR sees the same chat line over several frames.
+
+      if (
+        lastFired[cueId] &&
+        now - lastFired[cueId] < 2500
+      ) {
+        return;
+      }
+
+
+      lastFired[cueId] = now;
+
+
+      try {
+
+        const cx =
+          Math.round(alt1.rsWidth / 2);
+
+        const cy =
+          Math.round(alt1.rsHeight / 2);
+
+
+        const panelX = cx - 340;
+        const panelY = cy - 85;
+        const panelW = 680;
+        const panelH = 165;
+
+
+        const colour =
+          rgbToHex(cue.color);
+
+
+        // -----------------------------------------------------
+        // Clear previous cue overlay
+        // -----------------------------------------------------
+
+        alt1.overLayClearGroup('zamcue');
+
+        alt1.overLaySetGroup('zamcue');
+
+
+        // -----------------------------------------------------
+        // OUTER WARNING BORDER
+        // -----------------------------------------------------
+
+        alt1.overLayRect(
+          colour,
+          panelX,
+          panelY,
+          panelW,
+          panelH,
+          cue.duration,
+          12
+        );
+
+
+        // -----------------------------------------------------
+        // INNER WHITE BORDER
+        // -----------------------------------------------------
+
+        alt1.overLayRect(
+          0xFFFFFF,
+          panelX + 8,
+          panelY + 8,
+          panelW - 16,
+          panelH - 16,
+          cue.duration,
+          3
+        );
+
+
+        // -----------------------------------------------------
+        // ADD MORE OUTLINE LAYERS
+        //
+        // These don't technically fill the rectangle, but
+        // they make the banner substantially more visible
+        // against the RS3 game background.
+        // -----------------------------------------------------
+
+        alt1.overLayRect(
+          colour,
+          panelX + 15,
+          panelY + 15,
+          panelW - 30,
+          panelH - 30,
+          cue.duration,
+          4
+        );
+
+
+        // -----------------------------------------------------
+        // TITLE SHADOW
+        // -----------------------------------------------------
+
+        alt1.overLayTextEx(
+          cue.title,
+          0x000000,
+          46,
+          cx + 3,
+          cy - 25 + 3,
+          cue.duration,
+          '',
+          true,
+          true
+        );
+
+
+        // -----------------------------------------------------
+        // TITLE
+        // -----------------------------------------------------
+
+        alt1.overLayTextEx(
+          cue.title,
+          0xFFFF00,
+          46,
+          cx,
+          cy - 25,
+          cue.duration,
+          '',
+          true,
+          true
+        );
+
+
+        // -----------------------------------------------------
+        // INSTRUCTION SHADOW
+        // -----------------------------------------------------
+
+        alt1.overLayTextEx(
+          cue.text,
+          0x000000,
+          23,
+          cx + 3,
+          cy + 32 + 3,
+          cue.duration,
+          '',
+          true,
+          true
+        );
+
+
+        // -----------------------------------------------------
+        // INSTRUCTION
+        // -----------------------------------------------------
+
+        alt1.overLayTextEx(
+          cue.text,
+          0xFFFFFF,
+          23,
+          cx,
+          cy + 32,
+          cue.duration,
+          '',
+          true,
+          true
+        );
+
+
+        log(
+          'BANNER → ' +
+          cue.title +
+          ' at ' +
+          cx +
+          ',' +
+          cy,
+          'hit'
+        );
+
+      }
+
+      catch (e) {
+
+        log(
+          'Banner overlay error: ' +
+          (e.message || e),
+          'info'
+        );
+
+      }
+
+    }
+
+
+    // =========================================================
+    // BUTTONS
+    // =========================================================
+
+    document
+      .querySelectorAll('button.cue')
+      .forEach(btn => {
+
+        btn.addEventListener('click', () => {
+
+          showBanner(
+            btn.dataset.id
+          );
+
+        });
+
+      });
+
+
+    // =========================================================
+    // KEYBOARD SHORTCUTS
+    // =========================================================
+
+    document.addEventListener(
+      'keydown',
+      e => {
+
+        if (
+          e.target.tagName === 'INPUT' ||
+          e.target.tagName === 'TEXTAREA'
+        ) {
+          return;
+        }
+
+
+        const map = {
+
+          '1': 'stun',
+          '2': 'slam',
+          '3': 'cage',
+          '4': 'curl',
+          '5': 'infernus',
+          '6': 'channel',
+          '7': 'rune',
+          '8': 'def'
+
+        };
+
+
+        if (map[e.key]) {
+
+          e.preventDefault();
+
+          showBanner(
+            map[e.key]
+          );
+
+        }
+
+      }
+    );
+
+
+    // =========================================================
+    // AUTO TOGGLE
+    // =========================================================
+
+    autoToggle.addEventListener(
+      'click',
+      () => {
+
+        autoEnabled =
+          !autoEnabled;
+
+
+        autoToggle.classList.toggle(
+          'on',
+          autoEnabled
+        );
+
+
+        if (autoEnabled) {
+
+          startAuto();
+
+        }
+
+        else {
+
+          stopAuto();
+
+          setStatus(
+            foundChat
+              ? 'Chat found – Auto OFF'
+              : 'Auto OFF',
+            ''
+          );
+
+          log(
+            'Auto-read disabled'
+          );
+
+        }
+
+      }
+    );
+
+
+    // =========================================================
+    // START AUTO
+    // =========================================================
+
+    function startAuto() {
+
+      if (!window.alt1) {
+
+        setStatus(
+          'Alt1 not detected',
+          'err'
+        );
+
+        autoEnabled = false;
+
+        autoToggle.classList.remove('on');
+
+        return;
+      }
+
+
+      // -------------------------------------------------------
+      // Create ChatBoxReader
+      // -------------------------------------------------------
+
+      if (!reader) {
+
+        try {
+
+          const CB =
+            window.Chatbox &&
+            (
+              window.Chatbox.default ||
+              window.Chatbox
+            );
+
+
+          if (CB) {
+
+            reader = new CB();
+
+
+            // -------------------------------------------------
+            // Zamorak chat colours
+            // -------------------------------------------------
+
+            const lib =
+              window.A1lib ||
+              window.a1lib ||
+              null;
+
+
+            if (
+              lib &&
+              lib.mixColor
+            ) {
+
+              reader.readargs =
+                reader.readargs || {};
+
+
+              reader.readargs.colors = [
+
+                lib.mixColor(
+                  153,
+                  255,
+                  153
+                ),
+
+                lib.mixColor(
+                  232,
+                  4,
+                  4
+                ),
+
+                lib.mixColor(
+                  255,
+                  255,
+                  255
+                ),
+
+                lib.mixColor(
+                  127,
+                  169,
+                  255
+                ),
+
+                lib.mixColor(
+                  255,
+                  0,
+                  0
+                ),
+
+                lib.mixColor(
+                  255,
+                  255,
+                  0
+                )
+
+              ];
+
+
+              log(
+                'Zamorak colours loaded (green + red)',
+                'info'
+              );
+
+            }
+
+            else {
+
+              log(
+                'A1lib not found – colours may be limited',
+                'info'
+              );
+
+            }
+
+
+            log(
+              'ChatBoxReader created',
+              'info'
+            );
+
+          }
+
+          else {
+
+            log(
+              'ChatBoxReader global not found – using limited mode',
+              'info'
+            );
+
+          }
+
+        }
+
+        catch (e) {
+
+          log(
+            'Reader init: ' +
+            e.message,
+            'info'
+          );
+
+        }
+
+      }
+
+
+      // -------------------------------------------------------
+      // Force fresh chatbox detection
+      // -------------------------------------------------------
+
+      if (reader) {
+        reader.pos = null;
+      }
+
+
+      foundChat = false;
+
+
+      if (pollTimer) {
+        clearInterval(pollTimer);
+      }
+
+
+      pollTimer =
+        setInterval(
+          tick,
+          350
+        );
+
+
+      setStatus(
+        'Auto ON – looking for chat…',
+        'warn'
+      );
+
+
+      log(
+        'Auto-read started'
+      );
+
+    }
+
+
+    // =========================================================
+    // STOP AUTO
+    // =========================================================
+
+    function stopAuto() {
+
+      if (pollTimer) {
+
+        clearInterval(
+          pollTimer
+        );
+
+        pollTimer = null;
+
+      }
+
+    }
+
+
+    // =========================================================
+    // RECURSIVELY FIND A RECTANGLE
+    //
+    // ChatBoxReader structures can vary. Instead of assuming
+    // reader.pos.mainbox.rect, search the position object for
+    // anything that looks like:
+    //
+    // { x, y, width, height }
+    // =========================================================
+
+    function findRect(obj, depth = 0) {
+
+      if (!obj || depth > 6) {
+        return null;
+      }
+
+
+      if (
+        typeof obj === 'object' &&
+        typeof obj.x === 'number' &&
+        typeof obj.y === 'number' &&
+        typeof obj.width === 'number' &&
+        typeof obj.height === 'number' &&
+        obj.width > 10 &&
+        obj.height > 10
+      ) {
+
+        return {
+
+          x: obj.x,
+          y: obj.y,
+          width: obj.width,
+          height: obj.height
+
+        };
+
+      }
+
+
+      if (
+        typeof obj !== 'object'
+      ) {
+        return null;
+      }
+
+
+      for (
+        const key of Object.keys(obj)
+      ) {
+
+        try {
+
+          const result =
+            findRect(
+              obj[key],
+              depth + 1
+            );
+
+
+          if (result) {
+            return result;
+          }
+
+        }
+
+        catch (_) {}
+
+      }
+
+
+      return null;
+
+    }
+
+
+    // =========================================================
+    // HIGHLIGHT CHATBOX
+    // =========================================================
+
+    function highlightChat(r) {
+
+      if (!r) {
+
+        log(
+          'Chat found but no rectangle was available',
+          'info'
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        alt1.overLayClearGroup(
+          'zamcue-chat'
+        );
+
+        alt1.overLaySetGroup(
+          'zamcue-chat'
+        );
+
+
+        // -----------------------------------------------------
+        // Large green outer border
+        // -----------------------------------------------------
+
+        alt1.overLayRect(
+          0x00FF00,
+          r.x,
+          r.y,
+          r.width,
+          r.height,
+          10000,
+          8
+        );
+
+
+        // -----------------------------------------------------
+        // Yellow inner border
+        // -----------------------------------------------------
+
+        alt1.overLayRect(
+          0xFFFF00,
+          r.x + 4,
+          r.y + 4,
+          Math.max(1, r.width - 8),
+          Math.max(1, r.height - 8),
+          10000,
+          3
+        );
+
+
+        // -----------------------------------------------------
+        // Detection label
+        // -----------------------------------------------------
+
+        const labelX =
+          r.x +
+          Math.floor(r.width / 2);
+
+
+        const labelY =
+          Math.max(
+            20,
+            r.y - 18
+          );
+
+
+        // Shadow
+
+        alt1.overLayTextEx(
+          'CHAT DETECTED',
+          0x000000,
+          19,
+          labelX + 2,
+          labelY + 2,
+          10000,
+          '',
+          true,
+          true
+        );
+
+
+        // Green text
+
+        alt1.overLayTextEx(
+          'CHAT DETECTED',
+          0x00FF00,
+          19,
+          labelX,
+          labelY,
+          10000,
+          '',
+          true,
+          true
+        );
+
+
+        log(
+          'Highlighted chat box at ' +
+          r.x +
+          ',' +
+          r.y +
+          ' ' +
+          r.width +
+          'x' +
+          r.height,
+          'info'
+        );
+
+      }
+
+      catch (e) {
+
+        log(
+          'Highlight error: ' +
+          (e.message || e),
+          'info'
+        );
+
+      }
+
+    }
+
+
+    // =========================================================
+    // CAPTURE / OCR TICK
+    // =========================================================
+
+    function tick() {
+
+      if (
+        !autoEnabled ||
+        !window.alt1
+      ) {
+        return;
+      }
+
+
+      try {
+
+        if (
+          reader &&
+          typeof reader.find === 'function'
+        ) {
+
+
+          // ---------------------------------------------------
+          // Capture RS3
+          // ---------------------------------------------------
+
+          let img = null;
+
+
+          const lib =
+            window.A1lib ||
+            window.a1lib ||
+            null;
+
+
+          if (lib) {
+
+            if (
+              lib.captureHoldFullRs
+            ) {
+
+              img =
+                lib.captureHoldFullRs();
+
+            }
+
+            else if (
+              lib.captureHold
+            ) {
+
+              img =
+                lib.captureHold(
+                  0,
+                  0,
+                  alt1.rsWidth,
+                  alt1.rsHeight
+                );
+
+            }
+
+          }
+
+
+          if (
+            !img &&
+            window.alt1 &&
+            alt1.captureHoldFullRs
+          ) {
+
+            img =
+              alt1.captureHoldFullRs();
+
+          }
+
+
+          // ---------------------------------------------------
+          // Find chatbox
+          // ---------------------------------------------------
+
+          if (!reader.pos) {
+
+            const pos =
+              reader.find(img);
+
+
+            if (pos) {
+
+              foundChat = true;
+
+
+              setStatus(
+                'Chat found – watching…',
+                'ok'
+              );
+
+
+              log(
+                'Chatbox located',
+                'info'
+              );
+
+
+              // -----------------------------------------------
+              // Find rectangle inside reader.pos
+              // -----------------------------------------------
+
+              const r =
+                findRect(
+                  reader.pos
+                );
+
+
+              if (r) {
+
+                highlightChat(r);
+
+              }
+
+              else {
+
+                log(
+                  'Chat found, but could not locate a rectangle',
+                  'info'
+                );
+
+
+                try {
+
+                  log(
+                    'Chat position keys: ' +
+                    Object.keys(
+                      reader.pos || {}
+                    ).join(', '),
+                    'info'
+                  );
+
+                }
+
+                catch (_) {}
+
+              }
+
+            }
+
+            else {
+
+              setStatus(
+                'Looking for chatbox… (keep it visible)',
+                'warn'
+              );
+
+              return;
+
+            }
+
+          }
+
+
+          // ---------------------------------------------------
+          // OCR chat
+          // ---------------------------------------------------
+
+          const lines =
+            reader.read(img);
+
+
+          if (
+            lines &&
+            lines.length
+          ) {
+
+            processLines(
+              lines
+            );
+
+          }
+
+        }
+
+      }
+
+      catch (err) {
+
+        // Avoid flooding the log.
+
+        if (
+          Math.random() < 0.05
+        ) {
+
+          log(
+            'tick err: ' +
+            (
+              err.message ||
+              err
+            ),
+            'info'
+          );
+
+        }
+
+      }
+
+    }
+
+
+    // =========================================================
+    // OCR NORMALISATION
+    //
+    // Removes punctuation and spacing differences so:
+    //
+    // You're already dead
+    // Youre already dead
+    // YOU'RE   ALREADY   DEAD
+    //
+    // all become comparable.
+    // =========================================================
+
+    function clean(str) {
+
+      return (str || '')
+        .toString()
+        .toLowerCase()
+        .replace(/['’]/g, '')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    }
+
+
+    // =========================================================
+    // STRONGER OCR MATCH
+    // =========================================================
+
+    function matchesTrigger(
+      text,
+      trigger
+    ) {
+
+      const a =
+        clean(text)
+          .replace(/\s+/g, '');
+
+
+      const b =
+        clean(trigger)
+          .replace(/\s+/g, '');
+
+
+      if (!a || !b) {
+        return false;
+      }
+
+
+      return a.includes(b);
+
+    }
+
+
+    // =========================================================
+    // PROCESS OCR LINES
+    // =========================================================
+
+    function processLines(lines) {
+
+      for (
+        const line of lines
+      ) {
+
+
+        // -----------------------------------------------------
+        // ChatBoxReader normally provides .text.
+        // -----------------------------------------------------
+
+        let raw = '';
+
+
+        if (
+          typeof line === 'string'
+        ) {
+
+          raw = line;
+
+        }
+
+        else if (
+          line &&
+          line.text
+        ) {
+
+          raw = line.text;
+
+        }
+
+        else if (
+          line &&
+          line.fragments
+        ) {
+
+          raw =
+            line.fragments
+              .map(
+                f => f.text || ''
+              )
+              .join('');
+
+        }
+
+        else {
+
+          try {
+
+            raw =
+              JSON.stringify(
+                line
+              );
+
+          }
+
+          catch (_) {
+
+            raw = '';
+
+          }
+
+        }
+
+
+        const text =
+          clean(raw);
+
+
+        if (
+          !text ||
+          text.length < 4
+        ) {
+
+          continue;
+
+        }
+
+
+        // -----------------------------------------------------
+        // Debug OCR output
+        // -----------------------------------------------------
+
+        if (
+          text !== lastLogged &&
+          text.length > 8
+        ) {
+
+          lastLogged = text;
+
+
+          log(
+            'READ: ' +
+            text.slice(
+              0,
+              100
+            ),
+            'info'
+          );
+
+        }
+
+
+        // -----------------------------------------------------
+        // Check every cue
+        // -----------------------------------------------------
+
+        for (
+          const [id, cue]
+          of Object.entries(CUES)
+        ) {
+
+          for (
+            const trig
+            of cue.triggers
+          ) {
+
+            if (
+              matchesTrigger(
+                text,
+                trig
+              )
+            ) {
+
+              log(
+                'TRIGGER → ' +
+                cue.title,
+                'hit'
+              );
+
+
+              showBanner(id);
+
+
+              return;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    // =========================================================
+    // INIT
+    // =========================================================
+
+    function init() {
+
+      if (!window.alt1) {
+
+        setStatus(
+          'Open this page inside Alt1 Toolkit',
+          'err'
+        );
+
+
+        log(
+          'Not running inside Alt1'
+        );
+
+
+        return;
+
+      }
+
+
+      // -------------------------------------------------------
+      // Permission check
+      // -------------------------------------------------------
+
+      if (
+        alt1.permissionPixel === false ||
+        alt1.permissionOverlay === false
+      ) {
+
+        setStatus(
+          'Grant Pixel + Overlay permissions',
+          'warn'
+        );
+
+
+        log(
+          'Missing permissions – right-click app → Permissions'
+        );
+
+      }
+
+      else {
+
+        setStatus(
+          'Ready – turn on Auto-read or press 1-8',
+          'ok'
+        );
+
+      }
+
+
+      // -------------------------------------------------------
+      // Library status
+      // -------------------------------------------------------
+
+      setTimeout(
+        () => {
+
+          if (
+            window.Chatbox ||
+            window.A1lib ||
+            window.a1lib
+          ) {
+
+            log(
+              'Alt1 libraries loaded',
+              'info'
+            );
+
+          }
+
+          else {
+
+            log(
+              'Libraries present – buttons fully work',
+              'info'
+            );
+
+          }
+
+        },
+        600
+      );
+
+    }
+
+
+    // =========================================================
+    // START
+    // =========================================================
+
+    if (window.alt1) {
+
+      init();
+
+    }
+
+    else {
+
+      setTimeout(
+        init,
+        500
+      );
+
+    }
+
+
+    // =========================================================
+    // EXPOSE FOR DEBUGGING
+    // =========================================================
+
+    window.showBanner =
+      showBanner;
+
+    window.CUES =
+      CUES;
+
+    window.processLines =
+      processLines;
+
+  </script>
+
+</body>
+</html>
