@@ -1111,11 +1111,13 @@ shieldToggle.addEventListener("click", () => {
         if (action.type === "icon") {
           const label = iconName(action.src);
           const labelWidth = measureTextWidth(label, labelSize);
+          const cached = overlayIconCache[action.src];
+          const iconW = (cached && cached.status === "ready") ? cached.width : iconDrawSize;
           return {
             kind: "icon",
             src: action.src,
             label: label,
-            width: Math.ceil(Math.max(iconDrawSize, labelWidth) + slotPadding)
+            width: Math.ceil(Math.max(iconW, labelWidth) + slotPadding)
           };
         }
         return {
@@ -1126,7 +1128,13 @@ shieldToggle.addEventListener("click", () => {
       });
 
       const hasIconSlot = slots.some(s => s.kind === "icon");
-      const panelH = hasIconSlot ? 92 : 60;
+      const maxIconHeight = slots.reduce((max, s) => {
+        if (s.kind !== "icon") return max;
+        const cached = overlayIconCache[s.src];
+        const h = (cached && cached.status === "ready") ? cached.height : iconDrawSize;
+        return Math.max(max, h);
+      }, 0);
+      const panelH = hasIconSlot ? Math.ceil(maxIconHeight + 50) : 60;
 
       let totalWidth = 0;
       slots.forEach((s, i) => {
@@ -1162,20 +1170,25 @@ shieldToggle.addEventListener("click", () => {
           const cached = overlayIconCache[s.src];
 
           if (cached && cached.status === "ready") {
-            const ix = slotCx - Math.round(iconDrawSize / 2);
+            const iw = cached.width;
+            const ih = cached.height;
+            const ix = slotCx - Math.round(iw / 2);
             const iy = y + 10;
 
             try {
-              // Confirmed from in-game error output: this Alt1 build
-              // wants (x, y, imgstr, width, time) — position first,
-              // then the encoded image, then size/time. Every numeric
-              // arg must be a whole number or the native call throws.
-              alt1.overLayImage(rnd(ix), rnd(iy), cached.data, rnd(iconDrawSize), rnd(cue.duration));
+              // Confirmed from in-game error output: signature is
+              // (x, y, imgstr, imgwidth, time). Critically, Alt1
+              // does not scale — imgwidth must equal the actual
+              // pixel width of the encoded buffer or it throws
+              // "length of the string does not match the width".
+              // So icons render at native file resolution, not
+              // iconDrawSize.
+              alt1.overLayImage(rnd(ix), rnd(iy), cached.data, rnd(iw), rnd(cue.duration));
             } catch (e) {
               log("overLayImage failed for " + s.src + ": " + (e.message || e), "info");
             }
 
-            textCenteredAt(s.label, COLORS.white, labelSize, slotCx, iy + iconDrawSize + 6, cue.duration);
+            textCenteredAt(s.label, COLORS.white, labelSize, slotCx, iy + ih + 6, cue.duration);
           } else {
             // Icon not ready (or unsupported) — text label only, no broken cue.
             textCenteredAt(s.label, COLORS.white, textSize, slotCx, panelMidY - 11, cue.duration);
