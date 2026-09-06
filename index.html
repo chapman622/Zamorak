@@ -2014,15 +2014,20 @@ function centeredText(
        * expand the frame to 830px so it has absolute breathing room on the ends.
        * For all normal lines, keep your tight uniform 770px grid.
        */
+            /*
+       * Explicit ID Override: If the active cue layout is either the Infernus mechanic
+       * or the Defensive line, smash the width open to 860px directly to ensure 
+       * the left-aligned text never clips the right border line.
+       */
       let panelW = 770;
 
 
       if (
-        textLen >
-        25
+        id === "infernus" || 
+        id === "def"
       ) {
         
-        panelW = 830;
+        panelW = 860;
 
       }
 
@@ -2033,6 +2038,7 @@ function centeredText(
 
       const rowGap =
         16;
+
 
 
 
