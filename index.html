@@ -545,11 +545,18 @@ TOP BAR With Live Volume Controls
   <div id="settings">
 
 
-    <!-- ==========================================================
-         DISPLAY SETTINGS
-         ========================================================== -->
+        <!-- ============================================================
+    SETTINGS CONTAINER
+    ============================================================ -->
+    <div id="settings" style="display: none;">
+      
+      <div class="tabs">
+        <button id="displayTab" class="tab-btn active">Display</button>
+        <button id="triggersTab" class="tab-btn">Triggers</button>
+        <button id="advancedTab" class="tab-btn">Advanced</button>
+      </div>
 
-               <!-- ============================================================
+      <!-- ============================================================
       DISPLAY SETTINGS PANEL VIEW
       ============================================================ -->
       <div id="settingsView" class="view" style="display: none;">
@@ -573,7 +580,9 @@ TOP BAR With Live Volume Controls
           <div id="shieldToggle" class="toggle on"></div>
         </div>
 
-      </div> <!-- This closes settingsView perfectly at the very end of the group! -->
+      </div> <!-- Closes settingsView cleanly -->
+
+
 
 
 
