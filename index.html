@@ -1901,6 +1901,73 @@
        */
 
 
+      /*
+       * NO MECHANIC NAME.
+       */
+      const overlayText =
+        cue.actions
+          .map(
+            action =>
+              action.type ===
+              "icon"
+                ? iconName(
+                    action.src
+                  )
+                : action.text
+          )
+          .join(
+            "  →  "
+          );
+
+
+      const textSize =
+        25;
+
+
+      /*
+       * Same width estimate centeredText() uses internally,
+       * reused here so the box actually fits the text instead
+       * of always being a fixed 720px regardless of content.
+       */
+      const estTextWidth =
+        overlayText.length *
+        textSize *
+        0.48;
+
+
+      const horizontalPadding =
+        60;
+
+
+      const minPanelW =
+        280;
+
+
+      const maxPanelW =
+        900;
+
+
+      const panelW =
+        Math.max(
+          minPanelW,
+          Math.min(
+            maxPanelW,
+            Math.round(
+              estTextWidth +
+              horizontalPadding
+            )
+          )
+        );
+
+
+      const panelH =
+        155;
+
+
+      const rowGap =
+        12;
+
+
       const cx =
         Math.round(
           alt1.rsWidth /
@@ -1913,18 +1980,6 @@
           alt1.rsHeight /
           2
         );
-
-
-      const panelW =
-        720;
-
-
-      const panelH =
-        155;
-
-
-      const rowGap =
-        12;
 
 
       const x =
@@ -1978,29 +2033,10 @@
       );
 
 
-      /*
-       * NO MECHANIC NAME.
-       */
-      const overlayText =
-        cue.actions
-          .map(
-            action =>
-              action.type ===
-              "icon"
-                ? iconName(
-                    action.src
-                  )
-                : action.text
-          )
-          .join(
-            "  →  "
-          );
-
-
       centeredText(
         overlayText,
         COLORS.white,
-        25,
+        textSize,
         cx,
         y + 70,
         cue.duration
