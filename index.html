@@ -156,11 +156,26 @@
       flex: 0 0 auto;
     }
 
-    .action.icon {
-      width: var(--icon-size);
-      height: var(--icon-size);
-      padding: calc(var(--icon-size) * 0.06);
-    }
+   .action.icon {
+  width: var(--icon-size);
+  height: calc(var(--icon-size) + 18px); /* Added extra height for the text label */
+  padding: calc(var(--icon-size) * 0.06);
+  display: flex;         /* Added to stack icon and text vertically */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* New style for the text label beneath the icon */
+.action-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 
     .action img {
       width: var(--icon-image-size);
@@ -804,7 +819,7 @@ shieldToggle.addEventListener("click", () => {
     return true;
   });
 
-  // Loop through the filtered actions instead of cue.actions
+  // Loop through the filtered actions
   filteredActions.forEach((action, index) => {
     if (index > 0) {
       const arrow = document.createElement("div");
@@ -816,6 +831,7 @@ shieldToggle.addEventListener("click", () => {
     if (action.type === "icon") {
       const box = document.createElement("div");
       box.className = "action icon";
+      
       const img = document.createElement("img");
       img.src = action.src;
       img.alt = "";
@@ -824,6 +840,13 @@ shieldToggle.addEventListener("click", () => {
         box.textContent = "ICON MISSING";
       };
       box.appendChild(img);
+
+      // Create and append the label underneath the image
+      const label = document.createElement("div");
+      label.className = "action-label";
+      label.textContent = iconName(action.src);
+      box.appendChild(label);
+
       actionsEl.appendChild(box);
     } else {
       const box = document.createElement("div");
@@ -833,6 +856,7 @@ shieldToggle.addEventListener("click", () => {
     }
   });
 }
+
 
 
   function clearCueDisplay() {
