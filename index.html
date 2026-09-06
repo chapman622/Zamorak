@@ -13,87 +13,176 @@
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #1a1a1e;
+      background: #111216;
       color: #e8e8e8;
-      padding: 12px;
+      padding: 10px;
       user-select: none;
+      min-width: 320px;
     }
 
-    h1 {
-      font-size: 18px;
-      text-align: center;
-      margin-bottom: 6px;
+    /* ============================================================
+       TOP BAR
+       ============================================================ */
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .brand {
+      font-size: 15px;
+      font-weight: 800;
       color: #ff6b6b;
     }
 
-    .status {
+    .tab-btn {
+      border: 1px solid #33353d;
+      background: #1b1d23;
+      color: #aaa;
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: #252831;
+    }
+
+    /* ============================================================
+       GAMEPLAY BOARD
+       ============================================================ */
+
+    #cueBoard {
+      display: block;
+    }
+
+    .waiting {
+      min-height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #555963;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #25272e;
+      border-radius: 10px;
+      background: #15171c;
+    }
+
+    .cue-display {
+      min-height: 230px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background: #15171c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      transition: border-color 0.15s;
+    }
+
+    .actions {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .action {
+      min-width: 74px;
+      min-height: 74px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #3b3e47;
+      background: #20232a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       font-size: 12px;
-      color: #aaa;
-      margin-bottom: 10px;
-      min-height: 18px;
-    }
-
-    .status.ok {
-      color: #4ade80;
-    }
-
-    .status.warn {
-      color: #fbbf24;
-    }
-
-    .status.err {
-      color: #f87171;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    button.cue {
-      padding: 13px 6px;
-      font-size: 13px;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      font-weight: 800;
       color: #fff;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-      transition: transform 0.08s, filter 0.08s;
     }
 
-    button.cue:hover {
-      filter: brightness(1.15);
+    .action.icon {
+      width: 82px;
+      height: 82px;
+      padding: 5px;
     }
 
-    button.cue:active {
-      transform: scale(0.96);
+    .action img {
+      width: 64px;
+      height: 64px;
+      image-rendering: auto;
+      object-fit: contain;
     }
 
-    button.cue .key {
-      display: block;
-      font-size: 10px;
-      font-weight: 400;
-      opacity: 0.85;
-      margin-top: 2px;
+    .action.text {
+      min-width: 90px;
+      padding: 10px;
     }
 
-    .stun     { background: #dc2626; }
-    .slam     { background: #ea580c; }
-    .cage     { background: #7c3aed; }
-    .curl     { background: #2563eb; }
-    .infernus { background: #b45309; }
-    .channel  { background: #be185d; }
-    .rune     { background: #059669; }
-    .def      { background: #4b5563; }
+    .arrow {
+      color: #777b86;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Small text-only instructions */
+    .plain-action {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      padding: 12px 15px;
+      border-radius: 7px;
+      background: #20232a;
+      border: 1px solid #3b3e47;
+      text-align: center;
+    }
+
+    /* ============================================================
+       SETTINGS
+       ============================================================ */
+
+    #settings {
+      display: none;
+    }
+
+    .settings-section {
+      background: #17191e;
+      border: 1px solid #292c34;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .settings-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #aaa;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
     .auto-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 8px;
       align-items: center;
     }
 
@@ -132,13 +221,61 @@
       left: 23px;
     }
 
+    .status {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 8px;
+      min-height: 16px;
+    }
+
+    .status.ok {
+      color: #4ade80;
+    }
+
+    .status.warn {
+      color: #fbbf24;
+    }
+
+    .status.err {
+      color: #f87171;
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .test-btn {
+      border: 0;
+      border-radius: 6px;
+      padding: 9px 5px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .test-btn:hover {
+      filter: brightness(1.15);
+    }
+
+    .stun     { background: #dc2626; }
+    .slam     { background: #ea580c; }
+    .cage     { background: #7c3aed; }
+    .curl     { background: #2563eb; }
+    .infernus { background: #b45309; }
+    .channel  { background: #be185d; }
+    .rune     { background: #059669; }
+    .def      { background: #4b5563; }
+
     .log {
-      background: #111;
-      border: 1px solid #333;
+      background: #0c0d10;
+      border: 1px solid #292c34;
       border-radius: 6px;
       padding: 8px;
-      font-size: 11px;
-      height: 120px;
+      font-size: 10px;
+      height: 150px;
       overflow-y: auto;
       font-family: monospace;
       color: #9ca3af;
@@ -157,412 +294,699 @@
     }
 
     .help {
-      font-size: 11px;
-      color: #888;
-      margin-top: 8px;
+      font-size: 10px;
+      color: #777;
       line-height: 1.4;
     }
 
-    .help b {
-      color: #ccc;
+    /* ============================================================
+       MOBILE / SMALL WINDOW
+       ============================================================ */
+
+    @media (max-width: 430px) {
+      .cue-display {
+        min-height: 210px;
+      }
+
+      .action.icon {
+        width: 70px;
+        height: 70px;
+      }
+
+      .action img {
+        width: 55px;
+        height: 55px;
+      }
+
+      .arrow {
+        font-size: 18px;
+      }
+
+      .plain-action {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<h1>Zamorak Cue Board</h1>
+  <!-- ============================================================
+       TOP BAR
+       ============================================================ -->
 
-<div id="status" class="status">
-  Loading libraries…
-</div>
+  <div class="topbar">
+    <div class="brand">ZAMORAK</div>
 
-<div class="auto-row">
-  <label>Auto-read chat</label>
-  <div id="autoToggle"
-       class="toggle"
-       title="Toggle auto chat reading"></div>
-</div>
-
-<div class="grid">
-
-  <button class="cue stun" data-id="stun">
-    STUN HIM NOW
-    <span class="key">
-      1 · “I will tear you asunder!”
-    </span>
-  </button>
-
-  <button class="cue slam" data-id="slam">
-    SLAM / DEBILITATE
-    <span class="key">
-      2 · “This world will burn”
-    </span>
-  </button>
-
-  <button class="cue cage" data-id="cage">
-    CAGE – PRAY MAGE
-    <span class="key">
-      3 · “CHAOS, UNFETTERED!”
-    </span>
-  </button>
-
-  <button class="cue curl" data-id="curl">
-    CURL UP – RESONATE
-    <span class="key">
-      4 · “FEEL THE RAGE OF A GOD”
-    </span>
-  </button>
-
-  <button class="cue infernus" data-id="infernus">
-    INFERNUS
-    <span class="key">
-      5 · “Step into the dark…”
-    </span>
-  </button>
-
-  <button class="cue channel" data-id="channel">
-    CHANNELER / WITCH
-    <span class="key">
-      6 · “HEED MY CALL!”
-    </span>
-  </button>
-
-  <button class="cue rune" data-id="rune">
-    RUNE SMOKE
-    <span class="key">
-      7 · “You're already dead.”
-    </span>
-  </button>
-
-  <button class="cue def" data-id="def">
-    DEFENSIVE
-    <span class="key">
-      8 · Debilitate / Pray / Prot
-    </span>
-  </button>
-
-</div>
-
-<div class="log" id="log"></div>
-
-<div class="help">
-  <b>How to use</b><br>
-  • Click a button or press 1–8 for a large overlay.<br>
-  • Press 9 to test overlay colours.<br>
-  • Turn on Auto-read to watch Zamorak chat.<br>
-  • Keep chat visible while Auto-read is active.<br>
-  • 500%+: Channeler starts Asphyxiate · everyone must be on rune together in Infernus.
-</div>
+    <button
+      id="settingsBtn"
+      class="tab-btn">
+      ⚙ Settings
+    </button>
+  </div>
 
 
-<!-- ============================================================
-     ALT1 LIBRARIES
-     ============================================================ -->
+  <!-- ============================================================
+       MAIN GAMEPLAY VIEW
+       ============================================================ -->
 
-<script src="https://unpkg.com/alt1@0.1.3/dist/base/index.js"></script>
-<script src="https://unpkg.com/alt1@0.1.3/dist/ocr/index.js"></script>
-<script src="https://unpkg.com/alt1@0.1.3/dist/chatbox/index.js"></script>
+  <div id="cueBoard">
 
+    <div id="waiting" class="waiting">
+      WAITING FOR CUE…
+    </div>
 
-<script>
+    <div
+      id="cueDisplay"
+      class="cue-display"
+      style="display:none;">
+      <div id="actions" class="actions"></div>
+    </div>
 
-/* ================================================================
-   CUES
-   ================================================================ */
-
-const CUES = {
-
-  stun: {
-    title: "STUN HIM NOW",
-    text: "FREEDOM / ANTICIPATION  →  STUN ZAMORAK",
-    color: [220, 38, 38],
-    duration: 4000,
-    triggers: [
-      "will tear you",
-      "i will tear you asunder"
-    ]
-  },
-
-  slam: {
-    title: "SLAM — DEBILITATE",
-    text: "PRAY MELEE  •  WALK UNDER  •  DEBILITATE",
-    color: [234, 88, 12],
-    duration: 5000,
-    triggers: [
-      "world will burn",
-      "this world will burn"
-    ]
-  },
-
-  cage: {
-    title: "CAGE — PRAY MAGE",
-    text: "PRAY MAGE  •  DEBILITATE / DEVOTION",
-    color: [124, 58, 237],
-    duration: 5000,
-    triggers: [
-      "chaos, unfettered",
-      "chaos unfettered"
-    ]
-  },
-
-  curl: {
-    title: "CURL UP — RESONATE",
-    text: "EQUIP SHIELD  •  RESONATE THE HIT",
-    color: [37, 99, 235],
-    duration: 5000,
-    triggers: [
-      "feel the rage of a god",
-      "rage of a god"
-    ]
-  },
-
-  infernus: {
-    title: "INFERNUS",
-    text: "MATCH RUNE  •  STUN ZAMMY  •  FINISH DEMON",
-    color: [180, 83, 9],
-    duration: 7000,
-    triggers: [
-      "into the dark",
-      "step into the dark"
-    ]
-  },
-
-  channel: {
-    title: "CHANNELER / WITCH",
-    text: "KILL THE WITCH IN INFERNUS",
-    color: [190, 24, 93],
-    duration: 6000,
-    triggers: [
-      "heed my call"
-    ]
-  },
-
-  rune: {
-    title: "RUNE SMOKE",
-    text: "ANTICIPATE / FREEDOM OVER BLACK SMOKE",
-    color: [5, 150, 105],
-    duration: 4500,
-    triggers: [
-      "already dead",
-      "you're already dead",
-      "youre already dead"
-    ]
-  },
-
-  def: {
-    title: "DEFENSIVE",
-    text: "DEBILITATE  •  REFLECT  •  DEVOTION  •  PROTECT",
-    color: [75, 85, 99],
-    duration: 4000,
-    triggers: []
-  }
-
-};
+  </div>
 
 
-/* ================================================================
-   STATE
-   ================================================================ */
+  <!-- ============================================================
+       SETTINGS / TESTING
+       ============================================================ -->
 
-let autoEnabled = false;
-let lastFired = {};
-let reader = null;
-let pollTimer = null;
-let foundChat = false;
-let lastLogged = "";
+  <div id="settings">
 
-const statusEl =
-  document.getElementById("status");
+    <div class="settings-section">
 
-const logEl =
-  document.getElementById("log");
+      <div class="settings-title">
+        Auto Detection
+      </div>
 
-const autoToggle =
-  document.getElementById("autoToggle");
+      <div
+        id="status"
+        class="status">
+        Loading libraries…
+      </div>
 
+      <div class="auto-row">
+        <label>Auto-read Zamorak chat</label>
 
-/* ================================================================
-   LOGGING
-   ================================================================ */
+        <div
+          id="autoToggle"
+          class="toggle"
+          title="Toggle auto chat reading">
+        </div>
+      </div>
 
-function setStatus(msg, cls = "") {
-
-  statusEl.textContent = msg;
-  statusEl.className = "status " + cls;
-
-}
+    </div>
 
 
-function log(msg, cls = "") {
+    <div class="settings-section">
 
-  const d =
-    document.createElement("div");
+      <div class="settings-title">
+        Cue Testing
+      </div>
 
-  d.className = cls;
+      <div class="test-grid">
 
-  d.textContent =
-    new Date().toLocaleTimeString() +
-    "  " +
-    msg;
+        <button class="test-btn stun" data-id="stun">
+          1 · STUN
+        </button>
 
-  logEl.prepend(d);
+        <button class="test-btn slam" data-id="slam">
+          2 · SLAM
+        </button>
 
-  while (
-    logEl.children.length > 80
-  ) {
-    logEl.removeChild(
-      logEl.lastChild
-    );
-  }
+        <button class="test-btn cage" data-id="cage">
+          3 · CAGE
+        </button>
 
-}
+        <button class="test-btn curl" data-id="curl">
+          4 · CURL
+        </button>
+
+        <button class="test-btn infernus" data-id="infernus">
+          5 · INFERNUS
+        </button>
+
+        <button class="test-btn channel" data-id="channel">
+          6 · CHANNELER
+        </button>
+
+        <button class="test-btn rune" data-id="rune">
+          7 · RUNE SMOKE
+        </button>
+
+        <button class="test-btn def" data-id="def">
+          8 · DEFENSIVE
+        </button>
+
+      </div>
+
+    </div>
 
 
-/* ================================================================
-   ALT1 COLOUR FUNCTION
+    <div class="settings-section">
 
-   Alt1 documents colours as 8-bit RGBA ints.
+      <div class="settings-title">
+        OCR / Debug Log
+      </div>
 
-   IMPORTANT:
-   Use A1lib.mixColor when available.
+      <div
+        id="log"
+        class="log">
+      </div>
 
-   Do NOT use 0xFFFF00 for yellow, because that does not contain
-   the alpha byte expected by the Alt1 overlay API.
-   ================================================================ */
+    </div>
 
-function color(r, g, b) {
 
-  const lib =
-    window.A1lib ||
-    window.a1lib ||
-    null;
+    <div class="settings-section">
 
-  if (
-    lib &&
-    typeof lib.mixColor === "function"
-  ) {
+      <div class="settings-title">
+        Controls
+      </div>
 
-    /*
-     * Alt1's mixColor helper is the preferred way of producing
-     * the overlay integer.
-     *
-     * The classic Alt1 API uses RGB here.
-     */
-    return lib.mixColor(
-      r,
-      g,
-      b
-    );
+      <div class="help">
+        1–8 = test cue<br>
+        9 = overlay colour test<br>
+        Auto-read watches the RuneScape chatbox.<br>
+        Keep Zamorak chat visible while auto-read is active.
+      </div>
 
-  }
+    </div>
 
-  /*
-   * Documented RGBA byte layout:
-   *
-   * RR GG BB AA
-   *
-   * Full opacity = FF.
-   *
-   * >>> 0 converts the JS bitwise result into an unsigned
-   * 32-bit number before it is handed to Alt1.
-   */
-  return (
-    (
-      ((r & 255) << 24) |
-      ((g & 255) << 16) |
-      ((b & 255) << 8) |
-      255
-    ) >>> 0
+  </div>
+
+
+  <!-- ============================================================
+       ALT1 LIBRARIES
+       ============================================================ -->
+
+  <script src="https://unpkg.com/alt1@0.1.3/dist/base/index.js"></script>
+  <script src="https://unpkg.com/alt1@0.1.3/dist/ocr/index.js"></script>
+  <script src="https://unpkg.com/alt1@0.1.3/dist/chatbox/index.js"></script>
+
+
+  <script>
+
+  /* ================================================================
+     CUES
+
+     IMPORTANT:
+     These remain based ONLY on the existing cue board.
+     ================================================================ */
+
+  const CUES = {
+
+    stun: {
+      title: "STUN HIM NOW",
+
+      actions: [
+        { type: "icon", src: "icons/freedom.png" },
+        { type: "icon", src: "icons/anticipation.png" },
+        { type: "text", text: "STUN" }
+      ],
+
+      color: [220, 38, 38],
+      duration: 4000,
+
+      triggers: [
+        "will tear you",
+        "i will tear you asunder"
+      ]
+    },
+
+
+    slam: {
+      title: "SLAM",
+
+      actions: [
+        { type: "icon", src: "icons/deflect_melee.png" },
+        { type: "icon", src: "icons/debilitate.png" }
+      ],
+
+      color: [234, 88, 12],
+      duration: 5000,
+
+      triggers: [
+        "world will burn",
+        "this world will burn"
+      ]
+    },
+
+
+    cage: {
+      title: "CAGE",
+
+      actions: [
+        { type: "icon", src: "icons/deflect_magic.png" },
+        { type: "icon", src: "icons/debilitate.png" },
+        { type: "icon", src: "icons/devotion.png" }
+      ],
+
+      color: [124, 58, 237],
+      duration: 5000,
+
+      triggers: [
+        "chaos, unfettered",
+        "chaos unfettered"
+      ]
+    },
+
+
+    curl: {
+      title: "CURL UP",
+
+      actions: [
+        { type: "text", text: "SHIELD" },
+        { type: "icon", src: "icons/resonance.png" }
+      ],
+
+      color: [37, 99, 235],
+      duration: 5000,
+
+      triggers: [
+        "feel the rage of a god",
+        "rage of a god"
+      ]
+    },
+
+
+    infernus: {
+      title: "INFERNUS",
+
+      actions: [
+        { type: "text", text: "MATCH RUNE" },
+        { type: "text", text: "STUN ZAMMY" },
+        { type: "text", text: "FINISH DEMON" }
+      ],
+
+      color: [180, 83, 9],
+      duration: 7000,
+
+      triggers: [
+        "into the dark",
+        "step into the dark"
+      ]
+    },
+
+
+    channel: {
+      title: "CHANNELER / WITCH",
+
+      actions: [
+        { type: "text", text: "KILL THE WITCH IN INFERNUS" }
+      ],
+
+      color: [190, 24, 93],
+      duration: 6000,
+
+      triggers: [
+        "heed my call"
+      ]
+    },
+
+
+    rune: {
+      title: "RUNE SMOKE",
+
+      actions: [
+        { type: "icon", src: "icons/anticipation.png" },
+        { type: "icon", src: "icons/freedom.png" }
+      ],
+
+      color: [5, 150, 105],
+      duration: 4500,
+
+      triggers: [
+        "already dead",
+        "you're already dead",
+        "youre already dead"
+      ]
+    },
+
+
+    def: {
+      title: "DEFENSIVE",
+
+      actions: [
+        { type: "icon", src: "icons/debilitate.png" },
+        { type: "icon", src: "icons/reflect.png" },
+        { type: "icon", src: "icons/devotion.png" },
+        { type: "text", text: "PROTECT" }
+      ],
+
+      color: [75, 85, 99],
+      duration: 4000,
+
+      triggers: []
+    }
+
+  };
+
+
+  /* ================================================================
+     STATE
+     ================================================================ */
+
+  let autoEnabled = false;
+  let lastFired = {};
+  let reader = null;
+  let pollTimer = null;
+  let foundChat = false;
+  let lastLogged = "";
+
+  let currentCue = null;
+
+
+  /* ================================================================
+     DOM
+     ================================================================ */
+
+  const statusEl =
+    document.getElementById("status");
+
+  const logEl =
+    document.getElementById("log");
+
+  const autoToggle =
+    document.getElementById("autoToggle");
+
+  const cueBoard =
+    document.getElementById("cueBoard");
+
+  const settings =
+    document.getElementById("settings");
+
+  const settingsBtn =
+    document.getElementById("settingsBtn");
+
+  const waiting =
+    document.getElementById("waiting");
+
+  const cueDisplay =
+    document.getElementById("cueDisplay");
+
+  const actionsEl =
+    document.getElementById("actions");
+
+
+  /* ================================================================
+     SETTINGS TAB
+     ================================================================ */
+
+  settingsBtn.addEventListener(
+    "click",
+    () => {
+
+      const showingSettings =
+        settings.style.display === "block";
+
+      if (showingSettings) {
+
+        settings.style.display = "none";
+        cueBoard.style.display = "block";
+
+        settingsBtn.textContent =
+          "⚙ Settings";
+
+      }
+
+      else {
+
+        settings.style.display = "block";
+        cueBoard.style.display = "none";
+
+        settingsBtn.textContent =
+          "← Cue Board";
+
+      }
+
+    }
   );
 
-}
+
+  /* ================================================================
+     LOGGING
+     ================================================================ */
+
+  function setStatus(msg, cls = "") {
+
+    statusEl.textContent = msg;
+    statusEl.className = "status " + cls;
+
+  }
 
 
-/* ================================================================
-   BASIC COLOURS
-   ================================================================ */
+  function log(msg, cls = "") {
 
-const COLORS = {
+    const d =
+      document.createElement("div");
 
-  black:
-    color(0, 0, 0),
+    d.className = cls;
 
-  white:
-    color(255, 255, 255),
+    d.textContent =
+      new Date().toLocaleTimeString() +
+      "  " +
+      msg;
 
-  yellow:
-    color(255, 235, 40),
+    logEl.prepend(d);
 
-  red:
-    color(255, 30, 30),
+    while (
+      logEl.children.length > 80
+    ) {
 
-  green:
-    color(0, 255, 80),
+      logEl.removeChild(
+        logEl.lastChild
+      );
 
-  blue:
-    color(60, 160, 255)
+    }
 
-};
+  }
 
 
-/* ================================================================
-   FILLED PANEL
+  /* ================================================================
+     GAMEPLAY CUE DISPLAY
 
-   Alt1 exposes lines and rectangles rather than a filled rectangle.
-   Therefore the panel is built out of horizontal lines.
+     This is the important new part.
 
-   We deliberately use OPAQUE BLACK here. This avoids relying on
-   alpha blending, which the legacy overlay renderer has limited
-   support for.
-   ================================================================ */
+     The main app displays ONLY the actions.
+     It deliberately does NOT display cue.title.
+     ================================================================ */
 
-function filledRect(
-  col,
-  x,
-  y,
-  w,
-  h,
-  duration,
-  spacing = 3
-) {
+  function renderCue(id) {
 
-  for (
-    let yy = y;
-    yy < y + h;
-    yy += spacing
-  ) {
+    const cue =
+      CUES[id];
 
-    alt1.overLayLine(
-      col,
-      spacing,
-      x,
-      yy,
-      x + w,
-      yy,
-      duration
+    if (!cue) {
+      return;
+    }
+
+    currentCue =
+      id;
+
+    waiting.style.display =
+      "none";
+
+    cueDisplay.style.display =
+      "flex";
+
+    cueDisplay.style.borderColor =
+      `rgb(${cue.color[0]}, ${cue.color[1]}, ${cue.color[2]})`;
+
+    actionsEl.innerHTML = "";
+
+
+    cue.actions.forEach(
+      (action, index) => {
+
+        if (index > 0) {
+
+          const arrow =
+            document.createElement("div");
+
+          arrow.className =
+            "arrow";
+
+          arrow.textContent =
+            "→";
+
+          actionsEl.appendChild(
+            arrow
+          );
+
+        }
+
+
+        if (action.type === "icon") {
+
+          const box =
+            document.createElement("div");
+
+          box.className =
+            "action icon";
+
+          const img =
+            document.createElement("img");
+
+          img.src =
+            action.src;
+
+          img.alt = "";
+
+          img.onerror =
+            () => {
+
+              box.className =
+                "action text";
+
+              box.textContent =
+                "ICON MISSING";
+
+            };
+
+          box.appendChild(
+            img
+          );
+
+          actionsEl.appendChild(
+            box
+          );
+
+        }
+
+        else {
+
+          const box =
+            document.createElement("div");
+
+          box.className =
+            "action text";
+
+          box.textContent =
+            action.text;
+
+          actionsEl.appendChild(
+            box
+          );
+
+        }
+
+      }
     );
 
   }
 
-}
+
+  function clearCueDisplay() {
+
+    currentCue =
+      null;
+
+    cueDisplay.style.display =
+      "none";
+
+    waiting.style.display =
+      "flex";
+
+    actionsEl.innerHTML = "";
+
+  }
 
 
-/* ================================================================
-   OUTLINE
-   ================================================================ */
+  /* ================================================================
+     ALT1 COLOUR
+     ================================================================ */
 
-function outline(
-  col,
-  x,
-  y,
-  w,
-  h,
-  duration,
-  lineWidth
-) {
+  function color(r, g, b) {
 
-  alt1.overLayRect(
+    const lib =
+      window.A1lib ||
+      window.a1lib ||
+      null;
+
+    if (
+      lib &&
+      typeof lib.mixColor ===
+      "function"
+    ) {
+
+      return lib.mixColor(
+        r,
+        g,
+        b
+      );
+
+    }
+
+    return (
+      (
+        ((r & 255) << 24) |
+        ((g & 255) << 16) |
+        ((b & 255) << 8) |
+        255
+      ) >>> 0
+    );
+
+  }
+
+
+  const COLORS = {
+
+    black:
+      color(0, 0, 0),
+
+    white:
+      color(255, 255, 255),
+
+    yellow:
+      color(255, 235, 40),
+
+    red:
+      color(255, 30, 30),
+
+    green:
+      color(0, 255, 80),
+
+    blue:
+      color(60, 160, 255)
+
+  };
+
+
+  /* ================================================================
+     ALT1 OVERLAY HELPERS
+     ================================================================ */
+
+  function filledRect(
+    col,
+    x,
+    y,
+    w,
+    h,
+    duration,
+    spacing = 3
+  ) {
+
+    for (
+      let yy = y;
+      yy < y + h;
+      yy += spacing
+    ) {
+
+      alt1.overLayLine(
+        col,
+        spacing,
+        x,
+        yy,
+        x + w,
+        yy,
+        duration
+      );
+
+    }
+
+  }
+
+
+  function outline(
     col,
     x,
     y,
@@ -570,1255 +994,268 @@ function outline(
     h,
     duration,
     lineWidth
-  );
+  ) {
 
-}
+    alt1.overLayRect(
+      col,
+      x,
+      y,
+      w,
+      h,
+      duration,
+      lineWidth
+    );
+
+  }
 
 
-/* ================================================================
-   TEXT
-
-   Draw black shadow first, then coloured/white text.
-
-   This gives the text contrast even when the game background
-   happens to be bright.
-   ================================================================ */
-
-function textWithShadow(
-  text,
-  col,
-  size,
-  x,
-  y,
-  duration
-) {
-
-  const shadow =
-    color(0, 0, 0);
-
-  alt1.overLayText(
-    text,
-    shadow,
-    size,
-    x + 3,
-    y + 3,
-    duration
-  );
-
-  alt1.overLayText(
+  function textWithShadow(
     text,
     col,
     size,
     x,
     y,
     duration
-  );
+  ) {
 
-}
+    const shadow =
+      color(0, 0, 0);
 
-
-/* ================================================================
-   CENTERED TEXT
-
-   Alt1's overLayText uses x/y as the text position rather than
-   giving us a CSS-like centered layout.
-
-   This is an approximate centering function.
-   ================================================================ */
-
-function centeredText(
-  text,
-  col,
-  size,
-  cx,
-  y,
-  duration
-) {
-
-  /*
-   * Approximate character width.
-   * Rune/Alt1 overlay text is roughly proportional to size.
-   */
-  const approxWidth =
-    text.length *
-    size *
-    0.48;
-
-  const x =
-    Math.round(
-      cx -
-      approxWidth / 2
+    alt1.overLayText(
+      text,
+      shadow,
+      size,
+      x + 3,
+      y + 3,
+      duration
     );
 
-  textWithShadow(
+    alt1.overLayText(
+      text,
+      col,
+      size,
+      x,
+      y,
+      duration
+    );
+
+  }
+
+
+  function centeredText(
     text,
     col,
     size,
-    x,
+    cx,
     y,
     duration
-  );
-
-}
-
-
-/* ================================================================
-   SHOW CUE
-   ================================================================ */
-
-function showBanner(id) {
-
-  const cue =
-    CUES[id];
-
-  if (
-    !cue ||
-    !window.alt1
   ) {
 
-    log(
-      "Cannot display cue — Alt1 unavailable",
-      "info"
-    );
-
-    return;
-
-  }
-
-
-  const now =
-    Date.now();
-
-
-  /*
-   * Prevent OCR from firing the same cue repeatedly.
-   */
-  if (
-    lastFired[id] &&
-    now -
-    lastFired[id] <
-    2500
-  ) {
-
-    return;
-
-  }
-
-
-  lastFired[id] =
-    now;
-
-
-  try {
-
-    /*
-     * Clear any previous cue.
-     */
-    alt1.overLayClearGroup(
-      "zamcue"
-    );
-
-    alt1.overLaySetGroup(
-      "zamcue"
-    );
-
-
-    const cx =
-      Math.round(
-        alt1.rsWidth / 2
-      );
-
-    const cy =
-      Math.round(
-        alt1.rsHeight / 2
-      );
-
-
-    /*
-     * Large panel.
-     */
-    const panelW = 720;
-    const panelH = 170;
+    const approxWidth =
+      text.length *
+      size *
+      0.48;
 
     const x =
-      cx -
       Math.round(
-        panelW / 2
+        cx -
+        approxWidth / 2
       );
 
-    const y =
-      cy -
-      Math.round(
-        panelH / 2
-      );
-
-
-    /*
-     * IMPORTANT:
-     * Solid black. No alpha.
-     */
-    filledRect(
-      COLORS.black,
+    textWithShadow(
+      text,
+      col,
+      size,
       x,
       y,
-      panelW,
-      panelH,
-      cue.duration,
-      3
-    );
-
-
-    /*
-     * Outer coloured border.
-     */
-    const cueColor =
-      color(
-        cue.color[0],
-        cue.color[1],
-        cue.color[2]
-      );
-
-
-    outline(
-      cueColor,
-      x,
-      y,
-      panelW,
-      panelH,
-      cue.duration,
-      10
-    );
-
-
-    /*
-     * Inner white border.
-     */
-    outline(
-      COLORS.white,
-      x + 10,
-      y + 10,
-      panelW - 20,
-      panelH - 20,
-      cue.duration,
-      2
-    );
-
-
-    /*
-     * Title.
-     */
-    centeredText(
-      cue.title,
-      COLORS.yellow,
-      44,
-      cx,
-      y + 62,
-      cue.duration
-    );
-
-
-    /*
-     * Instruction.
-     */
-    centeredText(
-      cue.text,
-      COLORS.white,
-      22,
-      cx,
-      y + 112,
-      cue.duration
-    );
-
-
-    log(
-      "BANNER → " +
-      cue.title,
-      "hit"
+      duration
     );
 
   }
 
-  catch (e) {
 
-    log(
-      "Overlay error: " +
-      (
-        e.message ||
-        e
-      ),
-      "info"
-    );
+  /* ================================================================
+     SHOW CUE
 
-  }
+     Native Alt1 overlay is retained for now, but the mechanic
+     name is removed from it too.
 
-}
+     Icons remain in the HTML Cue Board because classic Alt1's
+     overlay API does not provide the simple arbitrary-PNG overlay
+     call we would need here.
+     ================================================================ */
 
+  function showBanner(id) {
 
-/* ================================================================
-   COLOUR TEST — PRESS 9
-   ================================================================ */
-
-function colourTest() {
-
-  if (
-    !window.alt1
-  ) {
-    return;
-  }
-
-
-  try {
-
-    alt1.overLayClearGroup(
-      "zamcue-test"
-    );
-
-    alt1.overLaySetGroup(
-      "zamcue-test"
-    );
-
-
-    const cx =
-      Math.round(
-        alt1.rsWidth / 2
-      );
-
-
-    /*
-     * Solid black background.
-     */
-    filledRect(
-      COLORS.black,
-      cx - 300,
-      80,
-      600,
-      250,
-      8000,
-      3
-    );
-
-
-    outline(
-      COLORS.white,
-      cx - 300,
-      80,
-      600,
-      250,
-      8000,
-      5
-    );
-
-
-    centeredText(
-      "RED TEST",
-      color(255, 0, 0),
-      32,
-      cx,
-      120,
-      8000
-    );
-
-
-    centeredText(
-      "GREEN TEST",
-      color(0, 255, 0),
-      32,
-      cx,
-      170,
-      8000
-    );
-
-
-    centeredText(
-      "BLUE TEST",
-      color(0, 100, 255),
-      32,
-      cx,
-      220,
-      8000
-    );
-
-
-    centeredText(
-      "WHITE TEST",
-      color(255, 255, 255),
-      32,
-      cx,
-      270,
-      8000
-    );
-
-
-    log(
-      "Colour test drawn — key 9",
-      "hit"
-    );
-
-  }
-
-  catch (e) {
-
-    log(
-      "Colour test error: " +
-      (
-        e.message ||
-        e
-      ),
-      "info"
-    );
-
-  }
-
-}
-
-
-/* ================================================================
-   BUTTONS
-   ================================================================ */
-
-document
-  .querySelectorAll(
-    "button.cue"
-  )
-  .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          showBanner(
-            button.dataset.id
-          );
-
-        }
-      );
-
-    }
-  );
-
-
-/* ================================================================
-   KEYBOARD
-   ================================================================ */
-
-document.addEventListener(
-  "keydown",
-  e => {
+    const cue =
+      CUES[id];
 
     if (
-      e.target.tagName === "INPUT" ||
-      e.target.tagName === "TEXTAREA"
+      !cue
     ) {
       return;
     }
 
 
-    const map = {
-
-      "1": "stun",
-      "2": "slam",
-      "3": "cage",
-      "4": "curl",
-      "5": "infernus",
-      "6": "channel",
-      "7": "rune",
-      "8": "def"
-
-    };
+    /* Update the actual Cue Board immediately. */
+    renderCue(id);
 
 
-    /*
-     * 9 = colour diagnostic.
-     */
     if (
-      e.key === "9"
+      !window.alt1
     ) {
 
-      e.preventDefault();
-
-      colourTest();
+      log(
+        "Cue displayed in app — Alt1 unavailable for overlay",
+        "info"
+      );
 
       return;
 
     }
 
 
+    const now =
+      Date.now();
+
+
     if (
-      map[e.key]
+      lastFired[id] &&
+      now -
+      lastFired[id] <
+      2500
     ) {
 
-      e.preventDefault();
+      return;
 
-      showBanner(
-        map[e.key]
+    }
+
+
+    lastFired[id] =
+      now;
+
+
+    try {
+
+      alt1.overLayClearGroup(
+        "zamcue"
       );
 
-    }
-
-  }
-);
-
-
-/* ================================================================
-   AUTO TOGGLE
-   ================================================================ */
-
-autoToggle.addEventListener(
-  "click",
-  () => {
-
-    autoEnabled =
-      !autoEnabled;
+      alt1.overLaySetGroup(
+        "zamcue"
+      );
 
 
-    autoToggle.classList.toggle(
-      "on",
-      autoEnabled
-    );
-
-
-    if (
-      autoEnabled
-    ) {
-
-      startAuto();
-
-    }
-
-    else {
-
-      stopAuto();
-
-
-      if (
-        window.alt1
-      ) {
-
-        alt1.overLayClearGroup(
-          "zamcue-chat"
+      const cx =
+        Math.round(
+          alt1.rsWidth / 2
         );
 
-      }
+      const cy =
+        Math.round(
+          alt1.rsHeight / 2
+        );
 
 
-      setStatus(
-        foundChat
-          ? "Chat found — Auto OFF"
-          : "Auto OFF"
+      const panelW =
+        720;
+
+      const panelH =
+        155;
+
+
+      const x =
+        cx -
+        Math.round(
+          panelW / 2
+        );
+
+      const y =
+        cy -
+        Math.round(
+          panelH / 2
+        );
+
+
+      filledRect(
+        COLORS.black,
+        x,
+        y,
+        panelW,
+        panelH,
+        cue.duration,
+        3
+      );
+
+
+      const cueColor =
+        color(
+          cue.color[0],
+          cue.color[1],
+          cue.color[2]
+        );
+
+
+      outline(
+        cueColor,
+        x,
+        y,
+        panelW,
+        panelH,
+        cue.duration,
+        8
+      );
+
+
+      outline(
+        COLORS.white,
+        x + 9,
+        y + 9,
+        panelW - 18,
+        panelH - 18,
+        cue.duration,
+        2
+      );
+
+
+      /*
+       * NO MECHANIC NAME.
+       *
+       * Build the overlay from the same cue-board actions.
+       */
+      const overlayText =
+        cue.actions
+          .map(
+            action =>
+              action.type === "icon"
+                ? iconName(action.src)
+                : action.text
+          )
+          .join("  →  ");
+
+
+      centeredText(
+        overlayText,
+        COLORS.white,
+        25,
+        cx,
+        y + 70,
+        cue.duration
       );
 
 
       log(
-        "Auto-read disabled"
+        "CUE → " +
+        overlayText,
+        "hit"
       );
-
-    }
-
-  }
-);
-
-
-/* ================================================================
-   START AUTO
-   ================================================================ */
-
-function startAuto() {
-
-  if (
-    !window.alt1
-  ) {
-
-    setStatus(
-      "Alt1 not detected",
-      "err"
-    );
-
-    autoEnabled =
-      false;
-
-    autoToggle.classList.remove(
-      "on"
-    );
-
-    return;
-
-  }
-
-
-  /*
-   * Create ChatBoxReader once.
-   */
-  if (
-    !reader
-  ) {
-
-    try {
-
-      const CB =
-        window.Chatbox &&
-        (
-          window.Chatbox.default ||
-          window.Chatbox
-        );
-
-
-      if (
-        CB
-      ) {
-
-        reader =
-          new CB();
-
-
-        /*
-         * Configure Zamorak/chat colours.
-         */
-        const lib =
-          window.A1lib ||
-          window.a1lib ||
-          null;
-
-
-        if (
-          lib &&
-          typeof lib.mixColor ===
-          "function"
-        ) {
-
-          reader.readargs =
-            reader.readargs ||
-            {};
-
-
-          reader.readargs.colors = [
-
-            lib.mixColor(
-              153,
-              255,
-              153
-            ),
-
-            lib.mixColor(
-              232,
-              4,
-              4
-            ),
-
-            lib.mixColor(
-              255,
-              255,
-              255
-            ),
-
-            lib.mixColor(
-              127,
-              169,
-              255
-            ),
-
-            lib.mixColor(
-              255,
-              0,
-              0
-            ),
-
-            lib.mixColor(
-              255,
-              255,
-              0
-            )
-
-          ];
-
-
-          log(
-            "Zamorak chat colours configured",
-            "info"
-          );
-
-        }
-
-
-        log(
-          "ChatBoxReader created",
-          "info"
-        );
-
-      }
-
-      else {
-
-        log(
-          "ChatBoxReader global not found",
-          "info"
-        );
-
-      }
 
     }
 
     catch (e) {
 
       log(
-        "Reader init: " +
-        e.message,
-        "info"
-      );
-
-    }
-
-  }
-
-
-  /*
-   * Force ChatBoxReader to locate chat again.
-   */
-  if (
-    reader
-  ) {
-
-    reader.pos =
-      null;
-
-  }
-
-
-  foundChat =
-    false;
-
-
-  if (
-    pollTimer
-  ) {
-
-    clearInterval(
-      pollTimer
-    );
-
-  }
-
-
-  pollTimer =
-    setInterval(
-      tick,
-      350
-    );
-
-
-  setStatus(
-    "Auto ON — looking for chat…",
-    "warn"
-  );
-
-
-  log(
-    "Auto-read started",
-    "info"
-  );
-
-}
-
-
-/* ================================================================
-   STOP AUTO
-   ================================================================ */
-
-function stopAuto() {
-
-  if (
-    pollTimer
-  ) {
-
-    clearInterval(
-      pollTimer
-    );
-
-    pollTimer =
-      null;
-
-  }
-
-}
-
-
-/* ================================================================
-   CAPTURE SCREEN
-   ================================================================ */
-
-function captureScreen() {
-
-  let img =
-    null;
-
-
-  const lib =
-    window.A1lib ||
-    window.a1lib ||
-    null;
-
-
-  try {
-
-    if (
-      lib &&
-      typeof lib.captureHoldFullRs ===
-      "function"
-    ) {
-
-      img =
-        lib.captureHoldFullRs();
-
-    }
-
-    else if (
-      lib &&
-      typeof lib.captureHold ===
-      "function"
-    ) {
-
-      img =
-        lib.captureHold(
-          0,
-          0,
-          alt1.rsWidth,
-          alt1.rsHeight
-        );
-
-    }
-
-    else if (
-      alt1.captureHoldFullRs
-    ) {
-
-      img =
-        alt1.captureHoldFullRs();
-
-    }
-
-  }
-
-  catch (e) {
-
-    log(
-      "Capture error: " +
-      (
-        e.message ||
-        e
-      ),
-      "info"
-    );
-
-  }
-
-
-  return img;
-
-}
-
-
-/* ================================================================
-   FIND RECTANGLE
-
-   ChatBoxReader's position object has varied between versions,
-   so recursively look for something shaped like:
-
-   { x, y, width, height }
-   ================================================================ */
-
-function findRectangle(
-  obj,
-  depth = 0
-) {
-
-  if (
-    !obj ||
-    depth > 8
-  ) {
-
-    return null;
-
-  }
-
-
-  if (
-    typeof obj === "object" &&
-    typeof obj.x === "number" &&
-    typeof obj.y === "number" &&
-    typeof obj.width === "number" &&
-    typeof obj.height === "number" &&
-    obj.width > 30 &&
-    obj.height > 10
-  ) {
-
-    return {
-
-      x:
-        Math.round(
-          obj.x
-        ),
-
-      y:
-        Math.round(
-          obj.y
-        ),
-
-      width:
-        Math.round(
-          obj.width
-        ),
-
-      height:
-        Math.round(
-          obj.height
-        )
-
-    };
-
-  }
-
-
-  if (
-    typeof obj !== "object"
-  ) {
-
-    return null;
-
-  }
-
-
-  for (
-    const key
-    of Object.keys(obj)
-  ) {
-
-    try {
-
-      const result =
-        findRectangle(
-          obj[key],
-          depth + 1
-        );
-
-
-      if (
-        result
-      ) {
-
-        return result;
-
-      }
-
-    }
-
-    catch (_) {}
-
-  }
-
-
-  return null;
-
-}
-
-
-/* ================================================================
-   HIGHLIGHT CHATBOX
-   ================================================================ */
-
-function highlightChat(
-  r
-) {
-
-  if (
-    !r
-  ) {
-
-    log(
-      "Chat found, but no rectangle was available",
-      "info"
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    alt1.overLayClearGroup(
-      "zamcue-chat"
-    );
-
-    alt1.overLaySetGroup(
-      "zamcue-chat"
-    );
-
-
-    /*
-     * Strong green outline.
-     */
-    const green =
-      color(
-        0,
-        255,
-        60
-      );
-
-
-    outline(
-      green,
-      r.x,
-      r.y,
-      r.width,
-      r.height,
-      10000,
-      8
-    );
-
-
-    /*
-     * Second yellow outline makes it extremely obvious.
-     */
-    const yellow =
-      color(
-        255,
-        255,
-        0
-      );
-
-
-    outline(
-      yellow,
-      r.x + 5,
-      r.y + 5,
-      Math.max(
-        1,
-        r.width - 10
-      ),
-      Math.max(
-        1,
-        r.height - 10
-      ),
-      10000,
-      2
-    );
-
-
-    /*
-     * Label above chat.
-     */
-    textWithShadow(
-      "CHAT DETECTED",
-      green,
-      20,
-      r.x,
-      Math.max(
-        25,
-        r.y - 12
-      ),
-      10000
-    );
-
-
-    log(
-      "CHAT HIGHLIGHT → " +
-      r.x +
-      "," +
-      r.y +
-      " " +
-      r.width +
-      "x" +
-      r.height,
-      "hit"
-    );
-
-  }
-
-  catch (e) {
-
-    log(
-      "Chat highlight error: " +
-      (
-        e.message ||
-        e
-      ),
-      "info"
-    );
-
-  }
-
-}
-
-
-/* ================================================================
-   AUTO TICK
-   ================================================================ */
-
-function tick() {
-
-  if (
-    !autoEnabled ||
-    !window.alt1
-  ) {
-
-    return;
-
-  }
-
-
-  try {
-
-    if (
-      !reader ||
-      typeof reader.find !==
-      "function"
-    ) {
-
-      return;
-
-    }
-
-
-    const img =
-      captureScreen();
-
-
-    if (
-      !img
-    ) {
-
-      return;
-
-    }
-
-
-    /*
-     * Locate chatbox.
-     */
-    if (
-      !reader.pos
-    ) {
-
-      const pos =
-        reader.find(
-          img
-        );
-
-
-      if (
-        pos
-      ) {
-
-        foundChat =
-          true;
-
-
-        setStatus(
-          "Chat found — watching…",
-          "ok"
-        );
-
-
-        log(
-          "Chatbox located",
-          "hit"
-        );
-
-
-        /*
-         * Find its rectangle.
-         */
-        const rect =
-          findRectangle(
-            reader.pos
-          );
-
-
-        if (
-          rect
-        ) {
-
-          highlightChat(
-            rect
-          );
-
-        }
-
-        else {
-
-          log(
-            "Chatbox found but no rectangle was exposed",
-            "info"
-          );
-
-
-          try {
-
-            log(
-              "reader.pos keys: " +
-              Object.keys(
-                reader.pos
-              ).join(", "),
-              "info"
-            );
-
-          }
-
-          catch (_) {}
-
-        }
-
-      }
-
-      else {
-
-        setStatus(
-          "Looking for chatbox… (keep it visible)",
-          "warn"
-        );
-
-
-        return;
-
-      }
-
-    }
-
-
-    /*
-     * Read chat.
-     */
-    const lines =
-      reader.read(
-        img
-      );
-
-
-    if (
-      lines &&
-      lines.length
-    ) {
-
-      processLines(
-        lines
-      );
-
-    }
-
-  }
-
-  catch (e) {
-
-    /*
-     * Don't spam the log every 350ms.
-     */
-    if (
-      Math.random() <
-      0.03
-    ) {
-
-      log(
-        "Tick error: " +
+        "Overlay error: " +
         (
           e.message ||
           e
@@ -1830,192 +1267,572 @@ function tick() {
 
   }
 
-}
 
+  function iconName(src) {
 
-/* ================================================================
-   CLEAN OCR TEXT
-   ================================================================ */
+    const names = {
 
-function clean(
-  str
-) {
+      "icons/freedom.png":
+        "FREEDOM",
 
-  return (
-    str || ""
-  )
-    .toString()
-    .toLowerCase()
-    .replace(
-      /[’']/g,
-      ""
-    )
-    .replace(
-      /[^a-z0-9\s]/g,
-      " "
-    )
-    .replace(
-      /\s+/g,
-      " "
-    )
-    .trim();
+      "icons/anticipation.png":
+        "ANTICIPATION",
 
-}
+      "icons/deflect_melee.png":
+        "DEFLECT MELEE",
 
+      "icons/debilitate.png":
+        "DEBILITATE",
 
-/* ================================================================
-   MATCH OCR
-   ================================================================ */
+      "icons/deflect_magic.png":
+        "DEFLECT MAGIC",
 
-function matches(
-  text,
-  trigger
-) {
+      "icons/devotion.png":
+        "DEVOTION",
 
-  const a =
-    clean(
-      text
-    )
-    .replace(
-      /\s/g,
+      "icons/resonance.png":
+        "RESONANCE",
+
+      "icons/reflect.png":
+        "REFLECT"
+
+    };
+
+    return (
+      names[src] ||
       ""
     );
-
-
-  const b =
-    clean(
-      trigger
-    )
-    .replace(
-      /\s/g,
-      ""
-    );
-
-
-  if (
-    !a ||
-    !b
-  ) {
-
-    return false;
 
   }
 
 
-  return a.includes(
-    b
+  /* ================================================================
+     COLOUR TEST
+     ================================================================ */
+
+  function colourTest() {
+
+    if (
+      !window.alt1
+    ) {
+      return;
+    }
+
+
+    try {
+
+      alt1.overLayClearGroup(
+        "zamcue-test"
+      );
+
+      alt1.overLaySetGroup(
+        "zamcue-test"
+      );
+
+
+      const cx =
+        Math.round(
+          alt1.rsWidth / 2
+        );
+
+
+      filledRect(
+        COLORS.black,
+        cx - 300,
+        80,
+        600,
+        250,
+        8000,
+        3
+      );
+
+
+      outline(
+        COLORS.white,
+        cx - 300,
+        80,
+        600,
+        250,
+        8000,
+        5
+      );
+
+
+      centeredText(
+        "RED TEST",
+        color(255, 0, 0),
+        32,
+        cx,
+        120,
+        8000
+      );
+
+      centeredText(
+        "GREEN TEST",
+        color(0, 255, 0),
+        32,
+        cx,
+        170,
+        8000
+      );
+
+      centeredText(
+        "BLUE TEST",
+        color(0, 100, 255),
+        32,
+        cx,
+        220,
+        8000
+      );
+
+      centeredText(
+        "WHITE TEST",
+        color(255, 255, 255),
+        32,
+        cx,
+        270,
+        8000
+      );
+
+
+      log(
+        "Colour test drawn — key 9",
+        "hit"
+      );
+
+    }
+
+    catch (e) {
+
+      log(
+        "Colour test error: " +
+        (
+          e.message ||
+          e
+        ),
+        "info"
+      );
+
+    }
+
+  }
+
+
+  /* ================================================================
+     TEST BUTTONS
+     ================================================================ */
+
+  document
+    .querySelectorAll(
+      ".test-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            showBanner(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  /* ================================================================
+     KEYBOARD
+     ================================================================ */
+
+  document.addEventListener(
+    "keydown",
+    e => {
+
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+
+
+      const map = {
+
+        "1": "stun",
+        "2": "slam",
+        "3": "cage",
+        "4": "curl",
+        "5": "infernus",
+        "6": "channel",
+        "7": "rune",
+        "8": "def"
+
+      };
+
+
+      if (
+        e.key === "9"
+      ) {
+
+        e.preventDefault();
+
+        colourTest();
+
+        return;
+
+      }
+
+
+      if (
+        map[e.key]
+      ) {
+
+        e.preventDefault();
+
+        showBanner(
+          map[e.key]
+        );
+
+      }
+
+    }
   );
 
-}
+
+  /* ================================================================
+     AUTO TOGGLE
+     ================================================================ */
+
+  autoToggle.addEventListener(
+    "click",
+    () => {
+
+      autoEnabled =
+        !autoEnabled;
 
 
-/* ================================================================
-   PROCESS OCR LINES
-   ================================================================ */
+      autoToggle.classList.toggle(
+        "on",
+        autoEnabled
+      );
 
-function processLines(
-  lines
-) {
 
-  for (
-    const line
-    of lines
-  ) {
+      if (
+        autoEnabled
+      ) {
 
-    let raw =
-      "";
+        startAuto();
+
+      }
+
+      else {
+
+        stopAuto();
+
+
+        if (
+          window.alt1
+        ) {
+
+          alt1.overLayClearGroup(
+            "zamcue-chat"
+          );
+
+        }
+
+
+        setStatus(
+          foundChat
+            ? "Chat found — Auto OFF"
+            : "Auto OFF"
+        );
+
+
+        log(
+          "Auto-read disabled"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* ================================================================
+     START AUTO
+     ================================================================ */
+
+  function startAuto() {
+
+    if (
+      !window.alt1
+    ) {
+
+      setStatus(
+        "Alt1 not detected",
+        "err"
+      );
+
+      autoEnabled =
+        false;
+
+      autoToggle.classList.remove(
+        "on"
+      );
+
+      return;
+
+    }
 
 
     if (
-      typeof line ===
-      "string"
+      !reader
     ) {
-
-      raw =
-        line;
-
-    }
-
-    else if (
-      line &&
-      line.text
-    ) {
-
-      raw =
-        line.text;
-
-    }
-
-    else if (
-      line &&
-      line.fragments
-    ) {
-
-      raw =
-        line.fragments
-          .map(
-            f =>
-              f.text || ""
-          )
-          .join("");
-
-    }
-
-    else {
 
       try {
 
-        raw =
-          JSON.stringify(
-            line
+        const CB =
+          window.Chatbox &&
+          (
+            window.Chatbox.default ||
+            window.Chatbox
+          );
+
+
+        if (
+          CB
+        ) {
+
+          reader =
+            new CB();
+
+
+          const lib =
+            window.A1lib ||
+            window.a1lib ||
+            null;
+
+
+          if (
+            lib &&
+            typeof lib.mixColor ===
+            "function"
+          ) {
+
+            reader.readargs =
+              reader.readargs ||
+              {};
+
+
+            reader.readargs.colors = [
+
+              lib.mixColor(
+                153,
+                255,
+                153
+              ),
+
+              lib.mixColor(
+                232,
+                4,
+                4
+              ),
+
+              lib.mixColor(
+                255,
+                255,
+                255
+              ),
+
+              lib.mixColor(
+                127,
+                169,
+                255
+              ),
+
+              lib.mixColor(
+                255,
+                0,
+                0
+              ),
+
+              lib.mixColor(
+                255,
+                255,
+                0
+              )
+
+            ];
+
+          }
+
+
+          log(
+            "ChatBoxReader created",
+            "info"
+          );
+
+        }
+
+        else {
+
+          log(
+            "ChatBoxReader global not found",
+            "info"
+          );
+
+        }
+
+      }
+
+      catch (e) {
+
+        log(
+          "Reader init: " +
+          e.message,
+          "info"
+        );
+
+      }
+
+    }
+
+
+    if (
+      reader
+    ) {
+
+      reader.pos =
+        null;
+
+    }
+
+
+    foundChat =
+      false;
+
+
+    if (
+      pollTimer
+    ) {
+
+      clearInterval(
+        pollTimer
+      );
+
+    }
+
+
+    pollTimer =
+      setInterval(
+        tick,
+        350
+      );
+
+
+    setStatus(
+      "Auto ON — looking for chat…",
+      "warn"
+    );
+
+
+    log(
+      "Auto-read started",
+      "info"
+    );
+
+  }
+
+
+  /* ================================================================
+     STOP AUTO
+     ================================================================ */
+
+  function stopAuto() {
+
+    if (
+      pollTimer
+    ) {
+
+      clearInterval(
+        pollTimer
+      );
+
+      pollTimer =
+        null;
+
+    }
+
+  }
+
+
+  /* ================================================================
+     CAPTURE SCREEN
+     ================================================================ */
+
+  function captureScreen() {
+
+    let img =
+      null;
+
+
+    const lib =
+      window.A1lib ||
+      window.a1lib ||
+      null;
+
+
+    try {
+
+      if (
+        lib &&
+        typeof lib.captureHoldFullRs ===
+        "function"
+      ) {
+
+        img =
+          lib.captureHoldFullRs();
+
+      }
+
+      else if (
+        lib &&
+        typeof lib.captureHold ===
+        "function"
+      ) {
+
+        img =
+          lib.captureHold(
+            0,
+            0,
+            alt1.rsWidth,
+            alt1.rsHeight
           );
 
       }
 
-      catch (_) {
+      else if (
+        alt1.captureHoldFullRs
+      ) {
 
-        raw =
-          "";
+        img =
+          alt1.captureHoldFullRs();
 
       }
 
     }
 
-
-    const text =
-      clean(
-        raw
-      );
-
-
-    if (
-      !text ||
-      text.length < 4
-    ) {
-
-      continue;
-
-    }
-
-
-    /*
-     * Debug OCR output.
-     */
-    if (
-      text !==
-      lastLogged &&
-      text.length > 8
-    ) {
-
-      lastLogged =
-        text;
-
+    catch (e) {
 
       log(
-        "READ: " +
-        text.slice(
-          0,
-          100
+        "Capture error: " +
+        (
+          e.message ||
+          e
         ),
         "info"
       );
@@ -2023,41 +1840,621 @@ function processLines(
     }
 
 
-    /*
-     * Match every cue.
-     */
-    for (
-      const [id, cue]
-      of Object.entries(
-        CUES
-      )
+    return img;
+
+  }
+
+
+  /* ================================================================
+     FIND RECTANGLE
+     ================================================================ */
+
+  function findRectangle(
+    obj,
+    depth = 0
+  ) {
+
+    if (
+      !obj ||
+      depth > 8
     ) {
 
-      for (
-        const trigger
-        of cue.triggers
-      ) {
+      return null;
+
+    }
+
+
+    if (
+      typeof obj === "object" &&
+      typeof obj.x === "number" &&
+      typeof obj.y === "number" &&
+      typeof obj.width === "number" &&
+      typeof obj.height === "number" &&
+      obj.width > 30 &&
+      obj.height > 10
+    ) {
+
+      return {
+
+        x:
+          Math.round(
+            obj.x
+          ),
+
+        y:
+          Math.round(
+            obj.y
+          ),
+
+        width:
+          Math.round(
+            obj.width
+          ),
+
+        height:
+          Math.round(
+            obj.height
+          )
+
+      };
+
+    }
+
+
+    if (
+      typeof obj !== "object"
+    ) {
+
+      return null;
+
+    }
+
+
+    for (
+      const key of
+      Object.keys(obj)
+    ) {
+
+      try {
+
+        const result =
+          findRectangle(
+            obj[key],
+            depth + 1
+          );
+
 
         if (
-          matches(
-            text,
-            trigger
-          )
+          result
         ) {
 
+          return result;
+
+        }
+
+      }
+
+      catch (_) {}
+
+    }
+
+
+    return null;
+
+  }
+
+
+  /* ================================================================
+     HIGHLIGHT CHAT
+     ================================================================ */
+
+  function highlightChat(
+    r
+  ) {
+
+    if (
+      !r
+    ) {
+
+      log(
+        "Chat found, but no rectangle was available",
+        "info"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      alt1.overLayClearGroup(
+        "zamcue-chat"
+      );
+
+      alt1.overLaySetGroup(
+        "zamcue-chat"
+      );
+
+
+      const green =
+        color(
+          0,
+          255,
+          60
+        );
+
+
+      outline(
+        green,
+        r.x,
+        r.y,
+        r.width,
+        r.height,
+        10000,
+        8
+      );
+
+
+      const yellow =
+        color(
+          255,
+          255,
+          0
+        );
+
+
+      outline(
+        yellow,
+        r.x + 5,
+        r.y + 5,
+        Math.max(
+          1,
+          r.width - 10
+        ),
+        Math.max(
+          1,
+          r.height - 10
+        ),
+        10000,
+        2
+      );
+
+
+      textWithShadow(
+        "CHAT DETECTED",
+        green,
+        20,
+        r.x,
+        Math.max(
+          25,
+          r.y - 12
+        ),
+        10000
+      );
+
+
+      log(
+        "CHAT HIGHLIGHT → " +
+        r.x +
+        "," +
+        r.y +
+        " " +
+        r.width +
+        "x" +
+        r.height,
+        "hit"
+      );
+
+    }
+
+    catch (e) {
+
+      log(
+        "Chat highlight error: " +
+        (
+          e.message ||
+          e
+        ),
+        "info"
+      );
+
+    }
+
+  }
+
+
+  /* ================================================================
+     AUTO TICK
+     ================================================================ */
+
+  function tick() {
+
+    if (
+      !autoEnabled ||
+      !window.alt1
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      if (
+        !reader ||
+        typeof reader.find !==
+        "function"
+      ) {
+
+        return;
+
+      }
+
+
+      const img =
+        captureScreen();
+
+
+      if (
+        !img
+      ) {
+
+        return;
+
+      }
+
+
+      /*
+       * Locate chatbox.
+       */
+
+      if (
+        !reader.pos
+      ) {
+
+        const pos =
+          reader.find(
+            img
+          );
+
+
+        if (
+          pos
+        ) {
+
+          foundChat =
+            true;
+
+
+          setStatus(
+            "Chat found — watching…",
+            "ok"
+          );
+
+
           log(
-            "TRIGGER → " +
-            cue.title,
+            "Chatbox located",
             "hit"
           );
 
 
-          showBanner(
-            id
+          const rect =
+            findRectangle(
+              reader.pos
+            );
+
+
+          if (
+            rect
+          ) {
+
+            highlightChat(
+              rect
+            );
+
+          }
+
+          else {
+
+            log(
+              "Chatbox found but no rectangle was exposed",
+              "info"
+            );
+
+          }
+
+        }
+
+        else {
+
+          setStatus(
+            "Looking for chatbox… (keep it visible)",
+            "warn"
           );
 
-
           return;
+
+        }
+
+      }
+
+
+      /*
+       * Read chat.
+       */
+
+      const lines =
+        reader.read(
+          img
+        );
+
+
+      if (
+        lines &&
+        lines.length
+      ) {
+
+        processLines(
+          lines
+        );
+
+      }
+
+    }
+
+    catch (e) {
+
+      if (
+        Math.random() <
+        0.03
+      ) {
+
+        log(
+          "Tick error: " +
+          (
+            e.message ||
+            e
+          ),
+          "info"
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /* ================================================================
+     CLEAN OCR TEXT
+     ================================================================ */
+
+  function clean(
+    str
+  ) {
+
+    return (
+      str || ""
+    )
+      .toString()
+      .toLowerCase()
+      .replace(
+        /[’']/g,
+        ""
+      )
+      .replace(
+        /[^a-z0-9\s]/g,
+        " "
+      )
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim();
+
+  }
+
+
+  /* ================================================================
+     MATCH OCR
+     ================================================================ */
+
+  function matches(
+    text,
+    trigger
+  ) {
+
+    const a =
+      clean(
+        text
+      )
+      .replace(
+        /\s/g,
+        ""
+      );
+
+
+    const b =
+      clean(
+        trigger
+      )
+      .replace(
+        /\s/g,
+        ""
+      );
+
+
+    if (
+      !a ||
+      !b
+    ) {
+
+      return false;
+
+    }
+
+
+    return a.includes(
+      b
+    );
+
+  }
+
+
+  /* ================================================================
+     PROCESS OCR LINES
+     ================================================================ */
+
+  function processLines(
+    lines
+  ) {
+
+    for (
+      const line of lines
+    ) {
+
+      let raw =
+        "";
+
+
+      if (
+        typeof line ===
+        "string"
+      ) {
+
+        raw =
+          line;
+
+      }
+
+      else if (
+        line &&
+        line.text
+      ) {
+
+        raw =
+          line.text;
+
+      }
+
+      else if (
+        line &&
+        line.fragments
+      ) {
+
+        raw =
+          line.fragments
+            .map(
+              f =>
+                f.text || ""
+            )
+            .join("");
+
+      }
+
+      else {
+
+        try {
+
+          raw =
+            JSON.stringify(
+              line
+            );
+
+        }
+
+        catch (_) {
+
+          raw =
+            "";
+
+        }
+
+      }
+
+
+      const text =
+        clean(
+          raw
+        );
+
+
+      if (
+        !text ||
+        text.length < 4
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * Debug OCR output.
+       */
+
+      if (
+        text !==
+        lastLogged &&
+        text.length > 8
+      ) {
+
+        lastLogged =
+          text;
+
+
+        log(
+          "READ: " +
+          text.slice(
+            0,
+            100
+          ),
+          "info"
+        );
+
+      }
+
+
+      /*
+       * Match every cue.
+       */
+
+      for (
+        const [id, cue]
+        of Object.entries(
+          CUES
+        )
+      ) {
+
+        for (
+          const trigger
+          of cue.triggers
+        ) {
+
+          if (
+            matches(
+              text,
+              trigger
+            )
+          ) {
+
+            log(
+              "TRIGGER → " +
+              id,
+              "hit"
+            );
+
+
+            showBanner(
+              id
+            );
+
+
+            return;
+
+          }
 
         }
 
@@ -2067,165 +2464,157 @@ function processLines(
 
   }
 
-}
+
+  /* ================================================================
+     INIT
+     ================================================================ */
+
+  function init() {
+
+    if (
+      !window.alt1
+    ) {
+
+      setStatus(
+        "Open this page inside Alt1 Toolkit",
+        "err"
+      );
 
 
-/* ================================================================
-   INIT
-   ================================================================ */
+      log(
+        "Alt1 was not detected"
+      );
 
-function init() {
 
-  if (
-    !window.alt1
-  ) {
+      return;
 
-    setStatus(
-      "Open this page inside Alt1 Toolkit",
-      "err"
+    }
+
+
+    if (
+      alt1.permissionPixel === false ||
+      alt1.permissionOverlay === false
+    ) {
+
+      setStatus(
+        "Grant Pixel + Overlay permissions",
+        "warn"
+      );
+
+
+      log(
+        "Missing Pixel or Overlay permission"
+      );
+
+    }
+
+    else {
+
+      setStatus(
+        "Ready — enable Auto-read",
+        "ok"
+      );
+
+    }
+
+
+    setTimeout(
+      () => {
+
+        const lib =
+          window.A1lib ||
+          window.a1lib;
+
+
+        if (
+          lib &&
+          typeof lib.mixColor ===
+          "function"
+        ) {
+
+          log(
+            "A1lib.mixColor available",
+            "hit"
+          );
+
+        }
+
+        else {
+
+          log(
+            "A1lib.mixColor unavailable — using RGBA fallback",
+            "info"
+          );
+
+        }
+
+
+        if (
+          window.Chatbox
+        ) {
+
+          log(
+            "Chatbox library available",
+            "hit"
+          );
+
+        }
+
+        else {
+
+          log(
+            "Chatbox library not exposed",
+            "info"
+          );
+
+        }
+
+      },
+      800
     );
-
-
-    log(
-      "Alt1 was not detected"
-    );
-
-
-    return;
 
   }
 
 
-  /*
-   * Permissions.
-   */
+  /* ================================================================
+     START
+     ================================================================ */
+
   if (
-    alt1.permissionPixel === false ||
-    alt1.permissionOverlay === false
+    window.alt1
   ) {
 
-    setStatus(
-      "Grant Pixel + Overlay permissions",
-      "warn"
-    );
-
-
-    log(
-      "Missing Pixel or Overlay permission"
-    );
+    init();
 
   }
 
   else {
 
-    setStatus(
-      "Ready — press 1–8 or enable Auto-read",
-      "ok"
+    setTimeout(
+      init,
+      500
     );
 
   }
 
 
-  /*
-   * Report library state.
-   */
-  setTimeout(
-    () => {
+  /* ================================================================
+     GLOBAL DEBUG ACCESS
+     ================================================================ */
 
-      const lib =
-        window.A1lib ||
-        window.a1lib;
+  window.showBanner =
+    showBanner;
 
+  window.CUES =
+    CUES;
 
-      if (
-        lib &&
-        typeof lib.mixColor ===
-        "function"
-      ) {
+  window.colourTest =
+    colourTest;
 
-        log(
-          "A1lib.mixColor available",
-          "hit"
-        );
+  window.processLines =
+    processLines;
 
-      }
-
-      else {
-
-        log(
-          "A1lib.mixColor unavailable — using RGBA fallback",
-          "info"
-        );
-
-      }
-
-
-      if (
-        window.Chatbox
-      ) {
-
-        log(
-          "Chatbox library available",
-          "hit"
-        );
-
-      }
-
-      else {
-
-        log(
-          "Chatbox library not exposed",
-          "info"
-        );
-
-      }
-
-    },
-    800
-  );
-
-}
-
-
-/* ================================================================
-   START
-   ================================================================ */
-
-if (
-  window.alt1
-) {
-
-  init();
-
-}
-
-else {
-
-  setTimeout(
-    init,
-    500
-  );
-
-}
-
-
-/* ================================================================
-   GLOBAL DEBUG ACCESS
-   ================================================================ */
-
-window.showBanner =
-  showBanner;
-
-window.CUES =
-  CUES;
-
-window.colourTest =
-  colourTest;
-
-window.processLines =
-  processLines;
-
-</script>
+  </script>
 
 </body>
 </html>
