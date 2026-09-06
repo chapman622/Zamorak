@@ -2,6 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <!-- Forces Alt1 to clear its browser cache and fetch live files instantly -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
   <title>Zamorak Cue Board</title>
 
   <style>
@@ -2007,15 +2012,7 @@
       const realTextPixelSize = textLen * 11.2;
 
 
-      let panelW =
-        Math.max(
-          750,
-          Math.round(
-            realTextPixelSize +
-            75
-          )
-        );
-
+      let panelW = 830;
 
       const panelH =
         60;
