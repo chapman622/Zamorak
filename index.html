@@ -1992,40 +1992,21 @@
        * variance (wide letters like M/W vs narrow ones like I
        * or the arrow) far more closely.
        */
-      const measuredTextWidth =
-        measureTextWidth(
-          overlayText,
-          textSize
-        );
-
-
-      /*
-       * Alt1's real overlay text is drawn by its own native
-       * renderer, NOT by this webpage's canvas/font engine — so
-       * the canvas measurement above is only ever an approximation
-       * of a DIFFERENT font, not a true measurement of what's
-       * actually drawn on screen. Rather than chase an exact
-       * match we can't reliably get, we pad generously so the
-       * box comfortably contains the real text even when the
-       * estimate runs low.
+            /*
+       * Dynamic box math: Uses our character estimation to stretch the box 
+       * for extra long text rows, but keeps a neat 750px minimum width for everything else.
        */
-            const estTextWidth =
-        measuredTextWidth;
+      const approxWidth = overlayText.length * 12.2;
 
 
-      const horizontalPadding =
-        40;
-
-
-      const minPanelW =
-        280;
-
-
-      const maxPanelW =
-        1200;
-
-
-      const panelW = 750;
+      const panelW =
+        Math.max(
+          750,
+          Math.round(
+            approxWidth +
+            80
+          )
+        );
 
 
       const panelH =
