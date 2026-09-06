@@ -563,6 +563,15 @@ TOP BAR With Live Volume Controls
             Transparent background
           </div>
 
+          <div class="setting-row">
+  <div>
+    <div class="setting-label">Include Shield Prep Cues</div>
+    <div class="setting-description">Show/speak "SHIELD" text during Curl Up. Turn off to avoid sound clutter.</div>
+  </div>
+  <div id="shieldToggle" class="toggle on" title="Toggle shield cue activation"></div>
+</div>
+
+
           <div class="setting-description">
             Remove the Cue Board panel behind the actions.
           </div>
@@ -996,6 +1005,7 @@ let foundChat = false;
 let lastLogged = "";
 let currentCue = null;
 let activeCues = [];
+let includeShieldCue = true; // Tracks whether shield actions are processed
 
 // Master audio level state variable tracking slider adjustments
 let masterVoiceVolume = 1.0; 
@@ -1047,6 +1057,14 @@ const voiceVolumeSlider = document.getElementById("voiceVolumeSlider");
 
 voiceVolumeSlider.addEventListener("input", () => {
   masterVoiceVolume = Number(voiceVolumeSlider.value);
+});
+
+    const shieldToggle = document.getElementById("shieldToggle");
+
+shieldToggle.addEventListener("click", () => {
+  includeShieldCue = !includeShieldCue;
+  shieldToggle.classList.toggle("on", includeShieldCue);
+  log("Shield prep actions " + (includeShieldCue ? "enabled" : "disabled"), "info");
 });
 
 
@@ -1970,20 +1988,21 @@ function centeredText(
             /*
        * Cleaned up mapping scope to fix the undefined length bug.
        */
-      const overlayText =
-        cue.actions
-          .map(
-            action =>
-              action.type ===
-              "icon"
-                ? iconName(
-                  action.src
-                )
-                : action.text
-          )
-          .join(
-            " \u2192 "
-          );
+            /*
+       * Dynamic Filter Matrix: Reads your UI toggle states live. 
+       * Strips out "SHIELD" actions completely if you want a clean headset environment.
+       */
+      const filteredActions = cue.actions.filter(action => {
+        if (!includeShieldCue && action.text === "SHIELD") {
+          return false;
+        }
+        return true;
+      });
+
+      const overlayText = filteredActions
+        .map(action => action.type === "icon" ? iconName(action.src) : action.text)
+        .join(" \u2192 ");
+
 
 
       const textSize =
