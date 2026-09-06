@@ -2004,14 +2004,22 @@
       const approxWidth = overlayText.length * 12.8;
 
 
-      const panelW =
-        Math.max(
-          750,
-          Math.round(
-            approxWidth +
-            100
-          )
-        );
+            /*
+       * Foolproof ID detection: If the active cue is the massive 
+       * defensive chain (id "def"), open the box to 960px.
+       * Otherwise, default to the clean uniform 750px width.
+       */
+      let panelW = 750;
+
+
+      if (
+        id ===
+        "def"
+      ) {
+        
+        panelW = 960;
+
+      }
 
 
       const panelH =
@@ -2020,6 +2028,7 @@
 
       const rowGap =
         16;
+
 
 
 
