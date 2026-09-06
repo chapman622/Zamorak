@@ -676,11 +676,17 @@
   });
 
   const shieldToggle = document.getElementById("shieldToggle");
-  shieldToggle.addEventListener("click", () => {
-    includeShieldCue = !includeShieldCue;
-    shieldToggle.classList.toggle("on", includeShieldCue);
-    log("Shield prep actions " + (includeShieldCue ? "enabled" : "disabled"), "info");
-  });
+shieldToggle.addEventListener("click", () => {
+  includeShieldCue = !includeShieldCue;
+  shieldToggle.classList.toggle("on", includeShieldCue);
+  log("Shield prep actions " + (includeShieldCue ? "enabled" : "disabled"), "info");
+  
+  // Force the UI board to update instantly if a cue is active
+  if (currentCue) {
+    renderCue(currentCue);
+  }
+});
+
 
   const cueBoard = document.getElementById("cueBoard");
   const settings = document.getElementById("settings");
@@ -783,43 +789,51 @@
 
 
   function renderCue(id) {
-    const cue = CUES[id];
-    if (!cue) return;
+  const cue = CUES[id];
+  if (!cue) return;
 
-    currentCue = id;
-    waiting.style.display = "none";
-    cueDisplay.style.display = "flex";
-    cueDisplay.style.borderColor = `rgb(${cue.color[0]}, ${cue.color[1]}, ${cue.color[2]})`;
-    actionsEl.innerHTML = "";
+  currentCue = id;
+  waiting.style.display = "none";
+  cueDisplay.style.display = "flex";
+  cueDisplay.style.borderColor = `rgb(${cue.color[0]}, ${cue.color[1]}, ${cue.color[2]})`;
+  actionsEl.innerHTML = "";
 
-    cue.actions.forEach((action, index) => {
-      if (index > 0) {
-        const arrow = document.createElement("div");
-        arrow.className = "arrow";
-        arrow.textContent = "→";
-        actionsEl.appendChild(arrow);
-      }
+  // Filter actions first based on the toggle setting
+  const filteredActions = cue.actions.filter(action => {
+    if (!includeShieldCue && action.text === "SHIELD") return false;
+    return true;
+  });
 
-      if (action.type === "icon") {
-        const box = document.createElement("div");
-        box.className = "action icon";
-        const img = document.createElement("img");
-        img.src = action.src;
-        img.alt = "";
-        img.onerror = () => {
-          box.className = "action text";
-          box.textContent = "ICON MISSING";
-        };
-        box.appendChild(img);
-        actionsEl.appendChild(box);
-      } else {
-        const box = document.createElement("div");
+  // Loop through the filtered actions instead of cue.actions
+  filteredActions.forEach((action, index) => {
+    if (index > 0) {
+      const arrow = document.createElement("div");
+      arrow.className = "arrow";
+      arrow.textContent = "→";
+      actionsEl.appendChild(arrow);
+    }
+
+    if (action.type === "icon") {
+      const box = document.createElement("div");
+      box.className = "action icon";
+      const img = document.createElement("img");
+      img.src = action.src;
+      img.alt = "";
+      img.onerror = () => {
         box.className = "action text";
-        box.textContent = action.text;
-        actionsEl.appendChild(box);
-      }
-    });
-  }
+        box.textContent = "ICON MISSING";
+      };
+      box.appendChild(img);
+      actionsEl.appendChild(box);
+    } else {
+      const box = document.createElement("div");
+      box.className = "action text";
+      box.textContent = action.text;
+      actionsEl.appendChild(box);
+    }
+  });
+}
+
 
   function clearCueDisplay() {
     currentCue = null;
@@ -913,10 +927,13 @@
 
       alt1.overLaySetGroup("zamcue");
 
-      const filteredActions = cue.actions.filter(action => {
-        if (!includeShieldCue && action.text === "SHIELD") return false;
-        return true;
-      });
+      // Filter shield actions if the setting is unchecked, then loop through filteredActions instead of cue.actions
+const filteredActions = cue.actions.filter(action => {
+    if (!includeShieldCue && action.text === "SHIELD") return false;
+    return true;
+});
+filteredActions.forEach((action, index) => { /* render actions normally */ });
+
 
       const overlayText = filteredActions
         .map(action => action.type === "icon" ? iconName(action.src) : action.text)
