@@ -3550,29 +3550,32 @@ function centeredText(
   processLines;
 
 /* ================================================================
-TEXT TO SPEECH AUDIO VOICE ANNOUNCER
+REINFORCED TEXT TO SPEECH DUAL AUDIO ENGINE
 ================================================================ */
 function speakActions(text) {
   if ('speechSynthesis' in window) {
-    // 1. Immediately cut off any old voice cue currently playing
     window.speechSynthesis.cancel();
     
-    // 2. Clean up text string (turn arrows into short commas for natural spoken pauses)
     const spokenText = text.replace(/→/g, ", ");
     
-    // 3. Create the native audio prompt payload
-    const utterance = new SpeechSynthesisUtterance(spokenText);
+    // Core Voice Channel
+    const utterance1 = new SpeechSynthesisUtterance(spokenText);
+    utterance1.rate = 1.35;   // Fast action pace
+    utterance1.pitch = 1.15;  // Higher crisp cut-through tone
+    utterance1.volume = masterVoiceVolume;
     
-    // 4. Set rapid combat pace parameters
-    utterance.rate = 1.35;   // Fast combat pace call response times
-    utterance.pitch = 1.15;  // Higher tonal pitch cuts through heavy boss ambient loops
-    utterance.volume = masterVoiceVolume; // Binds layout level dynamically to slider settings
+    // Secondary Ghost Presence Channel (Creates a thick boost)
+    const utterance2 = new SpeechSynthesisUtterance(spokenText);
+    utterance2.rate = 1.35;
+    utterance2.pitch = 1.15;
+    utterance2.volume = masterVoiceVolume;
 
-    
-    // 5. Fire audio out to your headset!
-    window.speechSynthesis.speak(utterance);
+    // Fire both channels simultaneously to amplify your audio output presence
+    window.speechSynthesis.speak(utterance1);
+    window.speechSynthesis.speak(utterance2);
   }
 }
+
 
 </script>
 
