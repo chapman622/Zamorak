@@ -1807,16 +1807,14 @@ function centeredText(
   size,
   cx,
   y,
-  duration
+  duration,
+  panelW // Added panelW to the parameters here
 ) {
 
   /*
-   * Left-alignment matrix: Forces the text baseline to lock onto 
-   * the left side of your uniform 770px boxes, rather than centering itself.
+   * Left-alignment matrix: Computes the precise box left edge
+   * using the real panel width passed dynamically into the call execution.
    */
-  const panelW = 770;
-
-
   const boxLeftEdge =
     cx -
     Math.round(
@@ -1862,6 +1860,7 @@ function centeredText(
   );
 
 }
+
 
 
 
@@ -2116,14 +2115,16 @@ function centeredText(
       );
 
 
-      centeredText(
+            centeredText(
         overlayText,
         COLORS.white,
         textSize,
         cx,
         y + 16,
-        cue.duration
+        cue.duration,
+        panelW // Added panelW here to link it with your layout math
       );
+
 
 
       log(
