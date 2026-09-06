@@ -1811,9 +1811,20 @@ function centeredText(
 ) {
 
   /*
-   * Clean native alignment: Setting the final layout parameter to 1 
-   * tells Alt1 to use cx as the perfect horizontal center spine for the font.
+   * Reliable layout math: Uses your built-in measureTextWidth canvas tool 
+   * to calculate the exact pixel footprint of the sentence.
    */
+  const realPixelWidth = measureTextWidth(text, size);
+
+
+  const x =
+    Math.round(
+      cx -
+      realPixelWidth /
+      2
+    );
+
+
   const shadow =
     color(
       0,
@@ -1826,10 +1837,9 @@ function centeredText(
     text,
     shadow,
     size,
-    cx + 3,
+    x + 3,
     y + 3,
-    duration,
-    1
+    duration
   );
 
 
@@ -1837,13 +1847,13 @@ function centeredText(
     text,
     col,
     size,
-    cx,
+    x,
     y,
-    duration,
-    1
+    duration
   );
 
 }
+
 
 
 
