@@ -1808,58 +1808,17 @@ function centeredText(
   cx,
   y,
   duration,
-  panelW
+  panelW // Accepts the calculated panel width dynamically
 ) {
+  const boxLeftEdge = cx - Math.round(panelW / 2);
+  const leftPadding = 35;
+  const x = boxLeftEdge + leftPadding;
+  const shadow = color(0, 0, 0);
 
-  /*
-   * Left-alignment matrix: Computes the precise box boundary edge 
-   * using the variable panelW value passed dynamically into the call execution.
-   */
-  const boxLeftEdge =
-    cx -
-    Math.round(
-      panelW /
-      2
-    );
-
-
-  const leftPadding =
-    35;
-
-
-  const x =
-    boxLeftEdge +
-    leftPadding;
-
-
-  const shadow =
-    color(
-      0,
-      0,
-      0
-    );
-
-
-  alt1.overLayText(
-    text,
-    shadow,
-    size,
-    x + 3,
-    y + 3,
-    duration
-  );
-
-
-  alt1.overLayText(
-    text,
-    col,
-    size,
-    x,
-    y,
-    duration
-  );
-
+  alt1.overLayText(text, shadow, size, x + 3, y + 3, duration);
+  alt1.overLayText(text, col, size, x, y, duration);
 }
+
 
 
 
@@ -2115,7 +2074,7 @@ function centeredText(
       );
 
 
-      centeredText(
+            centeredText(
         overlayText,
         COLORS.white,
         textSize,
@@ -2124,6 +2083,7 @@ function centeredText(
         cue.duration,
         panelW
       );
+
 
 
 
