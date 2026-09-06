@@ -1986,29 +1986,15 @@
         25;
 
 
+    
+                 // Measures the text character length directly inside the function
+      let textLen = (typeof overlayText !== "undefined" && overlayText) ? overlayText.length : 45;
+
       /*
-       * Actual measured text width, rather than a flat
-       * per-character guess — this tracks real character-width
-       * variance (wide letters like M/W vs narrow ones like I
-       * or the arrow) far more closely.
+       * If the string has more than 35 characters, it stretches the panel out.
+       * 1100px guarantees massive strings like Row 8 fit with room to spare.
        */
-            /*
-            /*
-       * Automatic layout scaling: If any text string on screen grows 
-       * longer than 40 characters, stretch the frame wide to 960px.
-       * Otherwise, lock it to the standard uniform 750px footprint.
-       */
-      let panelW = 750;
-
-
-      if (
-        overlayText && 
-        overlayText.length > 40
-      ) {
-        
-        panelW = 960;
-
-      }
+      let panelW = (textLen > 35) ? 1100 : 750;
 
 
       const panelH =
