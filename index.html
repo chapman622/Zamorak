@@ -3550,31 +3550,38 @@ function centeredText(
   processLines;
 
 /* ================================================================
-REINFORCED TEXT TO SPEECH DUAL AUDIO ENGINE
+HIGH-CLARITY TEXT TO SPEECH SINGLE AUDIO ENGINE
 ================================================================ */
 function speakActions(text) {
   if ('speechSynthesis' in window) {
+    // 1. Instantly kill any old phrase running
     window.speechSynthesis.cancel();
     
     const spokenText = text.replace(/→/g, ", ");
+    const utterance = new SpeechSynthesisUtterance(spokenText);
     
-    // Core Voice Channel
-    const utterance1 = new SpeechSynthesisUtterance(spokenText);
-    utterance1.rate = 1.35;   // Fast action pace
-    utterance1.pitch = 1.15;  // Higher crisp cut-through tone
-    utterance1.volume = masterVoiceVolume;
+    // 2. Scan system and prioritize a sharp, distinct English accent voice
+    const voices = window.speechSynthesis.getVoices();
+    const premiumVoice = voices.find(v => 
+      v.name.includes("David") || 
+      v.name.includes("Google US English") || 
+      v.name.includes("Zira")
+    );
     
-    // Secondary Ghost Presence Channel (Creates a thick boost)
-    const utterance2 = new SpeechSynthesisUtterance(spokenText);
-    utterance2.rate = 1.35;
-    utterance2.pitch = 1.15;
-    utterance2.volume = masterVoiceVolume;
+    if (premiumVoice) {
+      utterance.voice = premiumVoice;
+    }
+    
+    // 3. Fast combat pace with clear cut-through tone settings
+    utterance.rate = 1.35;   // Faster speed to stay ahead of boss cycles
+    utterance.pitch = 1.15;  // Higher crisp tone cuts through loud sounds
+    utterance.volume = masterVoiceVolume; // Tied cleanly to your topbar slider
 
-    // Fire both channels simultaneously to amplify your audio output presence
-    window.speechSynthesis.speak(utterance1);
-    window.speechSynthesis.speak(utterance2);
+    // 4. Fire the single clear voice channel
+    window.speechSynthesis.speak(utterance);
   }
 }
+
 
 
 </script>
