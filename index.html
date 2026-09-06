@@ -1993,10 +1993,12 @@
        * or the arrow) far more closely.
        */
             /*
-       * Dynamic box math: Uses our character estimation to stretch the box 
-       * for extra long text rows, but keeps a neat 750px minimum width for everything else.
+      /*
+       * Dynamic box math using the local overlayText variable.
+       * Stretches the box for long cues like defensive sequence 8,
+       * but maintains a neat uniform 750px minimum width for rows 1-7.
        */
-      const approxWidth = message.length * 12.2;
+      const approxWidth = overlayText.length * 12.2;
 
 
       const panelW =
@@ -2015,6 +2017,7 @@
 
       const rowGap =
         16;
+
 
 
 
