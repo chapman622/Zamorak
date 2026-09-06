@@ -2097,6 +2097,9 @@ function centeredText(
         "hit"
       );
 
+      // Trigger the voice synthesizer engine to announce the rotation
+      speakActions(overlayText);
+
     }
 
     catch (e) {
@@ -2557,6 +2560,31 @@ function centeredText(
             ];
 
           }
+
+          /* ================================================================
+TEXT TO SPEECH AUDIO VOICE ANNOUNCER
+================================================================ */
+function speakActions(text) {
+  if ('speechSynthesis' in window) {
+    // 1. Immediately cut off any old voice cue currently playing
+    window.speechSynthesis.cancel();
+    
+    // 2. Clean up text string (turn arrows into short commas for natural spoken pauses)
+    const spokenText = text.replace(/→/g, ", ");
+    
+    // 3. Create the native audio prompt payload
+    const utterance = new SpeechSynthesisUtterance(spokenText);
+    
+    // 4. Set rapid combat pace parameters
+    utterance.rate = 1.15; // Speaks slightly faster to match rapid boss cycles
+    utterance.pitch = 1.0;  // High clarity tonal pitch
+    utterance.volume = 1.0; // Master volume balance scale
+    
+    // 5. Fire audio out to your headset!
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
 
 
           log(
