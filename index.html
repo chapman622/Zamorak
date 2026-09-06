@@ -1997,8 +1997,11 @@
        * Dynamic box math using the local overlayText variable.
        * Stretches the box for long cues like defensive sequence 8,
        * but maintains a neat uniform 750px minimum width for rows 1-7.
+      /*
+       * Expanded dynamic math: Adjusted multiplier to 12.8 and padding to 100 
+       * to safely push the box wider and keep long lines from clipping the borders.
        */
-      const approxWidth = overlayText.length * 12.2;
+      const approxWidth = overlayText.length * 12.8;
 
 
       const panelW =
@@ -2006,7 +2009,7 @@
           750,
           Math.round(
             approxWidth +
-            80
+            100
           )
         );
 
@@ -2017,6 +2020,7 @@
 
       const rowGap =
         16;
+
 
 
 
