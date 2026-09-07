@@ -1233,7 +1233,7 @@ shieldToggle.addEventListener("click", () => {
       const gain = audioCtx.createGain();
       osc.type = "sine";
       osc.frequency.value = freq;
-      const vol = Math.max(0, Math.min(1, masterVoiceVolume)) * 0.12;
+      const vol = Math.max(0, Math.min(1, masterVoiceVolume)) * 0.2;
       gain.gain.setValueAtTime(vol, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationMs / 1000);
       osc.connect(gain);
