@@ -412,6 +412,16 @@
       line-height: 1.4;
     }
 
+    .p7-countdown {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 900;
+      color: #facc15;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px #000;
+    }
+
     @media (max-width: 430px) {
       body { padding: 6px; }
       .cue-display { min-height: 210px; }
@@ -445,6 +455,13 @@
     <button id="settingsBtn" class="tab-btn">⚙ Settings</button>
 
   </div>
+
+
+  <!-- ============================================================
+       P7 COUNTDOWN (shown between the strike window and the
+       melee+blast follow-up)
+       ============================================================ -->
+  <div id="p7Countdown" class="p7-countdown" style="display:none;"></div>
 
 
   <!-- ============================================================
@@ -765,6 +782,61 @@ shieldToggle.addEventListener("click", () => {
   const transparentToggle = document.getElementById("transparentToggle");
   const iconSizeSlider = document.getElementById("iconSize");
   const iconSizeValue = document.getElementById("iconSizeValue");
+  const p7CountdownEl = document.getElementById("p7Countdown");
+
+  /*
+   * Ticks a visible countdown for `totalSeconds`, both as overlay
+   * text in-game (if Alt1 is present) and as a label on the browser
+   * board, then calls onComplete once it hits zero. Used to bridge
+   * the gap between the P7 stumble message and the melee+blast
+   * follow-up banner, since that gap has no chat trigger of its own.
+   */
+  function startP7Countdown(totalSeconds, onComplete) {
+    let remaining = totalSeconds;
+
+    const drawOverlay = () => {
+      if (!window.alt1) return;
+      try {
+        alt1.overLayClearGroup("zamcue-countdown");
+        if (remaining > 0) {
+          alt1.overLaySetGroup("zamcue-countdown");
+          const cx = Math.round(alt1.rsWidth / 2);
+          const cy = Math.round(alt1.rsHeight / 2) + 160;
+          textCenteredAt(String(remaining), COLORS.yellow, 40, cx, cy, 1100);
+        }
+      } catch (e) {
+        log("Countdown overlay error: " + (e.message || e), "info");
+      }
+    };
+
+    const drawBrowser = () => {
+      if (remaining > 0) {
+        p7CountdownEl.textContent = "Melee + blasts in " + remaining + "…";
+        p7CountdownEl.style.display = "block";
+      } else {
+        p7CountdownEl.style.display = "none";
+      }
+    };
+
+    drawOverlay();
+    drawBrowser();
+
+    const timer = setInterval(() => {
+      remaining -= 1;
+      drawOverlay();
+      drawBrowser();
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        if (window.alt1) {
+          try {
+            alt1.overLayClearGroup("zamcue-countdown");
+          } catch (e) {}
+        }
+        onComplete();
+      }
+    }, 1000);
+  }
 
 
   function loadDisplaySettings() {
@@ -1251,7 +1323,7 @@ shieldToggle.addEventListener("click", () => {
       speakActions(overlayTextLog);
 
       if (id === "p7_strike") {
-        setTimeout(() => showBanner("p7_incoming"), 5000);
+        startP7Countdown(5, () => showBanner("p7_incoming"));
       }
 
     } catch (e) {
