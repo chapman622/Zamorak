@@ -522,6 +522,8 @@
         <button class="test-btn channel" data-id="channel">6 · CHANNELER</button>
         <button class="test-btn rune" data-id="rune">7 · RUNE SMOKE</button>
         <button class="test-btn def" data-id="def">8 · DEFENSIVE</button>
+        <button class="test-btn stun" data-id="p7_strike">9 · P7 STRIKE</button>
+        <button class="test-btn channel" data-id="p7_demon">0 · P7 DEMON</button>
       </div>
     </div>
 
@@ -539,7 +541,8 @@
       <div class="settings-title">Controls</div>
       <div class="help">
         1–8 = test cue<br>
-        9 = overlay colour test<br>
+        9 = P7 strike window · 0 = P7 demon<br>
+        C = overlay colour test<br>
         Auto-read watches the RuneScape chatbox.<br>
         Keep Zamorak chat visible while auto-read is active.
       </div>
@@ -649,6 +652,46 @@
       ],
       color: [75, 85, 99],
       duration: 4000,
+      triggers: []
+    },
+
+    p7_strike: {
+      title: "P7: STRIKE NOW",
+      actions: [
+        { type: "text", text: "MAX DPS" }
+      ],
+      color: [234, 179, 8],
+      duration: 6000,
+      // Confirmed exact in-game text for the P7 stumble window.
+      triggers: ["sever zamorak", "connection completely", "strike now"]
+    },
+
+    p7_incoming: {
+      title: "P7: MELEE + BLASTS",
+      actions: [
+        { type: "text", text: "PROTECT MELEE" },
+        { type: "icon", src: "icons/devotion.png" },
+        { type: "icon", src: "icons/debilitate.png" },
+        { type: "text", text: "SHIELD" },
+        { type: "text", text: "POWERBURST" }
+      ],
+      color: [220, 38, 38],
+      duration: 5000,
+      // No known chat line for this — it's auto-chained 5s after
+      // p7_strike fires (per wiki: recovery happens ~5s after the
+      // stumble message). Not chat-triggered on its own.
+      triggers: []
+    },
+
+    p7_demon: {
+      title: "P7: KILL DEMON",
+      actions: [
+        { type: "text", text: "KILL DEMON" }
+      ],
+      color: [190, 24, 93],
+      duration: 4000,
+      // No reliable chat trigger found for demon spawn in P7 — this
+      // is manual-only, use the test button when it spawns.
       triggers: []
     }
 
@@ -1207,6 +1250,10 @@ shieldToggle.addEventListener("click", () => {
 
       speakActions(overlayTextLog);
 
+      if (id === "p7_strike") {
+        setTimeout(() => showBanner("p7_incoming"), 5000);
+      }
+
     } catch (e) {
       log("Overlay error: " + (e.message || e), "info");
     }
@@ -1265,10 +1312,11 @@ shieldToggle.addEventListener("click", () => {
 
     const map = {
       "1": "stun", "2": "slam", "3": "cage", "4": "curl",
-      "5": "infernus", "6": "channel", "7": "rune", "8": "def"
+      "5": "infernus", "6": "channel", "7": "rune", "8": "def",
+      "9": "p7_strike", "0": "p7_demon"
     };
 
-    if (e.key === "9") {
+    if (e.key === "c" || e.key === "C") {
       e.preventDefault();
       colourTest();
       return;
