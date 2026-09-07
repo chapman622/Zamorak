@@ -734,9 +734,12 @@
       ],
       color: [190, 24, 93],
       duration: 4000,
-      // No reliable chat trigger found for demon spawn in P7 — this
-      // is manual-only, use the test button when it spawns.
-      triggers: []
+      // You reported seeing "A Chaos Demon has fixated on you.
+      // Watch out!" in-game. It wasn't in the OCR log, so it may be
+      // outside the reader's color list (widened above) or may not
+      // be a chatbox line at all. Trigger added on a best-effort
+      // basis — test and check the debug log to confirm it fires.
+      triggers: ["chaos demon has fixated", "fixated on you"]
     }
 
   };
@@ -1213,9 +1216,46 @@ shieldToggle.addEventListener("click", () => {
   }
 
 
+  let audioCtx = null;
+
+  /*
+   * Fires an instant tone with no loading/startup lag, unlike
+   * speechSynthesis (which can take 100-300ms to actually produce
+   * sound). Used as the fastest possible "go" signal for
+   * time-critical cues, ahead of the spoken text.
+   */
+  function playBeep(freq = 880, durationMs = 140) {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.value = freq;
+      gain.gain.value = Math.max(0, Math.min(1, masterVoiceVolume)) * 0.35;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + durationMs / 1000);
+    } catch (e) {
+      log("Beep error: " + (e.message || e), "info");
+    }
+  }
+
   function showBanner(id) {
     const cue = CUES[id];
     if (!cue) return;
+
+    const firedAt = Date.now();
+    if (lastFired[id] && firedAt - lastFired[id] < 2500) return;
+    lastFired[id] = firedAt;
+
+    // Fire the instant beep first, before any rendering or overlay
+    // work, so the audio signal reaches you as fast as possible.
+    // Placed after the cooldown check so repeated OCR reads of the
+    // same still-visible chat line don't re-beep.
+    playBeep();
 
     renderCue(id);
 
@@ -1223,10 +1263,6 @@ shieldToggle.addEventListener("click", () => {
       log("Cue displayed in app — Alt1 unavailable for overlay", "info");
       return;
     }
-
-    const firedAt = Date.now();
-    if (lastFired[id] && firedAt - lastFired[id] < 2500) return;
-    lastFired[id] = firedAt;
 
     try {
       const now = Date.now();
@@ -1471,7 +1507,19 @@ shieldToggle.addEventListener("click", () => {
               lib.mixColor(255, 255, 255),
               lib.mixColor(127, 169, 255),
               lib.mixColor(255, 0, 0),
-              lib.mixColor(255, 255, 0)
+              lib.mixColor(255, 255, 0),
+              // Added to try to catch warning-style messages (e.g.
+              // "A Chaos Demon has fixated on you") that may use a
+              // color outside the original set. Untested — if the
+              // demon-fixation line still never appears in the
+              // debug log after this, it's likely not a chatbox
+              // line at all (an on-screen overlay instead), and no
+              // color list will catch it.
+              lib.mixColor(255, 165, 0),
+              lib.mixColor(255, 140, 0),
+              lib.mixColor(170, 0, 214),
+              lib.mixColor(0, 255, 255),
+              lib.mixColor(255, 100, 100)
             ];
           }
 
@@ -1494,7 +1542,7 @@ shieldToggle.addEventListener("click", () => {
       clearInterval(pollTimer);
     }
 
-    pollTimer = setInterval(tick, 350);
+    pollTimer = setInterval(tick, 150);
 
     setStatus("Auto ON — looking for chat…", "warn");
     log("Auto-read started", "info");
