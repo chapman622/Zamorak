@@ -541,6 +541,8 @@
         <button class="test-btn def" data-id="def">8 · DEFENSIVE</button>
         <button class="test-btn stun" data-id="p7_strike">9 · P7 STRIKE</button>
         <button class="test-btn channel" data-id="p7_demon">0 · P7 DEMON</button>
+        <button class="test-btn infernus" data-id="p7_charge">J · P7 CHARGE</button>
+        <button class="test-btn rune" data-id="p7_progress">K · P7 PROGRESS</button>
       </div>
     </div>
 
@@ -559,6 +561,7 @@
       <div class="help">
         1–8 = test cue<br>
         9 = P7 strike window · 0 = P7 demon<br>
+        J = P7 charge start · K = P7 rune disrupted<br>
         C = overlay colour test<br>
         Auto-read watches the RuneScape chatbox.<br>
         Keep Zamorak chat visible while auto-read is active.
@@ -670,6 +673,30 @@
       color: [75, 85, 99],
       duration: 4000,
       triggers: []
+    },
+
+    p7_charge: {
+      title: "P7: RUNES INCOMING",
+      actions: [
+        { type: "text", text: "KILL RUNES IN ORDER" }
+      ],
+      color: [217, 119, 6],
+      duration: 6000,
+      // Confirmed exact text — this fired in your own log at the
+      // start of the P7 rune-disruption window.
+      triggers: ["begins to conjure a world ending attack", "conjure a world ending attack"]
+    },
+
+    p7_progress: {
+      title: "P7: RUNE DISRUPTED",
+      actions: [
+        { type: "text", text: "KEEP GOING" }
+      ],
+      color: [16, 185, 129],
+      duration: 3000,
+      // Confirmed wiki text — fires on each correct rune disrupt
+      // before the final "Strike now!" message.
+      triggers: ["connection is weakened"]
     },
 
     p7_strike: {
@@ -1385,7 +1412,9 @@ shieldToggle.addEventListener("click", () => {
     const map = {
       "1": "stun", "2": "slam", "3": "cage", "4": "curl",
       "5": "infernus", "6": "channel", "7": "rune", "8": "def",
-      "9": "p7_strike", "0": "p7_demon"
+      "9": "p7_strike", "0": "p7_demon",
+      "j": "p7_charge", "J": "p7_charge",
+      "k": "p7_progress", "K": "p7_progress"
     };
 
     if (e.key === "c" || e.key === "C") {
