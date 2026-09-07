@@ -613,6 +613,7 @@
         <button class="test-btn channel" data-id="p7_demon">0 · P7 DEMON</button>
         <button class="test-btn infernus" data-id="p7_charge">J · P7 CHARGE</button>
         <button class="test-btn rune" data-id="p7_progress">K · P7 PROGRESS</button>
+        <button class="test-btn stun" data-id="p7_defensive">D . P7 DEFENSIVE</button>
       </div>
     </div>
 
@@ -815,6 +816,17 @@ p7_strike: {
   color: [0, 255, 0],
   duration: 4000,
   triggers: ["sever zamorak", "strike now", "connection completely"]
+},
+
+    p7_defensive: {
+  title: "P7: DEFLECT MELEE + DEFENSIVE",
+  actions: [
+    { type: "text", text: "DEFLECT MELEE" },
+    { type: "text", text: "REFLECT / VITALITY" }
+  ],
+  color: [220, 38, 38],
+  duration: 5000,
+  triggers: []   // no chat trigger – we fire it on a timer
 },
 
     p7_demon: {
@@ -1603,6 +1615,12 @@ shieldToggle.addEventListener("click", () => {
       log("CUE → " + overlayTextLog + " (slot " + slot + ")", "hit");
 
       speakActions(overlayTextLog);
+
+      if (id === "p7_charge" || id === "p7_strike" || id === "p7_progress") {
+      setTimeout(() => {
+        showBanner("p7_defensive");
+      }, 4500);
+    }
 
       if (id === "p7_strike") {
         startP7Countdown(5, () => showBanner("p7_incoming"));
