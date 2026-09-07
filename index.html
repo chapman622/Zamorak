@@ -1231,9 +1231,11 @@ shieldToggle.addEventListener("click", () => {
       }
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = "square";
+      osc.type = "sine";
       osc.frequency.value = freq;
-      gain.gain.value = Math.max(0, Math.min(1, masterVoiceVolume)) * 0.35;
+      const vol = Math.max(0, Math.min(1, masterVoiceVolume)) * 0.12;
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationMs / 1000);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
