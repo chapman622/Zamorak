@@ -1616,11 +1616,11 @@ shieldToggle.addEventListener("click", () => {
 
       speakActions(overlayTextLog);
 
-      if (id === "p7_charge" || id === "p7_strike" || id === "p7_progress") {
-      setTimeout(() => {
-        showBanner("p7_defensive");
-      }, 4500);
-    }
+      if (id === "p7_strike") {
+  setTimeout(() => {
+    showBanner("p7_defensive");
+  }, 1500);
+}
 
       if (id === "p7_strike") {
         startP7Countdown(5, () => showBanner("p7_incoming"));
