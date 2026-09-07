@@ -422,6 +422,42 @@
       text-shadow: 0 2px 4px #000;
     }
 
+    .pad-tracker {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px;
+      background: #0e2230;
+      border: 1px solid #1d4e5f;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    .pad-tracker-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #67e8f9;
+      letter-spacing: 0.5px;
+    }
+
+    .pad-tracker-current {
+      font-size: 26px;
+      font-weight: 900;
+      color: #22d3ee;
+      text-shadow: 0 2px 4px #000;
+    }
+
+    .pad-tracker-after {
+      font-size: 12px;
+      color: #7dd3fc;
+    }
+
+    #padNextLabel {
+      font-weight: 800;
+      color: #a5f3fc;
+    }
+
     @media (max-width: 430px) {
       body { padding: 6px; }
       .cue-display { min-height: 210px; }
@@ -454,6 +490,16 @@
 
     <button id="settingsBtn" class="tab-btn">⚙ Settings</button>
 
+  </div>
+
+
+  <!-- ============================================================
+       PAD ORDER TRACKER
+       ============================================================ -->
+  <div id="padTracker" class="pad-tracker" style="display:none;">
+    <span class="pad-tracker-label">NEXT PAD</span>
+    <span id="padCurrentLabel" class="pad-tracker-current">--</span>
+    <span class="pad-tracker-after">then <span id="padNextLabel">--</span></span>
   </div>
 
 
@@ -524,6 +570,30 @@
       <div class="auto-row">
         <label>Auto-read Zamorak chat</label>
         <div id="autoToggle" class="toggle" title="Toggle auto chat reading"></div>
+      </div>
+    </div>
+
+    <!-- PAD ORDER -->
+    <div class="settings-section">
+      <div class="settings-title">Pad Order</div>
+      <div class="setting-description" style="margin-bottom: 8px;">
+        Enter your team's pad/edict order, separated by commas or spaces (e.g. "2,4,6,1,3,5"). Advances automatically each time you restore an edict.
+      </div>
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <input id="padOrderInput" type="text" placeholder="e.g. 2,4,6,1,3,5"
+          style="flex:1; background:#0c0d10; border:1px solid #292c34; border-radius:6px; color:#fff; padding:8px; font-size:13px;">
+        <button id="padOrderSaveBtn" class="tab-btn" style="user-select:none;">Save</button>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <div style="font-size:12px; color:#aaa;">
+          Current: <span id="padSettingsCurrent" style="color:#22d3ee; font-weight:800;">--</span>
+          &nbsp;→&nbsp; Next: <span id="padSettingsNext" style="color:#a5f3fc; font-weight:800;">--</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button id="padBackBtn" class="tab-btn" style="flex:1; user-select:none;">◀ Back</button>
+        <button id="padAdvanceBtn" class="tab-btn" style="flex:1; user-select:none;">Advance ▶</button>
+        <button id="padResetBtn" class="tab-btn" style="flex:1; user-select:none;">Reset</button>
       </div>
     </div>
 
@@ -758,6 +828,9 @@
   let activeCues = [];
   let includeShieldCue = true;
   let masterVoiceVolume = 1.0;
+  let padOrder = [];
+  let padIndex = 0;
+  let lastPadAdvanceAt = 0;
 
   // Cache of icon images prepared for the in-game (Alt1) overlay.
   // Keyed by icon src. Each entry is one of:
@@ -813,6 +886,130 @@ shieldToggle.addEventListener("click", () => {
   const iconSizeSlider = document.getElementById("iconSize");
   const iconSizeValue = document.getElementById("iconSizeValue");
   const p7CountdownEl = document.getElementById("p7Countdown");
+
+  const padTrackerEl = document.getElementById("padTracker");
+  const padCurrentLabelEl = document.getElementById("padCurrentLabel");
+  const padNextLabelEl = document.getElementById("padNextLabel");
+  const padOrderInput = document.getElementById("padOrderInput");
+  const padOrderSaveBtn = document.getElementById("padOrderSaveBtn");
+  const padSettingsCurrent = document.getElementById("padSettingsCurrent");
+  const padSettingsNext = document.getElementById("padSettingsNext");
+  const padBackBtn = document.getElementById("padBackBtn");
+  const padAdvanceBtn = document.getElementById("padAdvanceBtn");
+  const padResetBtn = document.getElementById("padResetBtn");
+
+  function loadPadOrder() {
+    try {
+      const savedOrder = localStorage.getItem("zamorak_pad_order");
+      const savedIndex = localStorage.getItem("zamorak_pad_index");
+      if (savedOrder) padOrder = JSON.parse(savedOrder);
+      if (savedIndex !== null) {
+        const parsed = Number(savedIndex);
+        if (Number.isFinite(parsed)) padIndex = parsed;
+      }
+    } catch (e) {
+      console.warn("Could not load pad order", e);
+    }
+    padOrderInput.value = padOrder.join(", ");
+    updatePadDisplay();
+  }
+
+  function savePadOrderState() {
+    try {
+      localStorage.setItem("zamorak_pad_order", JSON.stringify(padOrder));
+      localStorage.setItem("zamorak_pad_index", String(padIndex));
+    } catch (e) {
+      console.warn("Could not save pad order", e);
+    }
+  }
+
+  function updatePadDisplay() {
+    const hasPads = padOrder.length > 0;
+    const current = padOrder[padIndex];
+    const next = padOrder[padIndex + 1];
+
+    const currentText = !hasPads ? "--" : (current !== undefined ? String(current) : "Done!");
+    const nextText = !hasPads ? "--" : (next !== undefined ? String(next) : (current !== undefined ? "last pad" : "--"));
+
+    padCurrentLabelEl.textContent = currentText;
+    padNextLabelEl.textContent = nextText;
+    padSettingsCurrent.textContent = currentText;
+    padSettingsNext.textContent = nextText;
+    padTrackerEl.style.display = hasPads ? "flex" : "none";
+
+    drawPadOverlay();
+  }
+
+  function drawPadOverlay() {
+    if (!window.alt1 || !padOrder.length) return;
+    try {
+      alt1.overLayClearGroup("zamcue-pad");
+      alt1.overLaySetGroup("zamcue-pad");
+      const current = padOrder[padIndex];
+      const label = current !== undefined ? ("NEXT PAD: " + current) : "PAD ORDER DONE";
+      const cx = Math.round(alt1.rsWidth / 2);
+      const y = 60;
+      textCenteredAt(label, COLORS.blue, 26, cx, y, 16000);
+    } catch (e) {
+      log("Pad overlay error: " + (e.message || e), "info");
+    }
+  }
+
+  // Keep the overlay text alive even if nothing else redraws it for a while.
+  setInterval(() => {
+    if (padOrder.length) drawPadOverlay();
+  }, 12000);
+
+  function advancePad() {
+    if (!padOrder.length) return;
+    padIndex = Math.min(padIndex + 1, padOrder.length);
+    savePadOrderState();
+    updatePadDisplay();
+    log("Pad advanced — next: " + (padOrder[padIndex] ?? "done"), "hit");
+  }
+
+  function backPad() {
+    if (!padOrder.length) return;
+    padIndex = Math.max(0, padIndex - 1);
+    savePadOrderState();
+    updatePadDisplay();
+    log("Pad order moved back — current: " + (padOrder[padIndex] ?? "--"), "info");
+  }
+
+  function resetPadOrder() {
+    padIndex = 0;
+    savePadOrderState();
+    updatePadDisplay();
+    log("Pad order reset to start", "info");
+  }
+
+  padOrderSaveBtn.addEventListener("click", () => {
+    const parsed = padOrderInput.value
+      .split(/[, ]+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+    padOrder = parsed;
+    padIndex = 0;
+    savePadOrderState();
+    updatePadDisplay();
+    log("Pad order saved: " + (padOrder.join(" → ") || "(empty)"), "info");
+  });
+
+  padBackBtn.addEventListener("click", backPad);
+  padAdvanceBtn.addEventListener("click", advancePad);
+  padResetBtn.addEventListener("click", resetPadOrder);
+
+  function maybeAdvancePadFromChat(text) {
+    if (!padOrder.length) return;
+    if (!matches(text, "restore the edict")) return;
+
+    const now = Date.now();
+    if (now - lastPadAdvanceAt < 5000) return;
+    lastPadAdvanceAt = now;
+
+    log("TRIGGER → pad advance", "hit");
+    advancePad();
+  }
 
   /*
    * Ticks a visible countdown for `totalSeconds`, both as overlay
@@ -1723,6 +1920,8 @@ shieldToggle.addEventListener("click", () => {
         log("READ: " + text.slice(0, 100), "info");
       }
 
+      maybeAdvancePadFromChat(text);
+
       for (const [id, cue] of Object.entries(CUES)) {
         for (const trigger of cue.triggers) {
           if (matches(text, trigger)) {
@@ -1738,6 +1937,7 @@ shieldToggle.addEventListener("click", () => {
 
   function init() {
     loadDisplaySettings();
+    loadPadOrder();
 
     if (!window.alt1) {
       setStatus("Open this page inside Alt1 Toolkit", "err");
