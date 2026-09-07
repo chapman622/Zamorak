@@ -797,6 +797,26 @@
       triggers: []
     },
 
+    p7_weakened: {
+  title: "P7: CONNECTION WEAKENED",
+  actions: [
+    { type: "text", text: "KEEP GOING" }
+  ],
+  color: [0, 200, 0],
+  duration: 3000,
+  triggers: ["connection weakened"]
+},
+
+p7_strike: {
+  title: "P7: STRIKE NOW",
+  actions: [
+    { type: "text", text: "STRIKE NOW" }
+  ],
+  color: [0, 255, 0],
+  duration: 4000,
+  triggers: ["sever zamorak", "strike now", "connection completely"]
+},
+
     p7_demon: {
       title: "P7: KILL DEMON",
       actions: [
@@ -1701,26 +1721,20 @@ shieldToggle.addEventListener("click", () => {
           if (lib && typeof lib.mixColor === "function") {
             reader.readargs = reader.readargs || {};
             reader.readargs.colors = [
-              lib.mixColor(153, 255, 153),
-              lib.mixColor(232, 4, 4),
-              lib.mixColor(255, 255, 255),
-              lib.mixColor(127, 169, 255),
-              lib.mixColor(255, 0, 0),
-              lib.mixColor(255, 255, 0),
-              // Added to try to catch warning-style messages (e.g.
-              // "A Chaos Demon has fixated on you") that may use a
-              // color outside the original set. Untested — if the
-              // demon-fixation line still never appears in the
-              // debug log after this, it's likely not a chatbox
-              // line at all (an on-screen overlay instead), and no
-              // color list will catch it.
-              lib.mixColor(235, 47, 47),   // Chaos Demon fixation warning
-              lib.mixColor(255, 165, 0),
-              lib.mixColor(255, 140, 0),
-              lib.mixColor(170, 0, 214),
-              lib.mixColor(0, 255, 255),
-              lib.mixColor(255, 100, 100)
-            ];
+  lib.mixColor(153, 255, 153), // Zamorak green voice
+  lib.mixColor(232, 4, 4),     // Zamorak red
+  lib.mixColor(255, 0, 0),     // Pure red (P7 charge)
+  lib.mixColor(255, 255, 255), // White
+  lib.mixColor(127, 169, 255), // Timestamp blue
+  lib.mixColor(255, 255, 0),   // Yellow
+  lib.mixColor(235, 47, 47),   // Chaos Demon fixation
+  lib.mixColor(0, 255, 0),     // Connection weakened / Strike now
+  lib.mixColor(255, 165, 0),   // Orange
+  lib.mixColor(255, 140, 0),   // Darker orange
+  lib.mixColor(255, 100, 100), // Light red
+  lib.mixColor(170, 0, 214),   // Purple
+  lib.mixColor(0, 255, 255)    // Cyan
+];
           }
 
           log("ChatBoxReader created", "info");
